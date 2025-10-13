@@ -1,0 +1,69 @@
+# Build outputs
+blog-backend/build/
+blog-backend/.gradle/
+blog-frontend/.next/
+blog-frontend/out/
+blog-frontend/node_modules/
+
+# Dependencies
+**/node_modules/
+**/.pnp/
+**/.pnp.js
+**/package-lock.json
+**/yarn.lock
+
+# Gradle
+**/.gradle/
+**/build/
+**/gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+**/.idea/
+**/.vscode/
+**/*.iml
+**/*.ipr
+**/*.iws
+
+# OS
+**/.DS_Store
+**/Thumbs.db
+
+# Logs
+**/*.log
+**/logs/
+
+# Database
+**/*.db
+**/*.sqlite
+
+# Uploads
+blog-backend/uploads/
+
+# Environment
+**/.env
+**/.env.local
+**/.env.*.local
+
+# Docker
+**/.docker/
+
+# Test coverage
+**/coverage/
+**/.nyc_output/
+
+# Generated files
+blog-frontend/.eslintcache
+**/dist/
+
+# Temporary files
+**/*.swp
+**/*.swo
+**/*~
+**/.*.swp
+
+# Large binary files
+**/*.jar
+**/*.war
+**/*.zip
+**/*.tar.gz
+

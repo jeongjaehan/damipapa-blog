@@ -1,0 +1,157 @@
+'use client'
+
+import Link from 'next/link'
+import { useAuth } from '@/contexts/AuthContext'
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Menu, X, PenSquare, LayoutDashboard } from 'lucide-react'
+
+export default function Header() {
+  const { user, isAuthenticated, isAdmin, logout } = useAuth()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-stone-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+      <nav className="container mx-auto px-4 py-4">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="text-2xl font-bold text-gray-900 hover:text-primary-600 transition-colors">
+            다미파파의 블로그
+          </Link>
+
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-6">
+            <Link href="/" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
+              홈
+            </Link>
+            <Link href="/profile" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
+              프로필
+            </Link>
+            <Link href="/search" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
+              검색
+            </Link>
+            <Link href="/tags" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
+              태그
+            </Link>
+            {isAuthenticated ? (
+              <>
+                {isAdmin && (
+                  <Link href="/admin">
+                    <Button variant="ghost" size="sm" className="gap-2">
+                      <LayoutDashboard className="w-4 h-4" />
+                      대시보드
+                    </Button>
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link href="/admin/posts/new">
+                    <Button size="sm" className="gap-2">
+                      <PenSquare className="w-4 h-4" />
+                      글쓰기
+                    </Button>
+                  </Link>
+                )}
+                <span className="text-sm text-gray-600">{user?.name}</span>
+                <Button variant="ghost" size="sm" onClick={logout}>
+                  로그아웃
+                </Button>
+              </>
+            ) : (
+              <Link href="/auth/login">
+                <Button size="sm">로그인</Button>
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </Button>
+        </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden mt-4 space-y-2">
+            <Link
+              href="/"
+              className="block py-2 text-gray-700 hover:text-primary-600"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              홈
+            </Link>
+            <Link
+              href="/profile"
+              className="block py-2 text-gray-700 hover:text-primary-600"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              프로필
+            </Link>
+            <Link
+              href="/search"
+              className="block py-2 text-gray-700 hover:text-primary-600"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              검색
+            </Link>
+            <Link
+              href="/tags"
+              className="block py-2 text-gray-700 hover:text-primary-600"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              태그
+            </Link>
+            {isAuthenticated ? (
+              <>
+                {isAdmin && (
+                  <>
+                    <Link
+                      href="/admin"
+                      className="block py-2 text-gray-700 hover:text-primary-600"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      관리자
+                    </Link>
+                    <Link
+                      href="/admin/posts/new"
+                      className="block py-2 bg-primary-600 text-white px-4 rounded hover:bg-primary-700"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      글쓰기
+                    </Link>
+                  </>
+                )}
+                <span className="block py-2 text-gray-700">{user?.name}</span>
+                <button
+                  onClick={() => {
+                    logout()
+                    setMobileMenuOpen(false)
+                  }}
+                  className="block py-2 text-gray-700 hover:text-primary-600 w-full text-left"
+                >
+                  로그아웃
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/auth/login"
+                className="block py-2 bg-primary-600 text-white px-4 rounded hover:bg-primary-700"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                로그인
+              </Link>
+            )}
+          </div>
+        )}
+      </nav>
+    </header>
+  )
+}
+

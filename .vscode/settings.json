@@ -1,0 +1,22 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3307,
+            "driver": "MySQL",
+            "name": "localhost",
+            "database": "blog",
+            "username": "blog_user",
+            "password": "password"
+        }
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "coderabbit.selfHostedUrl": ""
+}

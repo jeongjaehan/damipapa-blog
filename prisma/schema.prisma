@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  bio       String?  @db.Text
+  role      String   @default("USER")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  posts     Post[]
+  profile   Profile?
+
+  @@map("users")
+}
+
+model Post {
+  id        Int        @id @default(autoincrement())
+  title     String     @db.VarChar(200)
+  content   String     @db.LongText
+  excerpt   String?    @db.Text
+  category  String?    @db.VarChar(100)
+  tags      String?    @db.Text // JSON array stringified
+  published Boolean    @default(false)
+  viewCount Int        @default(0) @map("view_count")
+  authorId  Int        @map("author_id")
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  postViews PostView[]
+
+  @@map("posts")
+}
+
+model PostView {
+  id        Int      @id @default(autoincrement())
+  postId    Int      @map("post_id")
+  ipAddress String   @map("ip_address") @db.VarChar(50)
+  viewedAt  DateTime @default(now()) @map("viewed_at")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, ipAddress])
+  @@map("post_views")
+}
+
+model Profile {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String   @db.LongText
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("profiles")
+}
+
