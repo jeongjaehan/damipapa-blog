@@ -311,17 +311,131 @@ docker-compose logs mysql
 
 ## 🚀 배포
 
-### 프로덕션 빌드
+### EC2 배포 (메모리 최적화)
 
-\`\`\`bash
+#### EC2 t3.micro (1GB RAM) 준비
+
+**1. 스왑 메모리 설정 (필수!)**
+
+```bash
+# 4GB 스왑 생성
+sudo dd if=/dev/zero of=/swapfile bs=128M count=32
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile swap swap defaults 0 0' | sudo tee -a /etc/fstab
+
+# 스왑 사용 우선순위 조정
+sudo sysctl vm.swappiness=10
+echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
+
+# 확인
+free -h
+```
+
+**2. Node.js 및 PM2 설치**
+
+```bash
+# Node.js 20 설치
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# PM2 전역 설치
+sudo npm install -g pm2
+```
+
+**3. MySQL 설치 및 설정**
+
+```bash
+# MySQL 설치
+sudo apt install -y mysql-server
+sudo systemctl start mysql
+sudo systemctl enable mysql
+
+# 데이터베이스 생성
+sudo mysql -u root -p
+CREATE DATABASE blog CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'blog_user'@'localhost' IDENTIFIED BY 'your_password';
+GRANT ALL PRIVILEGES ON blog.* TO 'blog_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+**4. 프로젝트 배포**
+
+```bash
+# 저장소 클론
+cd ~
+git clone https://github.com/jeongjaehan/damipapa-blog.git
+cd damipapa-blog
+
+# .env 파일 설정
+cp .env.example .env
+nano .env  # 실제 값으로 수정
+
+# 배포 스크립트 실행
+chmod +x deploy.sh
+./deploy.sh
+```
+
+**5. PM2 자동 시작 설정**
+
+```bash
+pm2 startup
+# 출력된 명령어 실행 (sudo로 시작하는 명령어)
+pm2 save
+```
+
+#### 메모리 최적화 설정
+
+이 프로젝트는 1GB RAM 환경에서 실행되도록 최적화되었습니다:
+
+- **Node.js 힙 메모리**: 768MB로 제한
+- **PM2 재시작 임계값**: 800MB
+- **Worker threads**: 비활성화
+- **이미지 최적화**: 제한적 사용
+- **스왑 메모리**: 4GB 활용
+
+#### 모니터링
+
+```bash
+# 실시간 모니터링
+pm2 monit
+
+# 메모리 사용량 확인
+free -h
+
+# 로그 확인
+pm2 logs damipapa-blog --lines 50
+
+# 프로세스 상태
+pm2 status
+```
+
+#### 업데이트
+
+```bash
+cd ~/damipapa-blog
+git pull origin main
+./deploy.sh
+```
+
+### Docker Compose 배포 (대안)
+
+```bash
 # Docker Compose로 프로덕션 빌드
 docker-compose -f docker-compose.yml up -d --build
-\`\`\`
+```
 
-### 환경별 설정
+### 예상 메모리 사용량
 
-- `application-dev.yml` - 개발 환경
-- `application-prod.yml` - 프로덕션 환경
+- **Next.js 프로세스**: 400-600MB
+- **MySQL (로컬)**: 100-200MB
+- **시스템**: 100-150MB
+- **여유**: 50-100MB
+- **스왑**: 필요시 4GB
+
+**총 1GB RAM으로 안정적 운영 가능!** ✅
 
 ## 📄 라이선스
 
