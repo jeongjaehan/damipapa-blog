@@ -20,24 +20,15 @@ export default function PostCard({ post }: PostCardProps) {
         </CardHeader>
         
         <CardContent className="space-y-4">
-          {post.excerpt && (
-            <p className="text-gray-600 line-clamp-3 leading-relaxed">
-              {post.excerpt}
-            </p>
+          {post.tags && post.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {post.tags.slice(0, 5).map((tag) => (
+                <Badge key={tag} variant="outline" className="border-primary-200 text-primary-700">
+                  #{tag}
+                </Badge>
+              ))}
+            </div>
           )}
-
-          <div className="flex flex-wrap gap-2">
-            {post.category && (
-              <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100">
-                {post.category}
-              </Badge>
-            )}
-            {post.tags.slice(0, 3).map((tag) => (
-              <Badge key={tag} variant="outline" className="border-primary-200 text-primary-700">
-                #{tag}
-              </Badge>
-            ))}
-          </div>
 
           <div className="flex items-center justify-between pt-3 border-t border-stone-100">
             <span className="text-sm font-medium text-gray-700">{post.authorName}</span>

@@ -33,8 +33,6 @@ export async function GET(request: Request) {
     const content = posts.map((post) => ({
       id: post.id,
       title: post.title,
-      excerpt: post.excerpt,
-      category: post.category,
       tags: post.tags ? JSON.parse(post.tags) : [],
       authorName: post.author.name,
       createdAt: post.createdAt,

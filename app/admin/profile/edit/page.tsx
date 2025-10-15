@@ -3,13 +3,12 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
-import { getProfile, updateProfile } from '@/services/api'
+import { getProfile, updateProfile, uploadFile } from '@/services/api'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+import TipTapEditor from '@/components/admin/TipTapEditor'
 import Loading from '@/components/common/Loading'
-import { Eye, Edit3, Save, X } from 'lucide-react'
+import { Save, X } from 'lucide-react'
 
 export default function EditProfilePage() {
   const { isAdmin, loading: authLoading } = useAuth()
@@ -18,7 +17,6 @@ export default function EditProfilePage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-  const [showPreview, setShowPreview] = useState(false)
 
   useEffect(() => {
     if (!authLoading && !isAdmin) {
@@ -40,6 +38,20 @@ export default function EditProfilePage() {
       console.error('프로필 로딩 실패:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleImageUpload = async (file: File): Promise<string> => {
+    console.log('이미지 업로드 시작:', file.name, file.size, 'bytes')
+    
+    try {
+      const result = await uploadFile(file)
+      console.log('업로드 성공:', result)
+      return result.url
+    } catch (error: any) {
+      console.error('이미지 업로드 실패:', error)
+      const errorMsg = error.response?.data?.message || error.message || '이미지 업로드에 실패했습니다'
+      throw new Error(errorMsg)
     }
   }
 
@@ -80,42 +92,15 @@ export default function EditProfilePage() {
 
         <Card className="border-stone-200">
           <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle>내용</CardTitle>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                onClick={() => setShowPreview(!showPreview)}
-                className="gap-2"
-              >
-                {showPreview ? <Edit3 className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                {showPreview ? '편집' : '미리보기'}
-              </Button>
-            </div>
+            <CardTitle>프로필 내용</CardTitle>
           </CardHeader>
 
           <CardContent>
-            {showPreview ? (
-              <div className="border rounded p-4 min-h-[400px] markdown bg-white text-gray-900">
-                {content ? (
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
-                ) : (
-                  <p className="text-gray-400">내용을 입력하면 미리보기가 표시됩니다...</p>
-                )}
-              </div>
-            ) : (
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                required
-                rows={20}
-                spellCheck={true}
-                lang="ko"
-                className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary-500 font-mono"
-                placeholder="마크다운으로 프로필을 작성하세요..."
-              />
-            )}
+            <TipTapEditor
+              content={content}
+              onChange={setContent}
+              onImageUpload={handleImageUpload}
+            />
           </CardContent>
         </Card>
 

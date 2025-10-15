@@ -77,22 +77,17 @@ export default function PostDetail({ post }: PostDetailProps) {
             )}
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            {post.category && (
-              <Link href={`/?category=${post.category}`}>
-                <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100">
-                  {post.category}
-                </Badge>
-              </Link>
-            )}
-            {post.tags.map((tag) => (
-              <Link key={tag} href={`/?tag=${tag}`}>
-                <Badge variant="outline" className="border-primary-200 text-primary-700 hover:bg-primary-50">
-                  #{tag}
-                </Badge>
-              </Link>
-            ))}
-          </div>
+          {post.tags && post.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {post.tags.map((tag) => (
+                <Link key={tag} href={`/?tag=${tag}`}>
+                  <Badge variant="outline" className="border-primary-200 text-primary-700 hover:bg-primary-50">
+                    #{tag}
+                  </Badge>
+                </Link>
+              ))}
+            </div>
+          )}
         </header>
 
         <Separator />

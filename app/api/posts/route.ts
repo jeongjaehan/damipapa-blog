@@ -8,17 +8,12 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '0')
     const size = parseInt(searchParams.get('size') || '10')
     const tag = searchParams.get('tag')
-    const category = searchParams.get('category')
 
     const skip = page * size
     const take = size
 
     // 필터 조건
     const where: any = { published: true }
-    
-    if (category) {
-      where.category = category
-    }
     
     if (tag) {
       where.tags = { contains: tag }
@@ -38,8 +33,6 @@ export async function GET(request: Request) {
     const content = posts.map((post) => ({
       id: post.id,
       title: post.title,
-      excerpt: post.excerpt,
-      category: post.category,
       tags: post.tags ? JSON.parse(post.tags) : [],
       authorName: post.author.name,
       createdAt: post.createdAt,
@@ -85,7 +78,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const { title, content, excerpt, category, tags, published } = await request.json()
+    const { title, content, tags, published } = await request.json()
 
     const user = await prisma.user.findUnique({
       where: { email: payload.email },
@@ -102,8 +95,6 @@ export async function POST(request: Request) {
       data: {
         title,
         content,
-        excerpt,
-        category,
         tags: tags ? JSON.stringify(tags) : null,
         published: published || false,
         authorId: user.id,
@@ -115,8 +106,6 @@ export async function POST(request: Request) {
       id: post.id,
       title: post.title,
       content: post.content,
-      excerpt: post.excerpt,
-      category: post.category,
       tags: post.tags ? JSON.parse(post.tags) : [],
       author: {
         id: post.author.id,

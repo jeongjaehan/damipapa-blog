@@ -1,15 +1,14 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { createPost, updatePost, uploadFile } from '@/services/api'
+import { useRouter} from 'next/navigation'
+import { createPost, updatePost, uploadFile, getTags } from '@/services/api'
 import { PostDetail } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import { Upload, Eye, Edit3, Save, X } from 'lucide-react'
+import TipTapEditor from './TipTapEditor'
+import { Save, X } from 'lucide-react'
 
 interface PostEditorProps {
   post?: PostDetail
@@ -19,21 +18,50 @@ export default function PostEditor({ post }: PostEditorProps) {
   const router = useRouter()
   const [title, setTitle] = useState(post?.title || '')
   const [content, setContent] = useState(post?.content || '')
-  const [excerpt, setExcerpt] = useState(post?.excerpt || '')
-  const [category, setCategory] = useState(post?.category || '')
   const [tags, setTags] = useState<string[]>(post?.tags ? Array.from(post.tags) : [])
   const [tagInput, setTagInput] = useState('')
+  const [allTags, setAllTags] = useState<string[]>([])
+  const [filteredTags, setFilteredTags] = useState<string[]>([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
   const [published, setPublished] = useState(true) // 기본값을 true로 변경
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [showPreview, setShowPreview] = useState(false)
-  const [uploading, setUploading] = useState(false)
-  const fileInputRef = React.useRef<HTMLInputElement>(null)
 
-  const handleTagAdd = () => {
-    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
-      setTags([...tags, tagInput.trim()])
+  // 기존 태그 목록 로드
+  useEffect(() => {
+    const loadTags = async () => {
+      try {
+        const tagsData = await getTags()
+        setAllTags(tagsData)
+      } catch (error) {
+        console.error('태그 로딩 실패:', error)
+      }
+    }
+    loadTags()
+  }, [])
+
+  const handleTagInputChange = (value: string) => {
+    setTagInput(value)
+    if (value.trim()) {
+      const filtered = allTags.filter(tag => 
+        tag.toLowerCase().includes(value.toLowerCase()) &&
+        !tags.includes(tag)
+      )
+      setFilteredTags(filtered)
+      setShowSuggestions(filtered.length > 0)
+    } else {
+      setFilteredTags([])
+      setShowSuggestions(false)
+    }
+  }
+
+  const handleTagAdd = (tag?: string) => {
+    const tagToAdd = tag || tagInput.trim()
+    if (tagToAdd && !tags.includes(tagToAdd)) {
+      setTags([...tags, tagToAdd])
       setTagInput('')
+      setShowSuggestions(false)
+      setFilteredTags([])
     }
   }
 
@@ -41,29 +69,17 @@ export default function PostEditor({ post }: PostEditorProps) {
     setTags(tags.filter((tag) => tag !== tagToRemove))
   }
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
+  const handleImageUpload = async (file: File): Promise<string> => {
     console.log('이미지 업로드 시작:', file.name, file.size, 'bytes')
     
-    setUploading(true)
     try {
       const result = await uploadFile(file)
       console.log('업로드 성공:', result)
-      
-      const imageUrl = result.url
-      const imageMarkdown = `![${result.filename}](${imageUrl})`
-      
-      console.log('이미지 마크다운:', imageMarkdown)
-      setContent(content + '\n\n' + imageMarkdown)
-      alert('이미지가 업로드되었습니다!')
+      return result.url
     } catch (error: any) {
       console.error('이미지 업로드 실패:', error)
       const errorMsg = error.response?.data?.message || error.message || '이미지 업로드에 실패했습니다'
-      alert('이미지 업로드 실패: ' + errorMsg)
-    } finally {
-      setUploading(false)
+      throw new Error(errorMsg)
     }
   }
 
@@ -76,8 +92,6 @@ export default function PostEditor({ post }: PostEditorProps) {
       const postData = {
         title,
         content,
-        excerpt,
-        category: category || undefined,
         tags,
         published,
       }
@@ -122,47 +136,39 @@ export default function PostEditor({ post }: PostEditorProps) {
         </div>
 
         <div>
-          <label htmlFor="excerpt" className="block text-sm font-medium mb-2">
-            요약
-          </label>
-          <input
-            id="excerpt"
-            type="text"
-            value={excerpt}
-            onChange={(e) => setExcerpt(e.target.value)}
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
-            placeholder="포스트 요약을 입력하세요"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="category" className="block text-sm font-medium mb-2">
-            카테고리
-          </label>
-          <input
-            id="category"
-            type="text"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
-            placeholder="카테고리를 입력하세요"
-          />
-        </div>
-
-        <div>
           <label className="block text-sm font-medium mb-2">태그</label>
-          <div className="flex gap-2 mb-2">
-            <input
-              type="text"
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleTagAdd())}
-              className="flex-1 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
-              placeholder="태그를 입력하고 엔터를 누르세요"
-            />
-            <Button type="button" onClick={handleTagAdd} size="sm">
-              추가
-            </Button>
+          <div className="relative">
+            <div className="flex gap-2 mb-2">
+              <input
+                type="text"
+                value={tagInput}
+                onChange={(e) => handleTagInputChange(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleTagAdd())}
+                onFocus={() => tagInput && filteredTags.length > 0 && setShowSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                className="flex-1 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="태그를 입력하고 엔터를 누르세요"
+              />
+              <Button type="button" onClick={() => handleTagAdd()} size="sm">
+                추가
+              </Button>
+            </div>
+            
+            {/* 태그 자동완성 드롭다운 */}
+            {showSuggestions && filteredTags.length > 0 && (
+              <div className="absolute z-10 w-full bg-white border rounded-md shadow-lg max-h-60 overflow-y-auto">
+                {filteredTags.map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => handleTagAdd(tag)}
+                    className="w-full px-4 py-2 text-left hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
@@ -185,62 +191,12 @@ export default function PostEditor({ post }: PostEditorProps) {
       </div>
 
       <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex justify-between items-center mb-4">
-          <label className="block text-sm font-medium">내용 *</label>
-          <div className="flex gap-2">
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="hidden"
-              disabled={uploading}
-            />
-            <Button 
-              type="button" 
-              size="sm" 
-              variant="outline" 
-              disabled={uploading}
-              onClick={() => fileInputRef.current?.click()}
-              className="gap-2"
-            >
-              <Upload className="w-4 h-4" />
-              {uploading ? '업로드 중...' : '이미지'}
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={() => setShowPreview(!showPreview)}
-              className="gap-2"
-            >
-              {showPreview ? <Edit3 className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              {showPreview ? '편집' : '미리보기'}
-            </Button>
-          </div>
-        </div>
-
-
-        {showPreview ? (
-          <div className="border rounded p-4 min-h-[400px] markdown bg-white text-gray-900">
-            {content ? (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
-            ) : (
-              <p className="text-gray-400">내용을 입력하면 미리보기가 표시됩니다...</p>
-            )}
-          </div>
-        ) : (
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            required
-            rows={20}
-            spellCheck={true}
-            lang="ko"
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary-500 font-mono"
-            placeholder="마크다운으로 내용을 작성하세요..."
-          />
-        )}
+        <label className="block text-sm font-medium mb-4">내용 *</label>
+        <TipTapEditor
+          content={content}
+          onChange={setContent}
+          onImageUpload={handleImageUpload}
+        />
       </div>
 
       <div className="bg-white rounded-lg shadow-md p-6">

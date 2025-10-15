@@ -26,8 +26,6 @@ model Post {
   id        Int        @id @default(autoincrement())
   title     String     @db.VarChar(200)
   content   String     @db.LongText
-  excerpt   String?    @db.Text
-  category  String?    @db.VarChar(100)
   tags      String?    @db.Text // JSON array stringified
   published Boolean    @default(false)
   viewCount Int        @default(0) @map("view_count")

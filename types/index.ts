@@ -11,8 +11,6 @@ export interface User {
 export interface PostSummary {
   id: number
   title: string
-  excerpt: string
-  category?: string
   tags: string[]
   authorName: string
   createdAt: string
@@ -24,8 +22,6 @@ export interface PostDetail {
   id: number
   title: string
   content: string
-  excerpt: string
-  category?: string
   tags: string[]
   author: User
   createdAt: string
@@ -56,8 +52,6 @@ export interface LoginResponse {
 export interface CreatePostRequest {
   title: string
   content: string
-  excerpt?: string
-  category?: string
   tags: string[]
   published: boolean
 }
@@ -65,8 +59,6 @@ export interface CreatePostRequest {
 export interface UpdatePostRequest {
   title?: string
   content?: string
-  excerpt?: string
-  category?: string
   tags?: string[]
   published?: boolean
 }

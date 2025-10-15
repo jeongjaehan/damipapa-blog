@@ -41,8 +41,6 @@ export async function GET(
       id: post.id,
       title: post.title,
       content: post.content,
-      excerpt: post.excerpt,
-      category: post.category,
       tags: post.tags ? JSON.parse(post.tags) : [],
       author: {
         id: post.author.id,
@@ -92,8 +90,6 @@ export async function PUT(
     const updateData: any = {}
     if (data.title !== undefined) updateData.title = data.title
     if (data.content !== undefined) updateData.content = data.content
-    if (data.excerpt !== undefined) updateData.excerpt = data.excerpt
-    if (data.category !== undefined) updateData.category = data.category
     if (data.tags !== undefined) updateData.tags = JSON.stringify(data.tags)
     if (data.published !== undefined) updateData.published = data.published
 
@@ -107,8 +103,6 @@ export async function PUT(
       id: post.id,
       title: post.title,
       content: post.content,
-      excerpt: post.excerpt,
-      category: post.category,
       tags: post.tags ? JSON.parse(post.tags) : [],
       author: {
         id: post.author.id,

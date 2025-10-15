@@ -65,12 +65,10 @@ export const getCurrentUser = async (): Promise<User> => {
 export const getPosts = async (
   page = 0,
   size = 10,
-  tag?: string,
-  category?: string
+  tag?: string
 ): Promise<PageResponse<PostSummary>> => {
   const params = new URLSearchParams({ page: page.toString(), size: size.toString() })
   if (tag) params.append('tag', tag)
-  if (category) params.append('category', category)
 
   const response = await api.get<PageResponse<PostSummary>>(`/posts?${params}`)
   return response.data
@@ -106,14 +104,14 @@ export const searchPosts = async (
   return response.data
 }
 
-// Tag & Category APIs
-export const getAllTags = async (): Promise<string[]> => {
+// Tag APIs
+export const getTags = async (): Promise<string[]> => {
   const response = await api.get<string[]>('/tags')
   return response.data
 }
 
-export const getAllCategories = async (): Promise<string[]> => {
-  const response = await api.get<string[]>('/categories')
+export const getAllTags = async (): Promise<string[]> => {
+  const response = await api.get<string[]>('/tags')
   return response.data
 }
 
