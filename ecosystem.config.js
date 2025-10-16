@@ -11,7 +11,7 @@ module.exports = {
     max_memory_restart: '800M', // 800MB 초과 시 재시작
     env: {
       NODE_ENV: 'production',
-      PORT: 3000,
+      PORT: 3001,
       NODE_OPTIONS: '--max-old-space-size=768' // Node.js 힙 메모리 제한 768MB
     },
     error_file: './logs/err.log',
