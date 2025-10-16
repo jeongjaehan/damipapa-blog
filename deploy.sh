@@ -14,6 +14,10 @@ if [ ! -f "package.json" ]; then
   exit 1
 fi
 
+# 워크스페이스 루트 문제 해결을 위한 환경변수 설정
+export NEXT_TELEMETRY_DISABLED=1
+export NODE_ENV=production
+
 echo -e "${YELLOW}📦 Installing all dependencies (including dev dependencies for build)...${NC}"
 NODE_ENV=production npm ci
 
@@ -24,7 +28,7 @@ echo -e "${YELLOW}🗄️ Applying database schema...${NC}"
 npx prisma db push
 
 echo -e "${YELLOW}🏗️ Building application (with memory limit: 1024MB)...${NC}"
-NODE_OPTIONS="--max-old-space-size=1024" npm run build
+NODE_OPTIONS="--max-old-space-size=1024" NEXT_TELEMETRY_DISABLED=1 npm run build
 
 echo -e "${YELLOW}🧹 Removing dev dependencies to save space...${NC}"
 npm prune --production
