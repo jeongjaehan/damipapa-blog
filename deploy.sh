@@ -14,8 +14,8 @@ if [ ! -f "package.json" ]; then
   exit 1
 fi
 
-echo -e "${YELLOW}📦 Installing production dependencies only...${NC}"
-NODE_ENV=production npm ci --only=production
+echo -e "${YELLOW}📦 Installing all dependencies (including dev dependencies for build)...${NC}"
+NODE_ENV=production npm ci
 
 echo -e "${YELLOW}🔧 Generating Prisma client...${NC}"
 npx prisma generate
@@ -25,6 +25,9 @@ npx prisma db push
 
 echo -e "${YELLOW}🏗️ Building application (with memory limit: 1024MB)...${NC}"
 NODE_OPTIONS="--max-old-space-size=1024" npm run build
+
+echo -e "${YELLOW}🧹 Removing dev dependencies to save space...${NC}"
+npm prune --production
 
 echo -e "${YELLOW}📊 Checking memory usage...${NC}"
 free -h

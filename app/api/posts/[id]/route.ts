@@ -4,10 +4,11 @@ import { verifyToken, getClientIp } from '@/lib/auth'
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: idParam } = await params
+    const id = parseInt(idParam)
     const ipAddress = getClientIp(request)
 
     // 조회수 증가 (유니크)
@@ -63,7 +64,7 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authHeader = request.headers.get('authorization')
@@ -84,7 +85,8 @@ export async function PUT(
       )
     }
 
-    const id = parseInt(params.id)
+    const { id: idParam } = await params
+    const id = parseInt(idParam)
     const data = await request.json()
 
     const updateData: any = {}
@@ -125,7 +127,7 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authHeader = request.headers.get('authorization')
@@ -146,7 +148,8 @@ export async function DELETE(
       )
     }
 
-    const id = parseInt(params.id)
+    const { id: idParam } = await params
+    const id = parseInt(idParam)
     await prisma.post.delete({ where: { id } })
 
     return NextResponse.json({ message: '삭제되었습니다' })

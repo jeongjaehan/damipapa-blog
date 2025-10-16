@@ -21,7 +21,7 @@ function HomeContent() {
     const loadPosts = async () => {
       setLoading(true)
       try {
-        const data = await getPosts(page, 10, tag, category)
+        const data = await getPosts(page, 10, tag)
         setPostsData(data)
       } catch (error) {
         console.error('포스트 로딩 실패:', error)

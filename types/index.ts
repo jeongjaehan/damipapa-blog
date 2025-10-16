@@ -16,6 +16,7 @@ export interface PostSummary {
   createdAt: string
   updatedAt: string
   viewCount: number
+  commentCount: number
 }
 
 export interface PostDetail {
