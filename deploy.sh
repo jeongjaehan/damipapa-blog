@@ -27,6 +27,9 @@ npx prisma generate
 echo -e "${YELLOW}🗄️ Applying database schema...${NC}"
 npx prisma db push
 
+echo -e "${YELLOW}🌱 Seeding initial data...${NC}"
+npm run prisma:seed
+
 echo -e "${YELLOW}🏗️ Building application (with memory limit: 1024MB)...${NC}"
 NODE_OPTIONS="--max-old-space-size=1024" NEXT_TELEMETRY_DISABLED=1 npm run build
 
