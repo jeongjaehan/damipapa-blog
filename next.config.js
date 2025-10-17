@@ -3,6 +3,10 @@ const nextConfig = {
   output: 'standalone',
   outputFileTracingRoot: process.cwd(),
   
+  // 정적 파일 서빙 설정
+  trailingSlash: false,
+  assetPrefix: '',
+  
   // 웹팩 설정으로 경로 별칭 해결
   webpack: (config) => {
     config.resolve.alias = {
@@ -31,6 +35,7 @@ const nextConfig = {
     deviceSizes: [640, 750, 828, 1080],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
     formats: ['image/webp'],
+    unoptimized: true, // 로컬 이미지 최적화 비활성화
     remotePatterns: [
       {
         protocol: 'http',

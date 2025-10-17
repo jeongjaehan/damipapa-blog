@@ -133,7 +133,7 @@ export const uploadFile = async (file: File): Promise<{ url: string; filename: s
 }
 
 export const getFileUrl = (filename: string): string => {
-  return `/uploads/${filename}`
+  return `/api/files/${filename}`
 }
 
 // Admin APIs
