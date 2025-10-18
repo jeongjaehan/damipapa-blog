@@ -8,9 +8,56 @@ import Footer from '@/components/layout/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+
 export const metadata: Metadata = {
-  title: '다미파파의 블로그',
-  description: 'Next.js 풀스택으로 만든 다미파파의 개인 블로그',
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: '다미파파의 블로그',
+    template: '%s | 다미파파의 블로그',
+  },
+  description: 'Next.js 풀스택으로 만든 다미파파의 개인 블로그. 개발, 기술, 일상에 대한 이야기를 공유합니다.',
+  keywords: ['블로그', '개발', '기술', 'Next.js', '프로그래밍'],
+  authors: [{ name: '다미파파' }],
+  creator: '다미파파',
+  publisher: '다미파파',
+  robots: {
+    index: true,
+    follow: true,
+    'max-image-preview': 'large',
+    'max-snippet': -1,
+    'max-video-preview': -1,
+    googleBot: 'index, follow',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'ko_KR',
+    url: baseUrl,
+    siteName: '다미파파의 블로그',
+    title: '다미파파의 블로그',
+    description: 'Next.js 풀스택으로 만든 다미파파의 개인 블로그',
+    images: [
+      {
+        url: `${baseUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: '다미파파의 블로그',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '다미파파의 블로그',
+    description: 'Next.js 풀스택으로 만든 다미파파의 개인 블로그',
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+  },
+  icons: {
+    icon: '/favicon.ico',
+  },
 }
 
 export default function RootLayout({

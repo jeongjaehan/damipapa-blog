@@ -1,50 +1,78 @@
-'use client'
+import type { Metadata } from 'next'
+import PostPageClient from './page-client'
 
-import { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { getPost } from '@/services/api'
-import { PostDetail as PostDetailType } from '@/types'
-import PostDetail from '@/components/post/PostDetail'
-import FacebookComments from '@/components/comment/FacebookComments'
-import Loading from '@/components/common/Loading'
+// 메타데이터 생성 (서버 사이드)
+async function getPostData(id: string) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+    const response = await fetch(`${baseUrl}/posts/${id}`, {
+      next: { revalidate: 60 },
+    })
+    if (!response.ok) return null
+    return response.json()
+  } catch (error) {
+    console.error('Failed to fetch post:', error)
+    return null
+  }
+}
 
-export default function PostPage() {
-  const params = useParams()
-  const router = useRouter()
-  const [post, setPost] = useState<PostDetailType | null>(null)
-  const [loading, setLoading] = useState(true)
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const post = await getPostData(id)
+  
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+  const postUrl = `${baseUrl}/posts/${id}`
 
-  useEffect(() => {
-    const loadPost = async () => {
-      try {
-        const data = await getPost(parseInt(params.id as string))
-        setPost(data)
-      } catch (error) {
-        console.error('포스트 로딩 실패:', error)
-        router.push('/')
-      } finally {
-        setLoading(false)
-      }
+  if (!post) {
+    return {
+      title: '포스트를 찾을 수 없습니다',
+      description: '요청한 포스트를 찾을 수 없습니다.',
     }
-
-    if (params.id) {
-      loadPost()
-    }
-  }, [params.id, router])
-
-  if (loading || !post) {
-    return <Loading />
   }
 
-  const postUrl = typeof window !== 'undefined' 
-    ? `${window.location.origin}/posts/${post.id}`
-    : `http://localhost:3000/posts/${post.id}`
+  const title = post.title
+  const description = post.content
+    ?.replace(/<[^>]*>/g, '')
+    ?.substring(0, 160) || '다미파파의 블로그'
+  
+  return {
+    title: title,
+    description: description,
+    keywords: post.tags?.join(', ') || [],
+    authors: [{ name: post.author?.name || '다미파파' }],
+    openGraph: {
+      type: 'article',
+      title: title,
+      description: description,
+      url: postUrl,
+      siteName: '다미파파의 블로그',
+      publishedTime: post.createdAt,
+      modifiedTime: post.updatedAt,
+      authors: [post.author?.name || '다미파파'],
+      tags: post.tags || [],
+      images: [
+        {
+          url: `${baseUrl}/og-image.png`,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: title,
+      description: description,
+      images: [`${baseUrl}/og-image.png`],
+    },
+    alternates: {
+      canonical: postUrl,
+    },
+  }
+}
 
-  return (
-    <div>
-      <PostDetail post={post} />
-      <FacebookComments url={postUrl} />
-    </div>
-  )
+export default async function PostPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  return <PostPageClient postId={id} />
 }
 

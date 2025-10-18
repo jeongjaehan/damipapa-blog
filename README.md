@@ -267,6 +267,90 @@ npx prisma studio
 - `/admin/posts/edit/{id}` - 포스트 편집
 - `/admin/profile/edit` - 프로필 편집
 
+## 🔍 SEO (검색 엔진 최적화)
+
+이 블로그는 다음과 같은 SEO 기능을 포함하고 있습니다:
+
+### 메타데이터
+- ✅ 동적 메타 태그 생성 (각 페이지마다 고유한 title, description)
+- ✅ Open Graph (OG) 태그 - 소셜 미디어 공유 최적화
+- ✅ Twitter 카드 - 트위터 공유 최적화
+- ✅ Canonical URL - 중복 콘텐츠 방지
+
+### 검색 엔진 지원
+- ✅ `robots.txt` - 크롤러 가이드라인
+- ✅ 동적 `sitemap.xml` - 모든 포스트 자동 등록
+- ✅ 구조화된 메타데이터 - 다국어 지원 (한국어)
+
+### 포스트 메타데이터
+- ✅ 포스트별 동적 제목 및 설명
+- ✅ 태그를 메타 키워드로 활용
+- ✅ 작성자 정보
+- ✅ 공개 날짜 및 수정 날짜
+
+### SEO 설정 가이드
+
+#### 1. 환경 변수 설정
+
+`.env.local` 또는 `.env` 파일에 다음을 추가하세요:
+
+```env
+# 블로그 기본 URL (검색 엔진에 등록할 주소)
+NEXT_PUBLIC_BASE_URL=https://yourblog.com
+
+# API URL (메타데이터 생성 시 사용)
+NEXT_PUBLIC_API_URL=https://yourblog.com/api
+```
+
+#### 2. Google Search Console 등록
+
+1. https://search.google.com/search-console에 방문
+2. 속성 추가 → 도메인 입력
+3. 자동으로 생성된 sitemap에 접근:
+   - `https://yourblog.com/sitemap.xml`
+4. Search Console에 sitemap 등록
+
+#### 3. Robots.txt 확인
+
+`/public/robots.txt` 파일이 자동으로 생성됩니다:
+- 모든 크롤러에 대해 블로그 콘텐츠 공개
+- 관리자 페이지(`/admin`) 및 검색 페이지(`/search`) 제외
+- 프로덕션 배포 시 Google 수집 속도 최적화
+
+#### 4. 메타 태그 커스터마이징
+
+루트 레이아웃 (`/app/layout.tsx`)에서 다음을 수정할 수 있습니다:
+
+```typescript
+// 블로그 기본 설명
+description: 'Next.js 풀스택으로 만든 다미파파의 개인 블로그. 개발, 기술, 일상에 대한 이야기를 공유합니다.',
+
+// 키워드
+keywords: ['블로그', '개발', '기술', 'Next.js', '프로그래밍'],
+
+// Open Graph 이미지 (SNS 공유 시 보일 이미지)
+images: [
+  {
+    url: `${baseUrl}/og-image.png`,  // public 폴더에 og-image.png 추가 필요
+    width: 1200,
+    height: 630,
+  },
+]
+```
+
+#### 5. OG 이미지 추가 (선택사항)
+
+1. 1200x630px 크기의 이미지 생성 (SNS 공유 최적 크기)
+2. 파일명을 `og-image.png`로 저장
+3. `/public/` 폴더에 배치
+
+#### 6. 포스트별 SEO 최적화 팁
+
+- ✅ 포스트 제목을 명확하고 키워드 포함하게
+- ✅ 첫 문장을 설명적으로 (검색 결과에 노출됨)
+- ✅ 관련 태그를 추가 (키워드로 활용)
+- ✅ 이미지 추가 (소셜 공유 시 더 매력적)
+
 ## 📝 개발 가이드
 
 ### 새로운 기능 추가
@@ -318,14 +402,15 @@ docker-compose logs mysql
 **1. 스왑 메모리 설정 (필수!)**
 
 ```bash
-# 4GB 스왑 생성
+# 4GB 스외 생성
 sudo dd if=/dev/zero of=/swapfile bs=128M count=32
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
 echo '/swapfile swap swap defaults 0 0' | sudo tee -a /etc/fstab
 
-# 스왑 사용 우선순위 조정
+# 스외 사용 우선순위 조정
+
 sudo sysctl vm.swappiness=10
 echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
 
@@ -394,7 +479,7 @@ pm2 save
 - **PM2 재시작 임계값**: 800MB
 - **Worker threads**: 비활성화
 - **이미지 최적화**: 제한적 사용
-- **스왑 메모리**: 4GB 활용
+- **스외 메모리**: 4GB 활용
 
 #### 모니터링
 
@@ -433,7 +518,7 @@ docker-compose -f docker-compose.yml up -d --build
 - **MySQL (로컬)**: 100-200MB
 - **시스템**: 100-150MB
 - **여유**: 50-100MB
-- **스왑**: 필요시 4GB
+- **스외**: 필요시 4GB
 
 **총 1GB RAM으로 안정적 운영 가능!** ✅
 

@@ -1,0 +1,25 @@
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Disallow search index pages
+Disallow: /search
+Disallow: /admin
+Disallow: /auth
+Disallow: /api
+
+# Sitemap location
+# Sitemap: https://example.com/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1
+
+# Google-specific rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing-specific rules  
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
