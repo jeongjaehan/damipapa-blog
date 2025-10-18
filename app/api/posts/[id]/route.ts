@@ -93,7 +93,7 @@ export async function PUT(
     if (data.title !== undefined) updateData.title = data.title
     if (data.content !== undefined) updateData.content = data.content
     if (data.tags !== undefined) updateData.tags = JSON.stringify(data.tags)
-    if (data.published !== undefined) updateData.published = data.published
+    updateData.published = true
 
     const post = await prisma.post.update({
       where: { id },

@@ -22,19 +22,17 @@ export async function GET(request: Request) {
       )
     }
 
-    const [totalPosts, publishedPosts, posts] = await Promise.all([
+    const [totalPosts, posts] = await Promise.all([
       prisma.post.count(),
-      prisma.post.count({ where: { published: true } }),
       prisma.post.findMany({ select: { viewCount: true } }),
     ])
 
     const totalViews = posts.reduce((sum, post) => sum + post.viewCount, 0)
-    const draftPosts = totalPosts - publishedPosts
 
     return NextResponse.json({
       totalPosts,
-      publishedPosts,
-      draftPosts,
+      publishedPosts: totalPosts,
+      draftPosts: 0,
       totalViews,
     })
   } catch (error) {

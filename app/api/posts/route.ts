@@ -96,7 +96,7 @@ export async function POST(request: Request) {
         title,
         content,
         tags: tags ? JSON.stringify(tags) : null,
-        published: published || false,
+        published: true,
         authorId: user.id,
       },
       include: { author: true },

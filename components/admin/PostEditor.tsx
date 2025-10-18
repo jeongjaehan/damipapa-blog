@@ -23,7 +23,6 @@ export default function PostEditor({ post }: PostEditorProps) {
   const [allTags, setAllTags] = useState<string[]>([])
   const [filteredTags, setFilteredTags] = useState<string[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
-  const [published, setPublished] = useState(true) // 기본값을 true로 변경
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -93,7 +92,7 @@ export default function PostEditor({ post }: PostEditorProps) {
         title,
         content,
         tags,
-        published,
+        published: true,
       }
 
       if (post) {
@@ -199,21 +198,6 @@ export default function PostEditor({ post }: PostEditorProps) {
         />
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={published}
-            onChange={(e) => setPublished(e.target.checked)}
-            className="w-4 h-4"
-          />
-          <span className="text-sm font-medium">발행하기</span>
-        </label>
-        <p className="text-sm text-gray-500 mt-1">
-          체크하지 않으면 임시 저장됩니다
-        </p>
-      </div>
-
       <div className="flex justify-end gap-3">
         <Button
           type="button"
@@ -226,7 +210,7 @@ export default function PostEditor({ post }: PostEditorProps) {
         </Button>
         <Button type="submit" disabled={loading} className="gap-2">
           <Save className="w-4 h-4" />
-          {loading ? '저장 중...' : post ? '수정' : '작성'}
+          {loading ? '저장 중...' : post ? '수정' : '발행'}
         </Button>
       </div>
     </form>
