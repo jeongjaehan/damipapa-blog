@@ -147,7 +147,10 @@ export default function PostDetail({ post }: PostDetailProps) {
                   if (src?.includes('youtube.com')) {
                     return <YoutubeEmbed src={src} />
                   }
-                  // Regular image
+                  // Regular image - only render if src is valid
+                  if (!src) {
+                    return null
+                  }
                   return <img src={src} alt={alt} {...props} />
                 },
                 iframe: ({ node, src, ...props }: any) => {
@@ -165,6 +168,7 @@ export default function PostDetail({ post }: PostDetailProps) {
                     const urlMatch = content.match(/(https?:\/\/)?(www\.)?(youtube|youtu\.be)\S+/i)
                     if (urlMatch) {
                       const url = urlMatch[0]
+                      // Return YouTube embed without p tag wrapper to avoid HTML structure error
                       return <YoutubeEmbed src={url} />
                     }
                   }

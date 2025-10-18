@@ -4,11 +4,15 @@ import PostPageClient from './page-client'
 // 메타데이터 생성 (서버 사이드)
 async function getPostData(id: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
-    const response = await fetch(`${baseUrl}/posts/${id}`, {
+    // Use absolute URL for server-side fetch
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+    const response = await fetch(`${apiUrl}/posts/${id}`, {
       next: { revalidate: 60 },
     })
-    if (!response.ok) return null
+    if (!response.ok) {
+      console.error(`Failed to fetch post ${id}: ${response.status} ${response.statusText}`)
+      return null
+    }
     return response.json()
   } catch (error) {
     console.error('Failed to fetch post:', error)

@@ -111,6 +111,9 @@ export default function TipTapEditor({
         class:
           'prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none focus:outline-none min-h-[400px] px-4 py-3',
       },
+      handlePaste: (view, event) => {
+        return handlePaste(view, event)
+      },
     },
   })
 
@@ -159,6 +162,32 @@ export default function TipTapEditor({
     if (url) {
       editor.chain().focus().setYoutubeVideo({ src: url }).run()
     }
+  }
+
+  // Handle paste events to upload base64 images
+  const handlePaste = (view: any, event: ClipboardEvent) => {
+    const items = event.clipboardData?.items
+    if (!items) return false
+
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        event.preventDefault()
+        const file = item.getAsFile()
+        if (file) {
+          // Upload asynchronously without waiting (fire and forget)
+          onImageUpload(file)
+            .then((url) => {
+              editor.chain().focus().setImage({ src: url }).run()
+            })
+            .catch((error) => {
+              console.error('Image upload failed:', error)
+              alert('이미지 업로드에 실패했습니다.')
+            })
+        }
+        return true
+      }
+    }
+    return false
   }
 
   return (
