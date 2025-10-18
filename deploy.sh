@@ -18,8 +18,12 @@ fi
 export NEXT_TELEMETRY_DISABLED=1
 export NODE_ENV=production
 
-echo -e "${YELLOW}📦 Installing ALL dependencies (including dev for build & seed)...${NC}"
-npm ci  # NODE_ENV=production 제거 - dev dependencies 포함
+echo -e "${YELLOW}📦 Installing dependencies (production mode)...${NC}"
+npm ci
+
+# ✅ Seed 실행을 위해 tsx만 설치
+echo -e "${YELLOW}🌱 Installing tsx for seeding...${NC}"
+npm install --save-dev tsx
 
 echo -e "${YELLOW}🔧 Generating Prisma client...${NC}"
 npx prisma generate
@@ -30,11 +34,12 @@ npx prisma db push
 echo -e "${YELLOW}🌱 Seeding initial data...${NC}"
 npm run prisma:seed
 
-echo -e "${YELLOW}🏗️ Building application (with memory limit: 1024MB)...${NC}"
-NODE_OPTIONS="--max-old-space-size=1024" NEXT_TELEMETRY_DISABLED=1 npm run build
-
+# ✅ Seed 후 dev dependencies 제거
 echo -e "${YELLOW}🧹 Removing dev dependencies to save space...${NC}"
 npm prune --production
+
+echo -e "${YELLOW}🏗️ Building application (with memory limit: 1024MB)...${NC}"
+NODE_OPTIONS="--max-old-space-size=1024" NEXT_TELEMETRY_DISABLED=1 npm run build
 
 echo -e "${YELLOW}📊 Checking memory usage...${NC}"
 free -h
