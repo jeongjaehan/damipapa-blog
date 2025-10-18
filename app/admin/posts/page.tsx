@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import { getAllPostsForAdmin, deletePost } from '@/services/api'
-import { PageResponse, PostSummary } from '@/types'
+import { PostSummary } from '@/types'
 import { formatDate } from '@/utils/date'
 import Loading from '@/components/common/Loading'
 import Link from 'next/link'
@@ -14,8 +14,12 @@ import { PenSquare } from 'lucide-react'
 export default function AdminPostsPage() {
   const { isAdmin, loading: authLoading } = useAuth()
   const router = useRouter()
-  const [posts, setPosts] = useState<PageResponse<PostSummary> | null>(null)
+  const [allPosts, setAllPosts] = useState<PostSummary[]>([])
   const [loading, setLoading] = useState(true)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const [currentPage, setCurrentPage] = useState(0)
+  const observerTarget = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!authLoading && !isAdmin) {
@@ -24,18 +28,35 @@ export default function AdminPostsPage() {
     }
 
     if (isAdmin) {
-      loadPosts()
+      loadPosts(0, true)
     }
   }, [isAdmin, authLoading, router])
 
-  const loadPosts = async () => {
+  const loadPosts = async (pageNum: number, isInitial: boolean = false) => {
+    if (pageNum === 0) {
+      setLoading(true)
+    } else {
+      setIsLoadingMore(true)
+    }
+
     try {
-      const data = await getAllPostsForAdmin()
-      setPosts(data)
+      const data = await getAllPostsForAdmin(pageNum, 10)
+      
+      if (isInitial) {
+        setAllPosts(data.content)
+        console.log('📌 초기 로드:', { page: pageNum, count: data.content.length, last: data.last })
+      } else {
+        setAllPosts((prev) => [...prev, ...data.content])
+        console.log('📌 추가 로드:', { page: pageNum, count: data.content.length, last: data.last })
+      }
+
+      setCurrentPage(pageNum)
+      setHasMore(!data.last)
     } catch (error) {
-      console.error('포스트 로딩 실패:', error)
+      console.error('❌ 포스트 로딩 실패:', error)
     } finally {
       setLoading(false)
+      setIsLoadingMore(false)
     }
   }
 
@@ -46,14 +67,40 @@ export default function AdminPostsPage() {
 
     try {
       await deletePost(id)
-      loadPosts()
+      setAllPosts((prev) => prev.filter((post) => post.id !== id))
     } catch (error) {
       console.error('포스트 삭제 실패:', error)
       alert('포스트 삭제에 실패했습니다')
     }
   }
 
-  if (authLoading || loading) {
+  // Intersection Observer
+  useEffect(() => {
+    if (!observerTarget.current) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const isIntersecting = entries[0].isIntersecting
+        console.log('👀 Observer 감지:', { isIntersecting, hasMore, isLoadingMore })
+        
+        if (isIntersecting && hasMore && !isLoadingMore && !loading) {
+          console.log('🚀 다음 페이지 로드 트리거')
+          loadPosts(currentPage + 1, false)
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    observer.observe(observerTarget.current)
+
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current)
+      }
+    }
+  }, [currentPage, hasMore, isLoadingMore, loading])
+
+  if (authLoading || (loading && allPosts.length === 0)) {
     return <Loading />
   }
 
@@ -98,7 +145,7 @@ export default function AdminPostsPage() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {posts?.content.map((post) => (
+            {allPosts.map((post) => (
               <tr key={post.id}>
                 <td className="px-6 py-4">
                   <Link
@@ -136,12 +183,23 @@ export default function AdminPostsPage() {
           </tbody>
         </table>
 
-        {posts?.content.length === 0 && (
+        {allPosts.length === 0 && !loading && (
           <div className="text-center py-12 text-gray-500">
             <p>포스트가 없습니다</p>
           </div>
         )}
       </div>
+
+      {/* Intersection Observer 트리거 */}
+      <div ref={observerTarget} className="h-20 flex items-center justify-center mt-8">
+        {isLoadingMore && <p className="text-gray-500">로딩 중...</p>}
+      </div>
+
+      {!hasMore && allPosts.length > 0 && (
+        <div className="text-center py-8 text-gray-500">
+          <p className="text-sm">더 이상 포스트가 없습니다</p>
+        </div>
+      )}
     </div>
   )
 }
