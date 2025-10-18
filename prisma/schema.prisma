@@ -60,3 +60,15 @@ model Profile {
   @@map("profiles")
 }
 
+model Template {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(100)
+  description String   @db.VarChar(500)
+  tags        String?  @db.Text // JSON array stringified
+  content     String   @db.LongText
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("templates")
+}
+

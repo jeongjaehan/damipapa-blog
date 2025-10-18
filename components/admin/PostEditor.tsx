@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter} from 'next/navigation'
-import { createPost, updatePost, uploadFile, getTags } from '@/services/api'
-import { PostDetail } from '@/types'
+import { createPost, updatePost, uploadFile, getTags, getTemplates } from '@/services/api'
+import { PostDetail, Template } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -23,20 +23,26 @@ export default function PostEditor({ post }: PostEditorProps) {
   const [allTags, setAllTags] = useState<string[]>([])
   const [filteredTags, setFilteredTags] = useState<string[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const [templates, setTemplates] = useState<Template[]>([])
+  const [selectedTemplate, setSelectedTemplate] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  // 기존 태그 목록 로드
+  // 기존 태그 목록 및 템플릿 로드
   useEffect(() => {
-    const loadTags = async () => {
+    const loadData = async () => {
       try {
-        const tagsData = await getTags()
+        const [tagsData, templatesData] = await Promise.all([
+          getTags(),
+          getTemplates(),
+        ])
         setAllTags(tagsData)
+        setTemplates(templatesData)
       } catch (error) {
-        console.error('태그 로딩 실패:', error)
+        console.error('데이터 로딩 실패:', error)
       }
     }
-    loadTags()
+    loadData()
   }, [])
 
   const handleTagInputChange = (value: string) => {
@@ -66,6 +72,20 @@ export default function PostEditor({ post }: PostEditorProps) {
 
   const handleTagRemove = (tagToRemove: string) => {
     setTags(tags.filter((tag) => tag !== tagToRemove))
+  }
+
+  const handleApplyTemplate = (templateId: string) => {
+    const template = templates.find(t => t.id === parseInt(templateId))
+    if (template) {
+      setContent(template.content)
+      setTags(template.tags || [])
+      setSelectedTemplate(templateId)
+    }
+  }
+
+  const handleClearTemplate = () => {
+    setContent('')
+    setSelectedTemplate('')
   }
 
   const handleImageUpload = async (file: File): Promise<string> => {
@@ -186,6 +206,29 @@ export default function PostEditor({ post }: PostEditorProps) {
               </span>
             ))}
           </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <label className="block text-sm font-medium mb-4">템플릿 (선택사항)</label>
+        <div className="flex gap-2 mb-4">
+          <select
+            value={selectedTemplate}
+            onChange={(e) => handleApplyTemplate(e.target.value)}
+            className="flex-1 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
+          >
+            <option value="">템플릿 선택...</option>
+            {templates.map((template) => (
+              <option key={template.id} value={template.id}>
+                {template.name} - {template.description}
+              </option>
+            ))}
+          </select>
+          {selectedTemplate && (
+            <Button type="button" variant="outline" onClick={handleClearTemplate} size="sm">
+              초기화
+            </Button>
+          )}
         </div>
       </div>
 

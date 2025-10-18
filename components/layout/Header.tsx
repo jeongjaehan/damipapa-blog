@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Menu, X, PenSquare, LayoutDashboard } from 'lucide-react'
+import { Menu, X, PenSquare, LayoutDashboard, Settings } from 'lucide-react'
 
 export default function Header() {
   const { user, isAuthenticated, isAdmin, logout } = useAuth()
@@ -47,6 +47,14 @@ export default function Header() {
                     <Button size="sm" className="gap-2">
                       <PenSquare className="w-4 h-4" />
                       글쓰기
+                    </Button>
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link href="/admin/templates">
+                    <Button size="sm" className="gap-2">
+                      <Settings className="w-4 h-4" />
+                      템플릿 관리
                     </Button>
                   </Link>
                 )}
@@ -125,6 +133,13 @@ export default function Header() {
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       글쓰기
+                    </Link>
+                    <Link
+                      href="/admin/templates"
+                      className="block py-2 bg-primary-600 text-white px-4 rounded hover:bg-primary-700"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      템플릿 관리
                     </Link>
                   </>
                 )}

@@ -10,6 +10,9 @@ import type {
   DashboardStats,
   User,
   Profile,
+  Template,
+  CreateTemplateRequest,
+  UpdateTemplateRequest,
 } from '@/types'
 
 const API_URL = '/api'  // Next.js API Routes 사용
@@ -161,6 +164,31 @@ export const getProfile = async (): Promise<Profile> => {
 export const updateProfile = async (content: string): Promise<Profile> => {
   const response = await api.put<Profile>('/profile', { content })
   return response.data
+}
+
+// Template APIs
+export const getTemplates = async (): Promise<Template[]> => {
+  const response = await api.get<Template[]>('/templates')
+  return response.data
+}
+
+export const getTemplate = async (id: number): Promise<Template> => {
+  const response = await api.get<Template>(`/admin/templates/${id}`)
+  return response.data
+}
+
+export const createTemplate = async (data: CreateTemplateRequest): Promise<Template> => {
+  const response = await api.post<Template>('/admin/templates', data)
+  return response.data
+}
+
+export const updateTemplate = async (id: number, data: UpdateTemplateRequest): Promise<Template> => {
+  const response = await api.put<Template>(`/admin/templates/${id}`, data)
+  return response.data
+}
+
+export const deleteTemplate = async (id: number): Promise<void> => {
+  await api.delete(`/admin/templates/${id}`)
 }
 
 export default api

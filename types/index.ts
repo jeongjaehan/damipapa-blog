@@ -84,3 +84,27 @@ export interface Profile {
   }
 }
 
+export interface Template {
+  id: number
+  name: string
+  description: string
+  tags: string[]
+  content: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreateTemplateRequest {
+  name: string
+  description: string
+  tags: string[]
+  content: string
+}
+
+export interface UpdateTemplateRequest {
+  name?: string
+  description?: string
+  tags?: string[]
+  content?: string
+}
+
