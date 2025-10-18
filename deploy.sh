@@ -18,8 +18,8 @@ fi
 export NEXT_TELEMETRY_DISABLED=1
 export NODE_ENV=production
 
-echo -e "${YELLOW}📦 Installing all dependencies (including dev dependencies for build)...${NC}"
-NODE_ENV=production npm ci
+echo -e "${YELLOW}📦 Installing ALL dependencies (including dev for build & seed)...${NC}"
+npm ci  # NODE_ENV=production 제거 - dev dependencies 포함
 
 echo -e "${YELLOW}🔧 Generating Prisma client...${NC}"
 npx prisma generate
