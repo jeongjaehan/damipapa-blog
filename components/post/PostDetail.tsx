@@ -17,6 +17,43 @@ interface PostDetailProps {
   post: PostDetailType
 }
 
+// YouTube iframe renderer component
+const YoutubeEmbed = ({ src }: { src: string }) => {
+  // Extract video ID from various YouTube URL formats
+  let videoId = ''
+  
+  if (src.includes('/embed/')) {
+    videoId = src.split('/embed/')[1]?.split('?')[0] || ''
+  } else if (src.includes('watch?v=')) {
+    videoId = src.split('watch?v=')[1]?.split('&')[0] || ''
+  } else if (src.includes('youtu.be/')) {
+    videoId = src.split('youtu.be/')[1]?.split('?')[0] || ''
+  }
+
+  if (!videoId) return null
+
+  const embedUrl = `https://www.youtube.com/embed/${videoId}`
+
+  return (
+    <div className="youtube-embed-container my-6" style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
+      <iframe
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          border: 'none',
+        }}
+        src={embedUrl}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        title="YouTube video"
+      />
+    </div>
+  )
+}
+
 export default function PostDetail({ post }: PostDetailProps) {
   const { isAdmin } = useAuth()
   const router = useRouter()
@@ -94,7 +131,47 @@ export default function PostDetail({ post }: PostDetailProps) {
 
         <div className="px-8 py-12">
           <div className="markdown prose prose-lg">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown 
+              remarkPlugins={[remarkGfm]}
+              components={{
+                a: ({ node, href, children, ...props }) => {
+                  // Check if link is a YouTube URL
+                  if (href?.includes('youtube.com') || href?.includes('youtu.be')) {
+                    return <YoutubeEmbed src={href} />
+                  }
+                  // Regular link
+                  return <a href={href} {...props}>{children}</a>
+                },
+                img: ({ node, src, alt, ...props }) => {
+                  // Check if it's a YouTube embed markdown
+                  if (src?.includes('youtube.com')) {
+                    return <YoutubeEmbed src={src} />
+                  }
+                  // Regular image
+                  return <img src={src} alt={alt} {...props} />
+                },
+                iframe: ({ node, src, ...props }: any) => {
+                  // Handle iframe tags directly (for YouTube embeds)
+                  if (src?.includes('youtube.com/embed')) {
+                    return <YoutubeEmbed src={src} />
+                  }
+                  return null
+                },
+                p: ({ node, children }: any) => {
+                  // Check if paragraph contains YouTube link and convert it
+                  const content = String(children)
+                  if (content.includes('youtube.com') || content.includes('youtu.be')) {
+                    // Extract YouTube URL from text
+                    const urlMatch = content.match(/(https?:\/\/)?(www\.)?(youtube|youtu\.be)\S+/i)
+                    if (urlMatch) {
+                      const url = urlMatch[0]
+                      return <YoutubeEmbed src={url} />
+                    }
+                  }
+                  return <p>{children}</p>
+                },
+              }}
+            >
               {post.content}
             </ReactMarkdown>
           </div>

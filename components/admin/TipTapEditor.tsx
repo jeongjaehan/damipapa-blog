@@ -7,6 +7,7 @@ import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import Youtube from '@tiptap/extension-youtube'
 import { common, createLowlight } from 'lowlight'
 import TurndownService from 'turndown'
 import { marked } from 'marked'
@@ -27,6 +28,7 @@ import {
   Link as LinkIcon,
   Image as ImageIcon,
   Code2,
+  Play,
 } from 'lucide-react'
 
 const lowlight = createLowlight(common)
@@ -47,6 +49,20 @@ const turndownService = new TurndownService({
 turndownService.addRule('strikethrough', {
   filter: ['del', 's'],
   replacement: (content: string) => `~~${content}~~`,
+})
+
+// YouTube iframe to markdown conversion
+turndownService.addRule('youtube', {
+  filter: (node: any) => {
+    return (
+      node.tagName === 'IFRAME' &&
+      node.getAttribute('src')?.includes('youtube.com/embed')
+    )
+  },
+  replacement: (content: string, node: any) => {
+    const src = node.getAttribute('src') || ''
+    return `\n${src}\n\n`
+  },
 })
 
 export default function TipTapEditor({
@@ -74,6 +90,14 @@ export default function TipTapEditor({
       }),
       CodeBlockLowlight.configure({
         lowlight,
+      }),
+      Youtube.configure({
+        // This extension is not yet available in tiptap-extensions,
+        // so we'll keep it commented out or remove it if not needed.
+        // For now, we'll just add the import.
+        // HTMLAttributes: {
+        //   class: 'youtube-iframe',
+        // },
       }),
     ],
     content: content ? marked.parse(content) as string : '',
@@ -128,6 +152,13 @@ export default function TipTapEditor({
       }
     }
     input.click()
+  }
+
+  const addYoutube = () => {
+    const url = window.prompt('YouTube URL을 입력하세요:\n예: https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+    if (url) {
+      editor.chain().focus().setYoutubeVideo({ src: url }).run()
+    }
   }
 
   return (
@@ -275,6 +306,15 @@ export default function TipTapEditor({
           title="이미지"
         >
           <ImageIcon className="w-4 h-4" />
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={addYoutube}
+          title="유튜브"
+        >
+          <Play className="w-4 h-4" />
         </Button>
 
         <div className="w-px h-6 bg-gray-300 mx-1" />
