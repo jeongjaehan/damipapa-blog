@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 import PostPageClient from './page-client'
+import { getApiUrl } from '@/lib/utils'
 
 // 메타데이터 생성 (서버 사이드)
 async function getPostData(id: string) {
   try {
-    // Use absolute URL for server-side fetch
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+    // 공통 API URL 함수 사용
+    const apiUrl = getApiUrl()
     const response = await fetch(`${apiUrl}/posts/${id}`, {
       next: { revalidate: 60 },
     })

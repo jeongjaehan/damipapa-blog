@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     const take = size
 
     const where = {
-      published: true,
+      isPrivate: false,
       OR: [
         { title: { contains: keyword } },
         { content: { contains: keyword } },

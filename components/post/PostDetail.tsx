@@ -11,7 +11,7 @@ import { deletePost } from '@/services/api'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { Eye, Calendar, Edit, Trash2 } from 'lucide-react'
+import { Eye, Calendar, Edit, Trash2, EyeOff } from 'lucide-react'
 
 interface PostDetailProps {
   post: PostDetailType
@@ -76,49 +76,64 @@ export default function PostDetail({ post }: PostDetailProps) {
   return (
     <article className="max-w-4xl mx-auto">
       <div className="bg-white rounded-lg shadow-sm border border-stone-200 overflow-hidden">
-        <header className="px-8 py-12 bg-gradient-to-b from-stone-50 to-white">
-          <div className="flex justify-between items-start mb-6">
-            <h1 className="text-5xl font-bold text-gray-900 leading-tight flex-1 tracking-tight">
-              {post.title}
-            </h1>
-            {isAdmin && (
-              <div className="flex gap-2 ml-6">
-                <Link href={`/admin/posts/edit/${post.id}`}>
-                  <Button size="sm" variant="outline" className="gap-2">
-                    <Edit className="w-4 h-4" />
-                    수정
-                  </Button>
-                </Link>
-                <Button size="sm" variant="destructive" onClick={handleDelete} className="gap-2">
-                  <Trash2 className="w-4 h-4" />
-                  삭제
+        <header className="px-4 sm:px-8 py-8 sm:py-12 bg-gradient-to-b from-stone-50 to-white">
+          {/* 제목 - 모바일 친화적 크기 */}
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight tracking-tight mb-6">
+            {post.title}
+          </h1>
+          
+          {/* 관리자 액션 버튼 - 모바일 친화적 배치 */}
+          {isAdmin && (
+            <div className="flex gap-2 mb-6 sm:justify-end">
+              <Link href={`/admin/posts/edit/${post.id}`}>
+                <Button size="sm" variant="outline" className="gap-2 w-full sm:w-auto">
+                  <Edit className="w-4 h-4" />
+                  수정
                 </Button>
-              </div>
-            )}
-          </div>
+              </Link>
+              <Button size="sm" variant="destructive" onClick={handleDelete} className="gap-2 w-full sm:w-auto">
+                <Trash2 className="w-4 h-4" />
+                삭제
+              </Button>
+            </div>
+          )}
 
-          <div className="flex items-center gap-4 text-sm text-gray-600 mb-6">
-            <span className="font-medium text-gray-900">{post.author.name}</span>
-            <span className="flex items-center gap-1.5">
-              <Calendar className="w-4 h-4" />
-              {formatFullDate(post.createdAt)}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Eye className="w-4 h-4" />
-              {post.viewCount.toLocaleString()} 조회
-            </span>
-            {post.createdAt !== post.updatedAt && (
-              <span className="text-xs text-gray-500">
-                (수정됨: {formatFullDate(post.updatedAt)})
+          {/* 메타데이터 - 모바일 친화적 배치 */}
+          <div className="space-y-3 mb-6">
+            <div className="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
+              <span className="font-medium text-gray-900">{post.author.name}</span>
+              <span className="flex items-center gap-1.5">
+                <Calendar className="w-4 h-4" />
+                {formatFullDate(post.createdAt)}
               </span>
-            )}
+              <span className="flex items-center gap-1.5">
+                <Eye className="w-4 h-4" />
+                {post.viewCount.toLocaleString()} 조회
+              </span>
+            </div>
+            
+            {/* 비공개 포스트 배지와 수정일시 */}
+            <div className="flex items-center gap-2 flex-wrap">
+              {post.isPrivate && isAdmin && (
+                <span className="flex items-center gap-1 px-2 py-1 bg-red-100 text-red-800 rounded text-xs">
+                  <EyeOff className="w-3 h-3" />
+                  비공개 포스트
+                </span>
+              )}
+              {post.createdAt !== post.updatedAt && (
+                <span className="text-xs text-gray-500">
+                  (수정됨: {formatFullDate(post.updatedAt)})
+                </span>
+              )}
+            </div>
           </div>
 
+          {/* 태그 - 모바일 친화적 배치 */}
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {post.tags.map((tag) => (
                 <Link key={tag} href={`/?tag=${tag}`}>
-                  <Badge variant="outline" className="border-primary-200 text-primary-700 hover:bg-primary-50">
+                  <Badge variant="outline" className="border-primary-200 text-primary-700 hover:bg-primary-50 text-sm">
                     #{tag}
                   </Badge>
                 </Link>
@@ -129,7 +144,7 @@ export default function PostDetail({ post }: PostDetailProps) {
 
         <Separator />
 
-        <div className="px-8 py-12">
+        <div className="px-4 sm:px-8 py-8 sm:py-12">
           <div className="markdown prose prose-lg">
             <ReactMarkdown 
               remarkPlugins={[remarkGfm]}

@@ -19,6 +19,7 @@ export default function PostEditor({ post }: PostEditorProps) {
   const [title, setTitle] = useState(post?.title || '')
   const [content, setContent] = useState(post?.content || '')
   const [tags, setTags] = useState<string[]>(post?.tags ? Array.from(post.tags) : [])
+  const [isPrivate, setIsPrivate] = useState(post?.isPrivate || false)
   const [tagInput, setTagInput] = useState('')
   const [allTags, setAllTags] = useState<string[]>([])
   const [filteredTags, setFilteredTags] = useState<string[]>([])
@@ -112,7 +113,7 @@ export default function PostEditor({ post }: PostEditorProps) {
         title,
         content,
         tags,
-        published: true,
+        isPrivate,
       }
 
       if (post) {
@@ -206,6 +207,21 @@ export default function PostEditor({ post }: PostEditorProps) {
               </span>
             ))}
           </div>
+        </div>
+
+        <div>
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={isPrivate}
+              onChange={(e) => setIsPrivate(e.target.checked)}
+              className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+            />
+            <span className="text-sm font-medium text-gray-700">나만 보기 (비공개)</span>
+          </label>
+          <p className="text-xs text-gray-500 mt-1">
+            체크하면 관리자만 볼 수 있는 비공개 포스트로 설정됩니다.
+          </p>
         </div>
       </div>
 

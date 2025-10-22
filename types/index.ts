@@ -17,6 +17,8 @@ export interface PostSummary {
   updatedAt: string
   viewCount: number
   commentCount: number
+  isPrivate?: boolean
+  secretToken?: string
 }
 
 export interface PostDetail {
@@ -28,6 +30,8 @@ export interface PostDetail {
   createdAt: string
   updatedAt: string
   viewCount: number
+  isPrivate?: boolean
+  secretToken?: string
 }
 
 export interface PageResponse<T> {
@@ -54,20 +58,19 @@ export interface CreatePostRequest {
   title: string
   content: string
   tags: string[]
-  published: boolean
+  isPrivate?: boolean
 }
 
 export interface UpdatePostRequest {
   title?: string
   content?: string
   tags?: string[]
-  published?: boolean
+  isPrivate?: boolean
 }
 
 export interface DashboardStats {
   totalPosts: number
-  publishedPosts: number
-  draftPosts: number
+  privatePosts: number
   totalViews: number
 }
 

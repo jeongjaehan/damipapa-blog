@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { getPost } from '@/services/api'
 import { PostDetail as PostDetailType } from '@/types'
 import PostDetail from '@/components/post/PostDetail'
@@ -10,13 +10,15 @@ import Loading from '@/components/common/Loading'
 
 export default function PostPageClient({ postId }: { postId: string }) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [post, setPost] = useState<PostDetailType | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const loadPost = async () => {
       try {
-        const data = await getPost(parseInt(postId))
+        const token = searchParams.get('token')
+        const data = await getPost(parseInt(postId), token || undefined)
         setPost(data)
       } catch (error) {
         console.error('포스트 로딩 실패:', error)
@@ -29,7 +31,7 @@ export default function PostPageClient({ postId }: { postId: string }) {
     if (postId) {
       loadPost()
     }
-  }, [postId, router])
+  }, [postId, router, searchParams])
 
   if (loading || !post) {
     return <Loading />
@@ -42,7 +44,7 @@ export default function PostPageClient({ postId }: { postId: string }) {
   return (
     <div>
       <PostDetail post={post} />
-      <FacebookComments url={postUrl} />
+      {!post.isPrivate && <FacebookComments url={postUrl} />}
     </div>
   )
 }

@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     const take = size
 
     // 필터 조건
-    const where: any = { published: true }
+    const where: any = { isPrivate: false }
     
     if (tag) {
       where.tags = { contains: tag }
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const { title, content, tags, published } = await request.json()
+    const { title, content, tags, isPrivate } = await request.json()
 
     const user = await prisma.user.findUnique({
       where: { email: payload.email },
@@ -91,14 +91,18 @@ export async function POST(request: Request) {
       )
     }
 
+    // 비공개 포스트인 경우 secretToken 생성
+    const secretToken = isPrivate ? crypto.randomUUID() : null
+
     const post = await prisma.post.create({
       data: {
         title,
         content,
         tags: tags ? JSON.stringify(tags) : null,
-        published: true,
+        isPrivate: isPrivate || false,
+        secretToken,
         authorId: user.id,
-      },
+      } as any,
       include: { author: true },
     })
 
@@ -116,6 +120,8 @@ export async function POST(request: Request) {
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       viewCount: post.viewCount,
+      isPrivate: (post as any).isPrivate,
+      secretToken: (post as any).secretToken,
     })
   } catch (error) {
     console.error('Create post error:', error)

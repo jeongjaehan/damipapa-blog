@@ -14,8 +14,9 @@ import type {
   CreateTemplateRequest,
   UpdateTemplateRequest,
 } from '@/types'
+import { getApiUrl } from '@/lib/utils'
 
-const API_URL = '/api'  // Next.js API Routes 사용
+const API_URL = getApiUrl()
 
 const api = axios.create({
   baseURL: API_URL,
@@ -77,8 +78,9 @@ export const getPosts = async (
   return response.data
 }
 
-export const getPost = async (id: number): Promise<PostDetail> => {
-  const response = await api.get<PostDetail>(`/posts/${id}`)
+export const getPost = async (id: number, token?: string): Promise<PostDetail> => {
+  const url = token ? `/posts/${id}?token=${encodeURIComponent(token)}` : `/posts/${id}`
+  const response = await api.get<PostDetail>(url)
   return response.data
 }
 

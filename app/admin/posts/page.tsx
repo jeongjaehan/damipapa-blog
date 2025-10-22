@@ -1,19 +1,22 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { getAllPostsForAdmin, deletePost } from '@/services/api'
 import { PostSummary } from '@/types'
 import { formatDate } from '@/utils/date'
 import Loading from '@/components/common/Loading'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { PenSquare } from 'lucide-react'
+import { PenSquare, Copy, EyeOff } from 'lucide-react'
+import { Suspense } from 'react'
+import { getApiUrl } from '@/lib/utils'
 
-export default function AdminPostsPage() {
+function AdminPostsPageContent() {
   const { isAdmin, loading: authLoading } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [allPosts, setAllPosts] = useState<PostSummary[]>([])
   const [loading, setLoading] = useState(true)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
@@ -21,18 +24,9 @@ export default function AdminPostsPage() {
   const [currentPage, setCurrentPage] = useState(0)
   const observerTarget = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (!authLoading && !isAdmin) {
-      router.push('/auth/login')
-      return
-    }
+  const filter = searchParams.get('filter')
 
-    if (isAdmin) {
-      loadPosts(0, true)
-    }
-  }, [isAdmin, authLoading, router])
-
-  const loadPosts = async (pageNum: number, isInitial: boolean = false) => {
+  const loadPosts = useCallback(async (pageNum: number, isInitial: boolean = false) => {
     if (pageNum === 0) {
       setLoading(true)
     } else {
@@ -40,7 +34,15 @@ export default function AdminPostsPage() {
     }
 
     try {
-      const data = await getAllPostsForAdmin(pageNum, 10)
+      // 공통 API URL 함수 사용
+      const baseUrl = getApiUrl()
+      const url = filter ? `${baseUrl}/admin/posts?page=${pageNum}&size=10&filter=${filter}` : `${baseUrl}/admin/posts?page=${pageNum}&size=10`
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      const data = await response.json()
       
       if (isInitial) {
         setAllPosts(data.content)
@@ -58,7 +60,25 @@ export default function AdminPostsPage() {
       setLoading(false)
       setIsLoadingMore(false)
     }
-  }
+  }, [filter])
+
+  useEffect(() => {
+    if (!authLoading && !isAdmin) {
+      router.push('/auth/login')
+      return
+    }
+
+    if (isAdmin) {
+      loadPosts(0, true)
+    }
+  }, [isAdmin, authLoading, router])
+
+  // 필터가 변경될 때마다 포스트 다시 로드
+  useEffect(() => {
+    if (isAdmin) {
+      loadPosts(0, true)
+    }
+  }, [isAdmin, loadPosts])
 
   const handleDelete = async (id: number, title: string) => {
     if (!confirm(`"${title}" 포스트를 삭제하시겠습니까?`)) {
@@ -71,6 +91,20 @@ export default function AdminPostsPage() {
     } catch (error) {
       console.error('포스트 삭제 실패:', error)
       alert('포스트 삭제에 실패했습니다')
+    }
+  }
+
+  const handleCopySecretLink = async (post: PostSummary) => {
+    if (!post.secretToken) return
+    
+    const secretUrl = `${window.location.origin}/posts/${post.id}?token=${post.secretToken}`
+    
+    try {
+      await navigator.clipboard.writeText(secretUrl)
+      alert('비밀 링크가 클립보드에 복사되었습니다')
+    } catch (error) {
+      console.error('링크 복사 실패:', error)
+      alert('링크 복사에 실패했습니다')
     }
   }
 
@@ -98,7 +132,7 @@ export default function AdminPostsPage() {
         observer.unobserve(observerTarget.current)
       }
     }
-  }, [currentPage, hasMore, isLoadingMore, loading])
+  }, [currentPage, hasMore, isLoadingMore, loading, loadPosts])
 
   if (authLoading || (loading && allPosts.length === 0)) {
     return <Loading />
@@ -113,14 +147,10 @@ export default function AdminPostsPage() {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-4xl font-bold text-gray-900 tracking-tight">포스트 관리</h1>
-          <p className="text-gray-600 mt-2">모든 포스트를 관리하세요</p>
+          <p className="text-gray-600 mt-2">
+            {filter === 'private' ? '비공개 포스트를 관리하세요' : '모든 포스트를 관리하세요'}
+          </p>
         </div>
-        <Link href="/admin/posts/new">
-          <Button className="gap-2">
-            <PenSquare className="w-4 h-4" />
-            새 포스트 작성
-          </Button>
-        </Link>
       </div>
 
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -156,9 +186,14 @@ export default function AdminPostsPage() {
                   </Link>
                 </td>
                 <td className="px-6 py-4">
-                  <span className={`px-2 py-1 rounded text-xs bg-green-100 text-green-800`}>
-                    발행됨
-                  </span>
+                  <div className="flex gap-2">
+                    {post.isPrivate && (
+                      <span className="px-2 py-1 rounded text-xs bg-red-100 text-red-800 flex items-center gap-1">
+                        <EyeOff className="w-3 h-3" />
+                        비공개
+                      </span>
+                    )}
+                  </div>
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {formatDate(post.createdAt)}
@@ -170,6 +205,17 @@ export default function AdminPostsPage() {
                   <Link href={`/admin/posts/edit/${post.id}`}>
                     <Button size="sm" variant="outline">편집</Button>
                   </Link>
+                  {post.isPrivate && post.secretToken && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleCopySecretLink(post)}
+                      className="gap-1"
+                    >
+                      <Copy className="w-3 h-3" />
+                      링크
+                    </Button>
+                  )}
                   <Button
                     size="sm"
                     variant="destructive"
@@ -201,6 +247,14 @@ export default function AdminPostsPage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function AdminPostsPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <AdminPostsPageContent />
+    </Suspense>
   )
 }
 

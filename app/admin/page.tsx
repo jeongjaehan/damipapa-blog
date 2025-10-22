@@ -8,7 +8,7 @@ import { DashboardStats } from '@/types'
 import Loading from '@/components/common/Loading'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { FileText, CheckCircle, Clock, Eye } from 'lucide-react'
+import { FileText, CheckCircle, EyeOff, Eye } from 'lucide-react'
 
 export default function AdminDashboard() {
   const { isAdmin, loading: authLoading } = useAuth()
@@ -67,26 +67,15 @@ export default function AdminDashboard() {
           </Card>
         </Link>
 
-        <Link href="/admin/posts">
-          <Card className="hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer border-stone-200">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">발행됨</CardTitle>
-              <CheckCircle className="w-5 h-5 text-emerald-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-emerald-600">{stats?.publishedPosts}</div>
-            </CardContent>
-          </Card>
-        </Link>
 
-        <Link href="/admin/posts">
+        <Link href="/admin/posts?filter=private">
           <Card className="hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer border-stone-200">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">임시 저장</CardTitle>
-              <Clock className="w-5 h-5 text-amber-600" />
+              <CardTitle className="text-sm font-medium text-gray-600">비공개</CardTitle>
+              <EyeOff className="w-5 h-5 text-red-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-amber-600">{stats?.draftPosts}</div>
+              <div className="text-3xl font-bold text-red-600">{stats?.privatePosts}</div>
             </CardContent>
           </Card>
         </Link>
@@ -102,30 +91,6 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Link href="/admin/posts/new">
-          <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer border-stone-200">
-            <CardHeader>
-              <CardTitle className="text-xl">새 포스트 작성</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">마크다운으로 새 포스트를 작성합니다</p>
-            </CardContent>
-          </Card>
-        </Link>
-        
-        <Link href="/admin/posts">
-          <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer border-stone-200">
-            <CardHeader>
-              <CardTitle className="text-xl">포스트 관리</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">포스트를 수정하거나 삭제합니다</p>
-            </CardContent>
-          </Card>
-        </Link>
-      </div>
     </div>
   )
 }

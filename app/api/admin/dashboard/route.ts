@@ -22,8 +22,9 @@ export async function GET(request: Request) {
       )
     }
 
-    const [totalPosts, posts] = await Promise.all([
+    const [totalPosts, privatePosts, posts] = await Promise.all([
       prisma.post.count(),
+      prisma.post.count({ where: { isPrivate: true } }),
       prisma.post.findMany({ select: { viewCount: true } }),
     ])
 
@@ -31,8 +32,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       totalPosts,
-      publishedPosts: totalPosts,
-      draftPosts: 0,
+      privatePosts,
       totalViews,
     })
   } catch (error) {

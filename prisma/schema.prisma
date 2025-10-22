@@ -23,17 +23,18 @@ model User {
 }
 
 model Post {
-  id        Int        @id @default(autoincrement())
-  title     String     @db.VarChar(200)
-  content   String     @db.LongText
-  tags      String?    @db.Text // JSON array stringified
-  published Boolean    @default(false)
-  viewCount Int        @default(0) @map("view_count")
-  authorId  Int        @map("author_id")
-  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  postViews PostView[]
+  id          Int        @id @default(autoincrement())
+  title       String     @db.VarChar(200)
+  content     String     @db.LongText
+  tags        String?    @db.Text // JSON array stringified
+  isPrivate   Boolean    @default(false) @map("is_private")
+  secretToken String?    @unique @map("secret_token") @db.VarChar(36)
+  viewCount   Int        @default(0) @map("view_count")
+  authorId    Int        @map("author_id")
+  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  postViews   PostView[]
 
   @@map("posts")
 }

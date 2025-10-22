@@ -25,18 +25,26 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '0')
     const size = parseInt(searchParams.get('size') || '10')
+    const filter = searchParams.get('filter')
 
     const skip = page * size
     const take = size
 
+    // 필터 조건 설정
+    const where: any = {}
+    if (filter === 'private') {
+      where.isPrivate = true
+    }
+
     const [posts, total] = await Promise.all([
       prisma.post.findMany({
+        where,
         include: { author: true },
         orderBy: { createdAt: 'desc' },
         skip,
         take,
       }),
-      prisma.post.count(),
+      prisma.post.count({ where }),
     ])
 
     const content = posts.map((post) => ({
@@ -44,10 +52,11 @@ export async function GET(request: Request) {
       title: post.title,
       tags: post.tags ? JSON.parse(post.tags) : [],
       authorName: post.author.name,
-      published: post.published,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       viewCount: post.viewCount,
+      isPrivate: (post as any).isPrivate,
+      secretToken: (post as any).secretToken,
     }))
 
     return NextResponse.json({
