@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
@@ -29,7 +29,9 @@ import {
   Image as ImageIcon,
   Code2,
   Play,
+  SpellCheck,
 } from 'lucide-react'
+import GrammarCheckModal from './GrammarCheckModal'
 
 const lowlight = createLowlight(common)
 
@@ -70,6 +72,14 @@ export default function TipTapEditor({
   onChange,
   onImageUpload,
 }: TipTapEditorProps) {
+  const [isGrammarModalOpen, setIsGrammarModalOpen] = useState(false)
+  const [grammarCheckLoading, setGrammarCheckLoading] = useState(false)
+  const [grammarResult, setGrammarResult] = useState<{
+    original: string
+    corrected: string
+    changes: Array<{ original: string; corrected: string; reason: string }>
+  } | null>(null)
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -188,6 +198,70 @@ export default function TipTapEditor({
       }
     }
     return false
+  }
+
+  // Grammar check function
+  const handleGrammarCheck = async () => {
+    if (!editor) return
+
+    const html = editor.getHTML()
+    const markdown = turndownService.turndown(html)
+
+    if (!markdown.trim()) {
+      alert('검사할 내용이 없습니다.')
+      return
+    }
+
+    setGrammarCheckLoading(true)
+    setIsGrammarModalOpen(true)
+    setGrammarResult(null)
+
+    try {
+      const response = await fetch('/api/grammar/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: markdown }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || '문법 검사에 실패했습니다.')
+      }
+
+      const data = await response.json()
+      setGrammarResult({
+        original: data.original,
+        corrected: data.corrected,
+        changes: data.changes,
+      })
+    } catch (error: any) {
+      console.error('Grammar check error:', error)
+      alert(error.message || '문법 검사 중 오류가 발생했습니다.')
+      setIsGrammarModalOpen(false)
+    } finally {
+      setGrammarCheckLoading(false)
+    }
+  }
+
+  // Apply grammar corrections
+  const handleApplyCorrections = () => {
+    if (!editor || !grammarResult) return
+
+    // Convert markdown to HTML and set as editor content
+    const html = marked.parse(grammarResult.corrected) as string
+    editor.commands.setContent(html)
+    onChange(grammarResult.corrected)
+
+    setIsGrammarModalOpen(false)
+    setGrammarResult(null)
+  }
+
+  // Close grammar modal
+  const handleCloseGrammarModal = () => {
+    setIsGrammarModalOpen(false)
+    setGrammarResult(null)
   }
 
   return (
@@ -348,6 +422,21 @@ export default function TipTapEditor({
 
         <div className="w-px h-6 bg-gray-300 mx-1" />
 
+        {/* Grammar Check */}
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={handleGrammarCheck}
+          disabled={grammarCheckLoading}
+          className="text-purple-600 hover:text-purple-800 hover:bg-purple-50"
+          title="문법 검사 (AI)"
+        >
+          <SpellCheck className="w-4 h-4" />
+        </Button>
+
+        <div className="w-px h-6 bg-gray-300 mx-1" />
+
         {/* Undo/Redo */}
         <Button
           type="button"
@@ -373,6 +462,17 @@ export default function TipTapEditor({
 
       {/* Editor Content */}
       <EditorContent editor={editor} />
+
+      {/* Grammar Check Modal */}
+      <GrammarCheckModal
+        isOpen={isGrammarModalOpen}
+        onClose={handleCloseGrammarModal}
+        original={grammarResult?.original || ''}
+        corrected={grammarResult?.corrected || ''}
+        changes={grammarResult?.changes || []}
+        onApply={handleApplyCorrections}
+        loading={grammarCheckLoading}
+      />
     </div>
   )
 }
