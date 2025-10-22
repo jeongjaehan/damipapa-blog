@@ -11,7 +11,6 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { PenSquare, Copy, EyeOff } from 'lucide-react'
 import { Suspense } from 'react'
-import { getApiUrl } from '@/lib/utils'
 
 function AdminPostsPageContent() {
   const { isAdmin, loading: authLoading } = useAuth()
@@ -34,8 +33,8 @@ function AdminPostsPageContent() {
     }
 
     try {
-      // 공통 API URL 함수 사용
-      const baseUrl = getApiUrl()
+      // API URL 직접 사용
+      const baseUrl = '/api'
       const url = filter ? `${baseUrl}/admin/posts?page=${pageNum}&size=10&filter=${filter}` : `${baseUrl}/admin/posts?page=${pageNum}&size=10`
       const response = await fetch(url, {
         headers: {

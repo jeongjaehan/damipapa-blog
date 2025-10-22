@@ -1,18 +1,5 @@
 /** @type {import('next').NextConfig} */
 
-// 포트 감지 로직
-const getPort = () => {
-  // 환경 변수에서 포트 가져오기
-  const envPort = process.env.PORT || process.env.NEXT_PUBLIC_PORT
-  if (envPort) return envPort
-  
-  // 기본 포트는 3000
-  return '3000'
-}
-
-const port = getPort()
-const baseUrl = `http://localhost:${port}`
-
 const nextConfig = {
   output: 'standalone',
   outputFileTracingRoot: process.cwd(),
@@ -40,9 +27,7 @@ const nextConfig = {
   productionBrowserSourceMaps: false,
   
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || `${baseUrl}/api`,
-    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || baseUrl,
-    NEXT_PUBLIC_PORT: port,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api',
   },
   
   // 이미지 최적화 제한 (메모리 절약)
@@ -56,7 +41,7 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: port,
+        port: '8080',
         pathname: '/api/files/**',
       },
     ],

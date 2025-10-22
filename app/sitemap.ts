@@ -1,10 +1,8 @@
 import { MetadataRoute } from 'next'
-import { getApiUrl } from '@/lib/utils'
 
 async function fetchPosts() {
   try {
-    // 공통 API URL 함수 사용
-    const baseUrl = getApiUrl()
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
     const response = await fetch(`${baseUrl}/posts?page=0&size=1000`, {
       next: { revalidate: 3600 },
     })

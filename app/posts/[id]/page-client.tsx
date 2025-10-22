@@ -17,8 +17,7 @@ export default function PostPageClient({ postId }: { postId: string }) {
   useEffect(() => {
     const loadPost = async () => {
       try {
-        const token = searchParams.get('token')
-        const data = await getPost(parseInt(postId), token || undefined)
+        const data = await getPost(parseInt(postId))
         setPost(data)
       } catch (error) {
         console.error('포스트 로딩 실패:', error)
@@ -31,7 +30,7 @@ export default function PostPageClient({ postId }: { postId: string }) {
     if (postId) {
       loadPost()
     }
-  }, [postId, router, searchParams])
+  }, [postId, router])
 
   if (loading || !post) {
     return <Loading />
