@@ -1,10 +1,13 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Script from 'next/script'
+import { Suspense } from 'react'
 import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import Analytics from '@/components/common/Analytics'
+import Loading from '@/components/common/Loading'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -66,10 +69,31 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const fbAppId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID || '1948329005731989'
+  const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
   
   return (
     <html lang="ko">
       <body className={inter.className}>
+        {/* Google Analytics 4 */}
+        {gaMeasurementId && gaMeasurementId !== 'your_ga_id' && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${gaMeasurementId}', {
+                  page_path: window.location.pathname,
+                });
+              `}
+            </Script>
+          </>
+        )}
+        
         {/* Facebook SDK */}
         <Script id="facebook-sdk" strategy="afterInteractive">
           {`
@@ -92,6 +116,9 @@ export default function RootLayout({
         <div id="fb-root"></div>
         
         <AuthProvider>
+          <Suspense fallback={<Loading />}>
+            <Analytics />
+          </Suspense>
           <div className="min-h-screen flex flex-col">
             <Header />
             <main className="flex-grow container mx-auto px-4 py-8">

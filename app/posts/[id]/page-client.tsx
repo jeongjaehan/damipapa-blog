@@ -7,6 +7,7 @@ import { PostDetail as PostDetailType } from '@/types'
 import PostDetail from '@/components/post/PostDetail'
 import FacebookComments from '@/components/comment/FacebookComments'
 import Loading from '@/components/common/Loading'
+import { trackPostView } from '@/lib/gtag'
 
 export default function PostPageClient({ postId }: { postId: string }) {
   const router = useRouter()
@@ -19,6 +20,9 @@ export default function PostPageClient({ postId }: { postId: string }) {
       try {
         const data = await getPost(parseInt(postId))
         setPost(data)
+        
+        // 게시글 조회 추적
+        trackPostView(postId, data.title)
       } catch (error) {
         console.error('포스트 로딩 실패:', error)
         router.push('/')

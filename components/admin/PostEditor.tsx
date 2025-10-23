@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import TipTapEditor from './TipTapEditor'
 import { Save, X } from 'lucide-react'
+import { trackPostCreate } from '@/lib/gtag'
 
 interface PostEditorProps {
   post?: PostDetail
@@ -120,6 +121,8 @@ export default function PostEditor({ post }: PostEditorProps) {
         await updatePost(post.id, postData)
       } else {
         await createPost(postData)
+        // 새 게시글 작성 추적
+        trackPostCreate(title)
       }
 
       router.push('/admin/posts')

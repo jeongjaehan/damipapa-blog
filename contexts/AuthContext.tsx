@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { User, LoginRequest } from '@/types'
 import { login as apiLogin, getCurrentUser, logout as apiLogout } from '@/services/api'
+import { trackLogin } from '@/lib/gtag'
 
 interface AuthContextType {
   user: User | null
@@ -40,6 +41,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const response = await apiLogin(data)
     localStorage.setItem('token', response.token)
     setUser(response.user)
+    
+    // 로그인 추적
+    trackLogin('email')
   }
 
   const logout = () => {

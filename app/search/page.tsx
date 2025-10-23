@@ -6,6 +6,7 @@ import { searchPosts } from '@/services/api'
 import { PostSummary, PageResponse } from '@/types'
 import PostCard from '@/components/post/PostCard'
 import Loading from '@/components/common/Loading'
+import { trackSearch } from '@/lib/gtag'
 
 function SearchContent() {
   const searchParams = useSearchParams()
@@ -28,6 +29,9 @@ function SearchContent() {
     try {
       const results = await searchPosts(term)
       setPosts(results)
+      
+      // 검색 추적
+      trackSearch(term, results.totalElements)
     } catch (error) {
       console.error('검색 실패:', error)
     } finally {
