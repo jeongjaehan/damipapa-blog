@@ -32,6 +32,7 @@ import {
   SpellCheck,
 } from 'lucide-react'
 import GrammarCheckModal from './GrammarCheckModal'
+import api from '@/services/api'
 import { DEFAULT_GRAMMAR_PROMPT_SETTINGS, GrammarPromptSettings } from '@/lib/prompts'
 
 const lowlight = createLowlight(common)
@@ -82,22 +83,26 @@ export default function TipTapEditor({
   } | null>(null)
   
   // 프롬프트 편집 상태
-  const [promptSettings, setPromptSettings] = useState<GrammarPromptSettings>(() => {
-    // localStorage에서 설정 불러오기
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('grammar-prompt-settings')
-      if (saved) {
-        try {
-          return JSON.parse(saved)
-        } catch {
-          return DEFAULT_GRAMMAR_PROMPT_SETTINGS
-        }
+  const [promptSettings, setPromptSettings] = useState<GrammarPromptSettings>(DEFAULT_GRAMMAR_PROMPT_SETTINGS)
+  const [showPromptEditor, setShowPromptEditor] = useState(false)
+  const [settingsLoaded, setSettingsLoaded] = useState(false)
+
+  // 초기 설정 로딩
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const response = await api.get('/admin/grammar-settings')
+        setPromptSettings(response.data)
+      } catch (error) {
+        console.error('설정 로딩 실패:', error)
+        // API 호출 실패 시 기본값 사용
+        setPromptSettings(DEFAULT_GRAMMAR_PROMPT_SETTINGS)
+      } finally {
+        setSettingsLoaded(true)
       }
     }
-    return DEFAULT_GRAMMAR_PROMPT_SETTINGS
-  })
-  
-  const [showPromptEditor, setShowPromptEditor] = useState(false)
+    loadSettings()
+  }, [])
 
   const editor = useEditor({
     extensions: [
@@ -236,25 +241,14 @@ export default function TipTapEditor({
     setGrammarResult(null)
 
     try {
-      const response = await fetch('/api/grammar/check', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          text: markdown,
-          systemPrompt: promptSettings.systemPrompt,
-          temperature: promptSettings.temperature,
-          maxTokens: promptSettings.maxTokens,
-        }),
+      const response = await api.post('/grammar/check', { 
+        text: markdown,
+        systemPrompt: promptSettings.systemPrompt,
+        temperature: promptSettings.temperature,
+        maxTokens: promptSettings.maxTokens,
       })
 
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || '문법 검사에 실패했습니다.')
-      }
-
-      const data = await response.json()
+      const data = response.data
       setGrammarResult({
         original: data.original,
         corrected: data.corrected,
@@ -262,7 +256,7 @@ export default function TipTapEditor({
       })
     } catch (error: any) {
       console.error('Grammar check error:', error)
-      alert(error.message || '문법 검사 중 오류가 발생했습니다.')
+      alert(error.response?.data?.error || '문법 검사 중 오류가 발생했습니다.')
       setIsGrammarModalOpen(false)
     } finally {
       setGrammarCheckLoading(false)
@@ -288,22 +282,29 @@ export default function TipTapEditor({
     setGrammarResult(null)
   }
 
-  // 프롬프트 설정 업데이트 및 localStorage 저장
-  const updatePromptSettings = (newSettings: Partial<GrammarPromptSettings>) => {
+  // 프롬프트 설정 업데이트 및 서버 저장
+  const updatePromptSettings = async (newSettings: Partial<GrammarPromptSettings>) => {
     const updatedSettings = { ...promptSettings, ...newSettings }
     setPromptSettings(updatedSettings)
     
-    // localStorage에 저장
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('grammar-prompt-settings', JSON.stringify(updatedSettings))
+    // API로 저장
+    try {
+      await api.put('/admin/grammar-settings', updatedSettings)
+    } catch (error) {
+      console.error('설정 저장 실패:', error)
+      alert('설정 저장에 실패했습니다. 다시 시도해주세요.')
     }
   }
 
   // 기본값 복원
-  const resetPromptSettings = () => {
+  const resetPromptSettings = async () => {
     setPromptSettings(DEFAULT_GRAMMAR_PROMPT_SETTINGS)
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('grammar-prompt-settings', JSON.stringify(DEFAULT_GRAMMAR_PROMPT_SETTINGS))
+    
+    try {
+      await api.put('/admin/grammar-settings', DEFAULT_GRAMMAR_PROMPT_SETTINGS)
+    } catch (error) {
+      console.error('설정 복원 실패:', error)
+      alert('설정 복원에 실패했습니다. 다시 시도해주세요.')
     }
   }
 
@@ -526,6 +527,7 @@ export default function TipTapEditor({
         onTogglePromptEditor={setShowPromptEditor}
         defaultSystemPrompt={DEFAULT_GRAMMAR_PROMPT_SETTINGS.systemPrompt}
         onResetPromptSettings={resetPromptSettings}
+        settingsLoaded={settingsLoaded}
       />
     </div>
   )

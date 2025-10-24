@@ -133,3 +133,9 @@ export interface GrammarCheckResponse {
   }
 }
 
+export interface GrammarSettings {
+  systemPrompt: string
+  temperature: number
+  maxTokens: number
+}
+

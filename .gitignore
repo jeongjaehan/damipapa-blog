@@ -50,3 +50,6 @@ prisma/migrations/
 
 # Cursor
 .cursor/
+
+# logs
+logs/

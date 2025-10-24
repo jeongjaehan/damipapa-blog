@@ -14,6 +14,12 @@ model User {
   name      String
   bio       String?  @db.Text
   role      String   @default("USER")
+  
+  // 프롬프트 설정 추가
+  grammarSystemPrompt   String?  @db.LongText @map("grammar_system_prompt")
+  grammarTemperature    Float?   @default(0.3) @map("grammar_temperature")
+  grammarMaxTokens      Int?     @default(4096) @map("grammar_max_tokens")
+  
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   posts     Post[]

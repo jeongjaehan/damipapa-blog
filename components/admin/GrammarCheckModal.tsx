@@ -29,6 +29,7 @@ interface GrammarCheckModalProps {
   onTogglePromptEditor: (show: boolean) => void
   defaultSystemPrompt: string
   onResetPromptSettings: () => void
+  settingsLoaded?: boolean
 }
 
 export default function GrammarCheckModal({
@@ -49,6 +50,7 @@ export default function GrammarCheckModal({
   onTogglePromptEditor,
   defaultSystemPrompt,
   onResetPromptSettings,
+  settingsLoaded = true,
 }: GrammarCheckModalProps) {
   if (!isOpen) return null
 
@@ -103,13 +105,19 @@ export default function GrammarCheckModal({
               {showPromptEditor && (
                 <div className="mb-6 p-6 bg-gray-50 border border-gray-200 rounded-lg">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-800">프롬프트 편집</h3>
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      프롬프트 편집
+                      {!settingsLoaded && (
+                        <span className="ml-2 text-sm text-gray-500">(로딩 중...)</span>
+                      )}
+                    </h3>
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
                       onClick={onResetPromptSettings}
                       className="gap-2"
+                      disabled={!settingsLoaded}
                     >
                       <RotateCcw className="w-4 h-4" />
                       기본값 복원
@@ -127,6 +135,7 @@ export default function GrammarCheckModal({
                       className="w-full h-40 p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="시스템 프롬프트를 입력하세요..."
                       style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                      disabled={!settingsLoaded}
                     />
                   </div>
 
@@ -145,6 +154,7 @@ export default function GrammarCheckModal({
                         value={temperature}
                         onChange={(e) => onTemperatureChange(parseFloat(e.target.value))}
                         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                        disabled={!settingsLoaded}
                       />
                       <div className="flex justify-between text-xs text-gray-500 mt-1">
                         <span>일관적 (0.0)</span>
@@ -169,6 +179,7 @@ export default function GrammarCheckModal({
                         onChange={(e) => onMaxTokensChange(parseInt(e.target.value))}
                         className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         style={{ color: '#111827', backgroundColor: '#ffffff' }}
+                        disabled={!settingsLoaded}
                       />
                       <p className="text-xs text-gray-600 mt-1">
                         💡 응답 최대 길이 설정 (1000-8000)

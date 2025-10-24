@@ -3,7 +3,7 @@ module.exports = {
     name: 'damipapa-blog',
     script: 'node_modules/.bin/next',
     args: 'start',
-    cwd: '/home/ec2-user/damipapa-blog',
+    cwd: process.cwd(),
     instances: 1,
     exec_mode: 'fork', // cluster 대신 fork 사용 (메모리 절약)
     autorestart: true,
