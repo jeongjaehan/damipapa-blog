@@ -32,6 +32,7 @@ import {
   SpellCheck,
 } from 'lucide-react'
 import GrammarCheckModal from './GrammarCheckModal'
+import { DEFAULT_GRAMMAR_PROMPT_SETTINGS, GrammarPromptSettings } from '@/lib/prompts'
 
 const lowlight = createLowlight(common)
 
@@ -79,6 +80,24 @@ export default function TipTapEditor({
     corrected: string
     changes: Array<{ original: string; corrected: string; reason: string }>
   } | null>(null)
+  
+  // 프롬프트 편집 상태
+  const [promptSettings, setPromptSettings] = useState<GrammarPromptSettings>(() => {
+    // localStorage에서 설정 불러오기
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('grammar-prompt-settings')
+      if (saved) {
+        try {
+          return JSON.parse(saved)
+        } catch {
+          return DEFAULT_GRAMMAR_PROMPT_SETTINGS
+        }
+      }
+    }
+    return DEFAULT_GRAMMAR_PROMPT_SETTINGS
+  })
+  
+  const [showPromptEditor, setShowPromptEditor] = useState(false)
 
   const editor = useEditor({
     extensions: [
@@ -222,7 +241,12 @@ export default function TipTapEditor({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text: markdown }),
+        body: JSON.stringify({ 
+          text: markdown,
+          systemPrompt: promptSettings.systemPrompt,
+          temperature: promptSettings.temperature,
+          maxTokens: promptSettings.maxTokens,
+        }),
       })
 
       if (!response.ok) {
@@ -262,6 +286,25 @@ export default function TipTapEditor({
   const handleCloseGrammarModal = () => {
     setIsGrammarModalOpen(false)
     setGrammarResult(null)
+  }
+
+  // 프롬프트 설정 업데이트 및 localStorage 저장
+  const updatePromptSettings = (newSettings: Partial<GrammarPromptSettings>) => {
+    const updatedSettings = { ...promptSettings, ...newSettings }
+    setPromptSettings(updatedSettings)
+    
+    // localStorage에 저장
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('grammar-prompt-settings', JSON.stringify(updatedSettings))
+    }
+  }
+
+  // 기본값 복원
+  const resetPromptSettings = () => {
+    setPromptSettings(DEFAULT_GRAMMAR_PROMPT_SETTINGS)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('grammar-prompt-settings', JSON.stringify(DEFAULT_GRAMMAR_PROMPT_SETTINGS))
+    }
   }
 
   return (
@@ -472,6 +515,17 @@ export default function TipTapEditor({
         changes={grammarResult?.changes || []}
         onApply={handleApplyCorrections}
         loading={grammarCheckLoading}
+        // 프롬프트 편집 관련 props
+        systemPrompt={promptSettings.systemPrompt}
+        onSystemPromptChange={(value) => updatePromptSettings({ systemPrompt: value })}
+        temperature={promptSettings.temperature}
+        onTemperatureChange={(value) => updatePromptSettings({ temperature: value })}
+        maxTokens={promptSettings.maxTokens}
+        onMaxTokensChange={(value) => updatePromptSettings({ maxTokens: value })}
+        showPromptEditor={showPromptEditor}
+        onTogglePromptEditor={setShowPromptEditor}
+        defaultSystemPrompt={DEFAULT_GRAMMAR_PROMPT_SETTINGS.systemPrompt}
+        onResetPromptSettings={resetPromptSettings}
       />
     </div>
   )

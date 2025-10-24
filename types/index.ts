@@ -111,3 +111,25 @@ export interface UpdateTemplateRequest {
   content?: string
 }
 
+export interface GrammarCheckRequest {
+  text: string
+  systemPrompt?: string
+  temperature?: number
+  maxTokens?: number
+}
+
+export interface GrammarCheckResponse {
+  original: string
+  corrected: string
+  changes: Array<{
+    original: string
+    corrected: string
+    reason: string
+  }>
+  usage?: {
+    promptTokens?: number
+    completionTokens?: number
+    totalTokens?: number
+  }
+}
+
