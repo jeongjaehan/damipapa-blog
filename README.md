@@ -323,7 +323,7 @@ NEXT_PUBLIC_API_URL=https://yourblog.com/api
 
 ```typescript
 // 블로그 기본 설명
-description: 'Next.js 풀스택으로 만든 다미파파의 개인 블로그. 개발, 기술, 일상에 대한 이야기를 공유합니다.',
+description: '100% 바이브 코딩으로 만든  블로그. 개발, 기술, 일상에 대한 이야기를 공유합니다.',
 
 // 키워드
 keywords: ['블로그', '개발', '기술', 'Next.js', '프로그래밍'],

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     default: '다미파파의 블로그',
     template: '%s | 다미파파의 블로그',
   },
-  description: 'Next.js 풀스택으로 만든 다미파파의 개인 블로그. 개발, 기술, 일상에 대한 이야기를 공유합니다.',
+  description: '100% 바이브 코딩으로 만든  블로그. 개발, 기술, 일상에 대한 이야기를 공유합니다.',
   keywords: ['블로그', '개발', '기술', 'Next.js', '프로그래밍'],
   authors: [{ name: '다미파파' }],
   creator: '다미파파',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     url: baseUrl,
     siteName: '다미파파의 블로그',
     title: '다미파파의 블로그',
-    description: 'Next.js 풀스택으로 만든 다미파파의 개인 블로그',
+    description: '100% 바이브 코딩으로 만든  블로그',
     images: [
       {
         url: `${baseUrl}/og-image.png`,
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: '다미파파의 블로그',
-    description: 'Next.js 풀스택으로 만든 다미파파의 개인 블로그',
+    description: '100% 바이브 코딩으로 만든  블로그',
   },
   viewport: {
     width: 'device-width',
