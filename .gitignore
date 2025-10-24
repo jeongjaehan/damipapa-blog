@@ -48,3 +48,5 @@ prisma/migrations/
 # Docker
 .docker/
 
+# Cursor
+.cursor/
