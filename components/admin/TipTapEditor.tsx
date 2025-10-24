@@ -515,6 +515,7 @@ export default function TipTapEditor({
         corrected={grammarResult?.corrected || ''}
         changes={grammarResult?.changes || []}
         onApply={handleApplyCorrections}
+        onRetry={handleGrammarCheck}
         loading={grammarCheckLoading}
         // 프롬프트 편집 관련 props
         systemPrompt={promptSettings.systemPrompt}

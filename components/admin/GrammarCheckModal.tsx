@@ -17,6 +17,7 @@ interface GrammarCheckModalProps {
   corrected: string
   changes: Change[]
   onApply: () => void
+  onRetry: () => void
   loading?: boolean
   // 프롬프트 편집 관련 props
   systemPrompt: string
@@ -39,6 +40,7 @@ export default function GrammarCheckModal({
   corrected,
   changes,
   onApply,
+  onRetry,
   loading = false,
   systemPrompt,
   onSystemPromptChange,
@@ -64,7 +66,7 @@ export default function GrammarCheckModal({
       <div className="bg-white rounded-lg shadow-xl max-w-7xl w-full max-h-[95vh] overflow-hidden flex flex-col mx-4">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-2xl font-bold">문법 검사 결과</h2>
+          <h2 className="text-2xl font-bold">AI 문장 개선</h2>
           <div className="flex items-center gap-3">
             {/* 프롬프트 편집 토글 버튼 */}
             <Button
@@ -229,18 +231,29 @@ export default function GrammarCheckModal({
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 p-6 border-t bg-gray-50">
+        <div className="flex justify-between items-center p-6 border-t bg-gray-50">
           <Button
             type="button"
             variant="outline"
-            onClick={onClose}
+            onClick={onRetry}
             disabled={loading}
             className="gap-2"
           >
-            <X className="w-4 h-4" />
-            취소
+            <RotateCcw className="w-4 h-4" />
+            재요청
           </Button>
-          {hasChanges && (
+          
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              disabled={loading}
+              className="gap-2"
+            >
+              <X className="w-4 h-4" />
+              취소
+            </Button>
             <Button
               type="button"
               onClick={onApply}
@@ -250,7 +263,7 @@ export default function GrammarCheckModal({
               <Check className="w-4 h-4" />
               수정 적용
             </Button>
-          )}
+          </div>
         </div>
       </div>
     </div>
