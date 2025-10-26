@@ -45,6 +45,9 @@ uploads/
 *.sqlite
 prisma/migrations/
 
+# data files
+data/career.json
+
 # Docker
 .docker/
 
