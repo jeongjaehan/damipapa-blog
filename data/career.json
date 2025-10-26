@@ -1,0 +1,27 @@
+{
+  "profile": {
+    "name": "다미파파",
+    "bio": "풀스택 개발자 | 블로그 운영자",
+    "email": "kakaruto12@naver.com",
+    "linkedin": "http://www.linkedin.com/in/damipapa",
+    "avatar": ""
+  },
+  "careers": [
+    {
+      "id": "2f13aa72-bc61-4df4-af17-74cebca0ea99",
+      "startDate": "2025-10-14",
+      "endDate": "2025-10-18",
+      "title": "야하하",
+      "subtitle": "CTO",
+      "description": "우헤헤"
+    },
+    {
+      "id": "6fc3588c-92fa-4c89-b0ba-e8fa97642c54",
+      "startDate": "2012-01-20",
+      "endDate": "2021-07-01",
+      "title": "KT뮤직",
+      "subtitle": "과장",
+      "description": "ㅇㅜ헤헤헤헤헤헤\n재ㅑ러ㅑㅐㅈ러"
+    }
+  ]
+}

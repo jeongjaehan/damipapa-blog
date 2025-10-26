@@ -23,7 +23,6 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   posts     Post[]
-  profile   Profile?
 
   @@map("users")
 }
@@ -54,17 +53,6 @@ model PostView {
 
   @@unique([postId, ipAddress])
   @@map("post_views")
-}
-
-model Profile {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique @map("user_id")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  content   String   @db.LongText
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("profiles")
 }
 
 model Template {

@@ -23,8 +23,8 @@ export default function Header() {
             <Link href="/" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
               홈
             </Link>
-            <Link href="/profile" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
-              프로필
+            <Link href="/career" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
+              경력
             </Link>
             <Link href="/search" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
               검색
@@ -96,11 +96,11 @@ export default function Header() {
               홈
             </Link>
             <Link
-              href="/profile"
+              href="/career"
               className="block py-2 text-gray-700 hover:text-primary-600"
               onClick={() => setMobileMenuOpen(false)}
             >
-              프로필
+              경력
             </Link>
             <Link
               href="/search"

@@ -9,10 +9,12 @@ import type {
   UpdatePostRequest,
   DashboardStats,
   User,
-  Profile,
   Template,
   CreateTemplateRequest,
   UpdateTemplateRequest,
+  Career,
+  CareerData,
+  CareerProfile,
 } from '@/types'
 
 const API_URL = '/api'  // Next.js API Routes 사용
@@ -155,17 +157,6 @@ export const getAllPostsForAdmin = async (
   return response.data
 }
 
-// Profile APIs
-export const getProfile = async (): Promise<Profile> => {
-  const response = await api.get<Profile>('/profile')
-  return response.data
-}
-
-export const updateProfile = async (content: string): Promise<Profile> => {
-  const response = await api.put<Profile>('/profile', { content })
-  return response.data
-}
-
 // Template APIs
 export const getTemplates = async (): Promise<Template[]> => {
   const response = await api.get<Template[]>('/templates')
@@ -189,6 +180,41 @@ export const updateTemplate = async (id: number, data: UpdateTemplateRequest): P
 
 export const deleteTemplate = async (id: number): Promise<void> => {
   await api.delete(`/admin/templates/${id}`)
+}
+
+// Career APIs
+export const getCareerData = async (): Promise<CareerData> => {
+  const response = await api.get<CareerData>('/career')
+  return response.data
+}
+
+export const getCareers = async (): Promise<Career[]> => {
+  const response = await api.get<CareerData>('/career')
+  return response.data.careers
+}
+
+export const getCareerProfile = async (): Promise<CareerProfile> => {
+  const response = await api.get<CareerProfile>('/career/profile')
+  return response.data
+}
+
+export const updateCareerProfile = async (data: Partial<CareerProfile>): Promise<CareerProfile> => {
+  const response = await api.put<CareerProfile>('/career/profile', data)
+  return response.data
+}
+
+export const createCareer = async (data: Omit<Career, 'id'>): Promise<Career> => {
+  const response = await api.post<Career>('/career', data)
+  return response.data
+}
+
+export const updateCareer = async (id: string, data: Partial<Career>): Promise<Career> => {
+  const response = await api.put<Career>(`/career/${id}`, data)
+  return response.data
+}
+
+export const deleteCareer = async (id: string): Promise<void> => {
+  await api.delete(`/career/${id}`)
 }
 
 export default api

@@ -74,19 +74,6 @@ export interface DashboardStats {
   totalViews: number
 }
 
-export interface Profile {
-  id?: number
-  userId?: number
-  content: string
-  createdAt?: string
-  updatedAt?: string
-  user?: {
-    id: number
-    name: string
-    email: string
-  }
-}
-
 export interface Template {
   id: number
   name: string
@@ -137,5 +124,27 @@ export interface GrammarSettings {
   systemPrompt: string
   temperature: number
   maxTokens: number
+}
+
+export interface CareerProfile {
+  name: string
+  bio: string           // 한줄소개
+  email: string
+  linkedin: string
+  avatar?: string       // 프로필 사진 (선택)
+}
+
+export interface Career {
+  id: string
+  startDate: string      // YYYY-MM-DD
+  endDate: string | null // YYYY-MM-DD or null
+  title: string
+  subtitle: string
+  description?: string
+}
+
+export interface CareerData {
+  profile: CareerProfile
+  careers: Career[]
 }
 
