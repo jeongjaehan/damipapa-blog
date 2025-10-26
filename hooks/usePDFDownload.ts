@@ -40,7 +40,7 @@ export function usePDFDownload(): UsePDFDownloadReturn {
         logging: false,
         scrollX: 0,
         scrollY: 0
-      })
+      } as any)
 
       // Canvas를 이미지 데이터로 변환
       const imgData = canvas.toDataURL('image/png')
