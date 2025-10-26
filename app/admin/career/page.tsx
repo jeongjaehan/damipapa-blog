@@ -115,7 +115,7 @@ function AdminCareerContent() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 tracking-tight">경력 관리</h1>
+        <h1 className="text-4xl font-bold text-gray-900 tracking-tight">프로필 관리</h1>
         <div className="flex gap-3">
           <Button onClick={() => setShowPreview(!showPreview)} variant="outline">
             <Eye className="w-4 h-4 mr-2" />
@@ -167,7 +167,7 @@ function AdminCareerContent() {
                 <p>등록된 경력이 없습니다.</p>
                 <Button onClick={handleAdd} className="mt-4 gap-2">
                   <Plus className="w-4 h-4" />
-                  첫 경력 추가하기
+                  첫 경력 추가
                 </Button>
               </div>
             ) : (

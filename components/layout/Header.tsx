@@ -24,7 +24,7 @@ export default function Header() {
               홈
             </Link>
             <Link href="/career" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
-              경력
+              프로필
             </Link>
             <Link href="/search" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
               검색
@@ -100,7 +100,7 @@ export default function Header() {
               className="block py-2 text-gray-700 hover:text-primary-600"
               onClick={() => setMobileMenuOpen(false)}
             >
-              경력
+              프로필
             </Link>
             <Link
               href="/search"
