@@ -55,25 +55,25 @@ export default function CareerPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
       <Card className="border-stone-200">
-        <div className="p-8">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900">프로필</h1>
-            <div className="flex gap-2">
+        <div className="p-4 sm:p-8">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-4xl font-bold text-gray-900">프로필</h1>
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               <Button 
                 onClick={handlePDFDownload} 
                 disabled={isGenerating}
                 variant="outline" 
-                className="gap-2"
+                className="gap-2 w-full sm:w-auto text-sm sm:text-base"
               >
-                <Download className="w-4 h-4" />
-                {isGenerating ? 'PDF 생성 중...' : 'PDF 다운로드'}
+                <Download className="w-4 h-4 flex-shrink-0" />
+                <span className="truncate">{isGenerating ? 'PDF 생성 중...' : 'PDF 다운로드'}</span>
               </Button>
               {isAdmin && (
-                <Link href="/admin/career">
-                  <Button variant="outline" className="gap-2">
-                    <Settings className="w-4 h-4" />
+                <Link href="/admin/career" className="w-full sm:w-auto">
+                  <Button variant="outline" className="gap-2 w-full text-sm sm:text-base">
+                    <Settings className="w-4 h-4 flex-shrink-0" />
                     관리
                   </Button>
                 </Link>
