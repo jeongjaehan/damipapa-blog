@@ -8,15 +8,13 @@ import CareerTimeline from '@/components/career/CareerTimeline'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import Loading from '@/components/common/Loading'
-import { Settings, Download } from 'lucide-react'
+import { Settings } from 'lucide-react'
 import Link from 'next/link'
-import { usePDFDownload } from '@/hooks/usePDFDownload'
 
 export default function CareerPage() {
   const { isAdmin } = useAuth()
   const [data, setData] = useState<CareerData | null>(null)
   const [loading, setLoading] = useState(true)
-  const { isGenerating, generatePDF } = usePDFDownload()
 
   useEffect(() => {
     const loadData = async () => {
@@ -32,11 +30,6 @@ export default function CareerPage() {
 
     loadData()
   }, [])
-
-  const handlePDFDownload = async () => {
-    if (!data?.profile?.name) return
-    await generatePDF('career-content', `${data.profile.name}_프로필`)
-  }
 
   if (loading) {
     return <Loading />
@@ -60,25 +53,16 @@ export default function CareerPage() {
         <div className="p-4 sm:p-8">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
             <h1 className="text-2xl sm:text-4xl font-bold text-gray-900">프로필</h1>
-            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-              <Button 
-                onClick={handlePDFDownload} 
-                disabled={isGenerating}
-                variant="outline" 
-                className="gap-2 w-full sm:w-auto text-sm sm:text-base"
-              >
-                <Download className="w-4 h-4 flex-shrink-0" />
-                <span className="truncate">{isGenerating ? 'PDF 생성 중...' : 'PDF 다운로드'}</span>
-              </Button>
-              {isAdmin && (
-                <Link href="/admin/career" className="w-full sm:w-auto">
-                  <Button variant="outline" className="gap-2 w-full text-sm sm:text-base">
+            {isAdmin && (
+              <div className="flex justify-end">
+                <Link href="/admin/career">
+                  <Button variant="outline" className="gap-2 text-sm sm:text-base">
                     <Settings className="w-4 h-4 flex-shrink-0" />
                     관리
                   </Button>
                 </Link>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {data.careers.length === 0 ? (
