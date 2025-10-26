@@ -417,3 +417,16 @@ select:disabled {
   animation: pulse-scale 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* PDF 생성시 불필요한 요소 숨기기 */
+.pdf-generating .hover\:shadow-lg:hover {
+  box-shadow: none !important;
+}
+
+.pdf-generating .hover\:-translate-y-1:hover {
+  transform: none !important;
+}
+
+.pdf-generating .animate-pulse {
+  animation: none !important;
+}
+

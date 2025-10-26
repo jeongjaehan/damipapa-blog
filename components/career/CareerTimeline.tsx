@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import { Career, CareerProfile } from '@/types'
-import { Mail, Linkedin, Building2, Briefcase, Calendar } from 'lucide-react'
+import { Mail, Linkedin, Building2, Briefcase } from 'lucide-react'
 
 interface CareerTimelineProps {
   profile: CareerProfile
@@ -10,7 +10,6 @@ interface CareerTimelineProps {
 }
 
 export default function CareerTimeline({ profile, careers }: CareerTimelineProps) {
-  const [hoveredCareer, setHoveredCareer] = useState<Career | null>(null)
 
   const formatDate = (dateStr: string): string => {
     const date = new Date(dateStr)
@@ -99,76 +98,50 @@ export default function CareerTimeline({ profile, careers }: CareerTimelineProps
             return (
               <div
                 key={career.id}
-                className="relative pl-12 group"
-                onMouseEnter={() => setHoveredCareer(career.description ? career : null)}
-                onMouseLeave={() => setHoveredCareer(null)}
+                className="relative pl-12"
               >
                 {/* 타임라인 점 */}
                 <div className={`absolute left-0 top-2 transform -translate-x-1/2 w-4 h-4 rounded-full ${dotColor} shadow-lg ring-4 ring-white z-10`} />
 
+                {/* 연도 표시 (점 아래에 수평으로) */}
+                <div className="absolute left-0 top-8 transform -translate-x-1/2 text-center z-30">
+                  <div className="text-xs font-bold text-gray-700 bg-white px-2 py-1 rounded-md shadow-sm border border-gray-200 leading-relaxed">
+                    <div>{formatDate(career.startDate)}</div>
+                    {isCurrent ? (
+                      <div className="text-green-600">~ 진행중</div>
+                    ) : (
+                      <div>~ {formatDate(career.endDate!)}</div>
+                    )}
+                  </div>
+                </div>
+
                 {/* 경력 카드 */}
                 <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer">
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <div className="flex items-start gap-4 flex-1">
-                      {/* 아이콘 */}
-                      <div className={`flex-shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br ${colorClass} flex items-center justify-center shadow-lg`}>
-                        <Briefcase className="w-8 h-8 text-white" />
-                      </div>
-                      
-                      {/* 회사 정보 */}
-                      <div className="flex-1">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-1">{career.title}</h3>
-                        <p className="text-lg text-gray-600 flex items-center gap-2">
-                          <Building2 className="w-5 h-5" />
-                          {career.subtitle}
-                        </p>
-                      </div>
+                  <div className="flex items-start gap-4 mb-4">
+                    {/* 아이콘 */}
+                    <div className={`flex-shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br ${colorClass} flex items-center justify-center shadow-lg`}>
+                      <Briefcase className="w-8 h-8 text-white" />
                     </div>
-
-                    {/* 날짜 표시 */}
-                    <div className="flex-shrink-0 text-right">
-                      <div className="flex items-center gap-2 text-gray-600 mb-1">
-                        <Calendar className="w-4 h-4" />
-                        <span className="text-sm font-medium">
-                          {formatDate(career.startDate)}
-                        </span>
-                      </div>
-                      <div className="text-lg font-bold text-gray-900">
-                        {isCurrent ? (
-                          <span className="text-green-600 flex items-center gap-1">
-                            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                            현재 재직중
-                          </span>
-                        ) : (
-                          <span className="text-gray-600 text-sm">
-                            → {formatDate(career.endDate!)}
-                          </span>
-                        )}
-                      </div>
+                    
+                    {/* 회사 정보 */}
+                    <div className="flex-1">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-1">{career.title}</h3>
+                      <p className="text-lg text-gray-600 flex items-center gap-2">
+                        <Building2 className="w-5 h-5" />
+                        {career.subtitle}
+                      </p>
                     </div>
                   </div>
 
-                  {/* 상세 설명 (호버 시 표시) */}
+                  {/* 상세 설명 */}
                   {career.description && (
                     <div className="mt-4 pt-4 border-t border-gray-100">
-                      <div className="text-sm text-gray-500 flex items-center gap-2 transition-colors group-hover:text-blue-600">
-                        <span className="font-medium">
-                          {hoveredCareer?.id === career.id ? '📋 상세 정보' : '👆 마우스를 올려보세요'}
-                        </span>
+                      <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+                        {career.description}
                       </div>
                     </div>
                   )}
                 </div>
-
-                {/* 호버 툴팁 */}
-                {hoveredCareer?.id === career.id && hoveredCareer.description && (
-                  <div className="absolute left-full ml-6 top-2 w-80 bg-gray-900 text-white p-4 rounded-xl shadow-2xl z-50 animate-in fade-in slide-in-from-left-2 duration-200">
-                    <div className="absolute right-full top-6 border-8 border-transparent border-r-gray-900" />
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-100">
-                      {hoveredCareer.description}
-                    </p>
-                  </div>
-                )}
               </div>
             )
           })}

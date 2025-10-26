@@ -8,13 +8,15 @@ import CareerTimeline from '@/components/career/CareerTimeline'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import Loading from '@/components/common/Loading'
-import { Settings } from 'lucide-react'
+import { Settings, Download } from 'lucide-react'
 import Link from 'next/link'
+import { usePDFDownload } from '@/hooks/usePDFDownload'
 
 export default function CareerPage() {
   const { isAdmin } = useAuth()
   const [data, setData] = useState<CareerData | null>(null)
   const [loading, setLoading] = useState(true)
+  const { isGenerating, generatePDF } = usePDFDownload()
 
   useEffect(() => {
     const loadData = async () => {
@@ -30,6 +32,11 @@ export default function CareerPage() {
 
     loadData()
   }, [])
+
+  const handlePDFDownload = async () => {
+    if (!data?.profile?.name) return
+    await generatePDF('career-content', `${data.profile.name}_프로필`)
+  }
 
   if (loading) {
     return <Loading />
@@ -53,14 +60,25 @@ export default function CareerPage() {
         <div className="p-8">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900">프로필</h1>
-            {isAdmin && (
-              <Link href="/admin/career">
-                <Button variant="outline" className="gap-2">
-                  <Settings className="w-4 h-4" />
-                  관리
-                </Button>
-              </Link>
-            )}
+            <div className="flex gap-2">
+              <Button 
+                onClick={handlePDFDownload} 
+                disabled={isGenerating}
+                variant="outline" 
+                className="gap-2"
+              >
+                <Download className="w-4 h-4" />
+                {isGenerating ? 'PDF 생성 중...' : 'PDF 다운로드'}
+              </Button>
+              {isAdmin && (
+                <Link href="/admin/career">
+                  <Button variant="outline" className="gap-2">
+                    <Settings className="w-4 h-4" />
+                    관리
+                  </Button>
+                </Link>
+              )}
+            </div>
           </div>
 
           {data.careers.length === 0 ? (
@@ -68,7 +86,9 @@ export default function CareerPage() {
               <p>등록된 경력이 없습니다.</p>
             </div>
           ) : (
-            <CareerTimeline profile={data.profile} careers={data.careers} />
+            <div id="career-content">
+              <CareerTimeline profile={data.profile} careers={data.careers} />
+            </div>
           )}
         </div>
       </Card>
