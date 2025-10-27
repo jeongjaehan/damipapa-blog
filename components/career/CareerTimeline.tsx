@@ -18,6 +18,33 @@ export default function CareerTimeline({ profile, careers }: CareerTimelineProps
     return `${year}.${month}`
   }
 
+  const calculateWorkPeriod = (startDate: string, endDate: string | null): string => {
+    const start = new Date(startDate)
+    const end = endDate ? new Date(endDate) : new Date()
+    
+    let years = end.getFullYear() - start.getFullYear()
+    let months = end.getMonth() - start.getMonth()
+    
+    if (months < 0) {
+      years--
+      months += 12
+    }
+    
+    if (years === 0 && months === 0) {
+      return '1개월 미만'
+    }
+    
+    if (years === 0) {
+      return `${months}개월`
+    }
+    
+    if (months === 0) {
+      return `${years}년`
+    }
+    
+    return `${years}년 ${months}개월`
+  }
+
   const getColorClass = (index: number) => {
     const colors = [
       'from-blue-500 to-blue-600',
@@ -108,10 +135,21 @@ export default function CareerTimeline({ profile, careers }: CareerTimelineProps
                   <div className="text-xs font-bold text-gray-700 bg-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md shadow-sm border border-gray-200 leading-tight sm:leading-relaxed whitespace-nowrap">
                     <div>{formatDate(career.startDate)}</div>
                     {isCurrent ? (
-                      <div className="text-green-600">~ 진행중</div>
+                      <div className="text-green-600">~ 재직 중</div>
                     ) : (
                       <div>~ {formatDate(career.endDate!)}</div>
                     )}
+                  </div>
+                  
+                  {/* 근무기간 뱃지 */}
+                  <div className="mt-1">
+                    <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full shadow-sm ${
+                      isCurrent 
+                        ? 'bg-green-100 text-green-700 border border-green-200' 
+                        : 'bg-blue-100 text-blue-700 border border-blue-200'
+                    }`}>
+                      {calculateWorkPeriod(career.startDate, career.endDate)}
+                    </span>
                   </div>
                 </div>
 
