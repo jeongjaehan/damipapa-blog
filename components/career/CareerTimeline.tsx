@@ -45,6 +45,42 @@ export default function CareerTimeline({ profile, careers }: CareerTimelineProps
     return `${years}년 ${months}개월`
   }
 
+  const calculateTotalExperience = (careers: Career[]): string => {
+    let totalMonths = 0
+    
+    careers.forEach(career => {
+      const start = new Date(career.startDate)
+      const end = career.endDate ? new Date(career.endDate) : new Date()
+      
+      let years = end.getFullYear() - start.getFullYear()
+      let months = end.getMonth() - start.getMonth()
+      
+      if (months < 0) {
+        years--
+        months += 12
+      }
+      
+      totalMonths += years * 12 + months
+    })
+    
+    const totalYears = Math.floor(totalMonths / 12)
+    const remainingMonths = totalMonths % 12
+    
+    if (totalYears === 0 && remainingMonths === 0) {
+      return '1개월 미만'
+    }
+    
+    if (totalYears === 0) {
+      return `${remainingMonths}개월`
+    }
+    
+    if (remainingMonths === 0) {
+      return `${totalYears}년`
+    }
+    
+    return `${totalYears}년 ${remainingMonths}개월`
+  }
+
   const getColorClass = (index: number) => {
     const colors = [
       'from-blue-500 to-blue-600',
@@ -81,7 +117,12 @@ export default function CareerTimeline({ profile, careers }: CareerTimelineProps
           )}
           
           <div className="flex-1 text-center sm:text-left w-full">
-            <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">{profile.name}</h2>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+              <h2 className="text-2xl sm:text-4xl font-bold text-gray-900">{profile.name}</h2>
+              <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-sm">
+                경력 {calculateTotalExperience(careers)}
+              </span>
+            </div>
             <p className="text-base sm:text-xl text-gray-700 mb-4 sm:mb-6 font-medium break-words">{profile.bio}</p>
             
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-6">
