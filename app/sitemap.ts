@@ -1,18 +1,8 @@
 import { MetadataRoute } from 'next'
 
 async function fetchPosts() {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
-    const response = await fetch(`${baseUrl}/posts?page=0&size=1000`, {
-      next: { revalidate: 3600 },
-    })
-    if (!response.ok) return []
-    const data = await response.json()
-    return data.content || []
-  } catch (error) {
-    console.error('Failed to fetch posts for sitemap:', error)
-    return []
-  }
+  // 빌드 시간 단축을 위해 임시로 빈 배열 반환
+  return []
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -27,7 +17,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     {
-      url: `${baseUrl}/profile`,
+      url: `${baseUrl}/career`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
