@@ -59,8 +59,37 @@ export const metadata: Metadata = {
     maximumScale: 5,
   },
   icons: {
-    icon: '/favicon.ico',
+    // 다양한 해상도 favicon (ICO 파일 우선, PNG 보조)
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon_16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon_32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon_48x48.png', sizes: '48x48', type: 'image/png' },
+      { url: '/favicon_64x64.png', sizes: '64x64', type: 'image/png' },
+    ],
+    
+    // Apple 디바이스용 터치 아이콘 (iPhone/iPad 홈 화면)
+    apple: [
+      { url: '/favicon_180x180.png', sizes: '180x180', type: 'image/png' },
+    ],
+    
+    // Android Chrome 및 기타 디바이스용
+    other: [
+      {
+        rel: 'icon',
+        url: '/favicon_192x192.png',
+        sizes: '192x192',
+        type: 'image/png',
+      },
+      {
+        rel: 'icon', 
+        url: '/favicon_512x512.png',
+        sizes: '512x512',
+        type: 'image/png',
+      },
+    ],
   },
+  manifest: '/manifest.json',
 }
 
 export default function RootLayout({
