@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'default-secret-key'
-const JWT_EXPIRATION = '30m'
+const JWT_EXPIRATION = '12h'
 
 export interface JWTPayload {
   email: string
