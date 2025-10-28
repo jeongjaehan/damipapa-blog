@@ -5,8 +5,8 @@ import { join } from 'path'
 import { randomUUID } from 'crypto'
 
 const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads')
-const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB (압축된 파일 크기에 맞춰 조정)
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'] // WebP 지원 유지
 
 export async function POST(request: Request) {
   try {
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { message: '파일 크기는 5MB를 초과할 수 없습니다' },
+        { message: '압축된 파일 크기는 5MB를 초과할 수 없습니다' },
         { status: 400 }
       )
     }

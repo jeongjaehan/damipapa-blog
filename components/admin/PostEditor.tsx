@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import TipTapEditor from './TipTapEditor'
 import { Save, X } from 'lucide-react'
 import { trackPostCreate } from '@/lib/gtag'
+import { smartCompressImage } from '@/utils/imageUtils'
 
 interface PostEditorProps {
   post?: PostDetail
@@ -94,7 +95,13 @@ export default function PostEditor({ post }: PostEditorProps) {
     console.log('이미지 업로드 시작:', file.name, file.size, 'bytes')
     
     try {
-      const result = await uploadFile(file)
+      // 이미지 압축
+      console.log('이미지 압축 중...')
+      const compressedFile = await smartCompressImage(file)
+      console.log('압축 완료:', compressedFile.name, compressedFile.size, 'bytes')
+      
+      // 압축된 파일 업로드
+      const result = await uploadFile(compressedFile)
       console.log('업로드 성공:', result)
       return result.url
     } catch (error: any) {

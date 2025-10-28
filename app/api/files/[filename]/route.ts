@@ -40,7 +40,9 @@ export async function GET(
     return new NextResponse(new Uint8Array(fileBuffer), {
       headers: {
         'Content-Type': contentType,
-        'Cache-Control': 'public, max-age=31536000', // 1년 캐시
+        'Cache-Control': 'public, max-age=31536000, immutable', // 1년 캐시, immutable 추가
+        'X-Content-Type-Options': 'nosniff',
+        'Vary': 'Accept-Encoding', // 압축 지원
       },
     })
   } catch (error) {

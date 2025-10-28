@@ -12,6 +12,7 @@ import { common, createLowlight } from 'lowlight'
 import TurndownService from 'turndown'
 import { marked } from 'marked'
 import { Button } from '@/components/ui/button'
+import { smartCompressImage } from '@/utils/imageUtils'
 import {
   Bold,
   Italic,
@@ -180,7 +181,12 @@ export default function TipTapEditor({
       const file = (e.target as HTMLInputElement).files?.[0]
       if (file) {
         try {
-          const url = await onImageUpload(file)
+          // 이미지 압축
+          console.log('이미지 압축 중...')
+          const compressedFile = await smartCompressImage(file)
+          
+          // 압축된 파일 업로드
+          const url = await onImageUpload(compressedFile)
           editor.chain().focus().setImage({ src: url }).run()
         } catch (error) {
           console.error('Image upload failed:', error)
@@ -208,8 +214,9 @@ export default function TipTapEditor({
         event.preventDefault()
         const file = item.getAsFile()
         if (file) {
-          // Upload asynchronously without waiting (fire and forget)
-          onImageUpload(file)
+          // 압축 후 업로드 (비동기)
+          smartCompressImage(file)
+            .then((compressedFile) => onImageUpload(compressedFile))
             .then((url) => {
               editor.chain().focus().setImage({ src: url }).run()
             })

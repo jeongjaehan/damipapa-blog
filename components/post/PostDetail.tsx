@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Eye, Calendar, Edit, Trash2, EyeOff } from 'lucide-react'
+import OptimizedImage from '@/components/common/OptimizedImage'
 
 interface PostDetailProps {
   post: PostDetailType
@@ -166,7 +167,13 @@ export default function PostDetail({ post }: PostDetailProps) {
                   if (!src) {
                     return null
                   }
-                  return <img src={src} alt={alt} {...props} />
+                  return (
+                    <OptimizedImage 
+                      src={src} 
+                      alt={alt || ''} 
+                      className="max-w-full h-auto rounded-lg shadow-sm my-4"
+                    />
+                  )
                 },
                 iframe: ({ node, src, ...props }: any) => {
                   // Handle iframe tags directly (for YouTube embeds)
