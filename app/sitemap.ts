@@ -1,8 +1,21 @@
 import { MetadataRoute } from 'next'
+import { prisma } from '@/lib/db'
 
 async function fetchPosts() {
-  // 빌드 시간 단축을 위해 임시로 빈 배열 반환
-  return []
+  try {
+    const posts = await prisma.post.findMany({
+      where: { isPrivate: false }, // 공개 포스트만
+      select: {
+        id: true,
+        updatedAt: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+    return posts
+  } catch (error) {
+    console.error('Failed to fetch posts for sitemap:', error)
+    return [] // 에러 발생 시 빈 배열 반환
+  }
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

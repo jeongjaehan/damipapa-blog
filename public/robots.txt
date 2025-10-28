@@ -1,25 +1,38 @@
 # Allow all search engines to crawl the site
 User-agent: *
 Allow: /
+Allow: /posts/
+Allow: /career
+Allow: /tags
+Allow: /sitemap.xml
 
-# Disallow search index pages
+# Disallow private/admin areas
 Disallow: /search
 Disallow: /admin
 Disallow: /auth
 Disallow: /api
+Disallow: /profile
 
-# Sitemap location
-# Sitemap: https://example.com/sitemap.xml
+# Allow specific API endpoints for SEO
+Allow: /api/posts/*/view
 
-# Crawl delay
+# Image uploads - allow crawling
+Allow: /uploads/
+
+# Sitemap location (배포 시 실제 도메인으로 변경 필요)
+Sitemap: https://example.com/sitemap.xml
+
+# Crawl delay for general bots
 Crawl-delay: 1
 
-# Google-specific rules
+# Google-specific rules (faster crawling for Google)
 User-agent: Googlebot
 Allow: /
+Allow: /uploads/
 Crawl-delay: 0
 
 # Bing-specific rules  
 User-agent: Bingbot
 Allow: /
+Allow: /uploads/
 Crawl-delay: 1
