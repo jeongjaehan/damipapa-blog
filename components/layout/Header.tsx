@@ -32,7 +32,7 @@ export default function Header() {
             <Link href="/tags" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
               태그
             </Link>
-            {isAuthenticated ? (
+            {isAuthenticated && (
               <>
                 {isAdmin && (
                   <Link href="/admin">
@@ -63,10 +63,6 @@ export default function Header() {
                   로그아웃
                 </Button>
               </>
-            ) : (
-              <Link href="/auth/login">
-                <Button size="sm">로그인</Button>
-              </Link>
             )}
           </div>
 
@@ -116,7 +112,7 @@ export default function Header() {
             >
               태그
             </Link>
-            {isAuthenticated ? (
+            {isAuthenticated && (
               <>
                 {isAdmin && (
                   <>
@@ -154,14 +150,6 @@ export default function Header() {
                   로그아웃
                 </button>
               </>
-            ) : (
-              <Link
-                href="/auth/login"
-                className="block py-2 bg-primary-600 text-white px-4 rounded hover:bg-primary-700"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                로그인
-              </Link>
             )}
           </div>
         )}
