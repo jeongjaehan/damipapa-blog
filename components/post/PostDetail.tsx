@@ -172,6 +172,7 @@ export default function PostDetail({ post }: PostDetailProps) {
                       src={src} 
                       alt={alt || ''} 
                       className="max-w-full h-auto rounded-lg shadow-sm my-4"
+                      enableModal={true}
                     />
                   )
                 },
@@ -183,6 +184,13 @@ export default function PostDetail({ post }: PostDetailProps) {
                   return null
                 },
                 p: ({ node, children }: any) => {
+                  // Check if paragraph contains an image to avoid HTML validation error
+                  const hasImage = node?.children?.some((child: any) => child.tagName === 'img')
+                  
+                  if (hasImage) {
+                    return <div className="my-4">{children}</div>
+                  }
+                  
                   // Check if paragraph contains YouTube link and convert it
                   const content = String(children)
                   if (content.includes('youtube.com') || content.includes('youtu.be')) {

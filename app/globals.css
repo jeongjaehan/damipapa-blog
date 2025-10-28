@@ -430,3 +430,9 @@ select:disabled {
   animation: none !important;
 }
 
+/* Markdown 스타일 */
+.markdown p {
+  margin: 1rem 0;
+  line-height: 1.6;
+}
+
