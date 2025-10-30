@@ -26,8 +26,8 @@ export default async function ProjectsPage() {
           사이드 프로젝트
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          개발하면서 만든 다양한 프로젝트들을 소개합니다. 
-          각 프로젝트를 클릭하면 자세한 정보를 확인할 수 있어요.
+          저에게 또는 누군가에게 필요한 프로덕틀 만드는 것을 좋아합니다.
+          서비스가 잘되면 더 좋지만, 잘 안되더라도 만들어보는 것을 좋아합니다.
         </p>
       </div>
 
@@ -36,10 +36,10 @@ export default async function ProjectsPage() {
         <div className="p-6 sm:p-8">
           <div className="mb-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-2">
-              프로젝트 컬렉션
+              다양한 프로젝트들을 둘러보세요
             </h2>
             <p className="text-sm text-gray-600">
-              아이폰 홈스크린처럼 배치된 프로젝트들을 둘러보세요
+              각 프로젝트를 클릭하면 자세한 정보를 확인할 수 있어요.
             </p>
           </div>
           
