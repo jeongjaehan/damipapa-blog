@@ -1,7 +1,11 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting deployment for EC2 t3.micro (1GB RAM)..."
+echo "🚀 Starting FULL deployment for EC2 t3.micro (1GB RAM)..."
+echo ""
+echo "ℹ️  This script installs dependencies and updates database."
+echo "   For code-only changes, use ./deploy-quick.sh instead (much faster)"
+echo ""
 
 # 색상 정의
 GREEN='\033[0;32m'

@@ -499,11 +499,25 @@ pm2 status
 
 #### 업데이트
 
+**코드만 변경된 경우 (빠른 배포 - 30초 이내):**
+```bash
+cd ~/damipapa-blog
+git pull origin main
+./deploy-quick.sh
+```
+
+**package.json 또는 schema.prisma 변경된 경우 (전체 배포 - 5-7분):**
 ```bash
 cd ~/damipapa-blog
 git pull origin main
 ./deploy.sh
 ```
+
+**배포 스크립트 비교:**
+| 스크립트 | 실행 시간 | 수행 작업 | 사용 시기 |
+|---------|----------|---------|----------|
+| `deploy-quick.sh` | ~30초 | 빌드 + 재시작만 | 코드 변경만 |
+| `deploy.sh` | ~5-7분 | 의존성 설치 + DB 마이그레이션 + 빌드 + 재시작 | 의존성/스키마 변경 |
 
 ### Docker Compose 배포 (대안)
 
