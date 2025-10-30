@@ -1,0 +1,29 @@
+{
+  "id": "damipapa-blog",
+  "title": "다미파파 블로그",
+  "subtitle": "풀스택 개인 블로그 플랫폼",
+  "description": "100% 바이브 코딩으로 만들어가는 블로그 시스템",
+  "status": "completed",
+  "category": "웹 애플리케이션",
+  "tech_stack": ["Next.js 15", "TypeScript", "Prisma", "MySQL", "Tailwind CSS", "AWS", "cloudflare", "github"],
+  "icon": {
+    "type": "auto",
+    "value": "다블",
+    "color": "#6366f1"
+  },
+  "links": {
+    "web": "https://damipapa.com"
+  },
+  "features": [
+    "마크다운 기반 포스트 작성",
+    "실시간 미리보기",
+    "이미지 업로드 및 최적화",
+    "Facebook 댓글 시스템",
+    "태그 및 검색 기능",
+    "JWT 인증 시스템"
+  ],
+  "created_at": "2024-10-01",
+  "updated_at": "2024-10-29"
+}
+
+

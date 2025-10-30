@@ -1,0 +1,27 @@
+{
+  "id": "ev-subsidy-helper",
+  "title": "전기차 보조금 도우미",
+  "subtitle": "Flutter 크로스플랫폼 전기차 보조금 계산 앱",
+  "description": "전국 지자체별 전기차 보조금을 쉽게 확인하고 계산할 수 있는 서비스",
+  "status": "completed",
+  "category": "모바일 애플리케이션",
+  "tech_stack": ["Flutter", "Dart", "Provider Pattern", "Node.js", "Express", "MySQL", "Playwright"],
+  "icon": {
+    "type": "auto", 
+    "value": "⚡️",
+    "color": "#10b981"
+  },
+  "links": {
+    "android": "https://play.google.com/store/apps/details?id=com.evsubsidy.app&hl=ko",
+    "playstore": "https://play.google.com/store/apps/details?id=com.evsubsidy.app&hl=ko",
+    "github": ""
+  },
+  "features": [
+    "전국 지자체별 전기차 보조금 조회",
+    "보조금 계산기",
+    "보조금 현황 모니터링",
+    "사용자 맞춤형 정보 제공"
+  ],
+  "created_at": "2025-10-30",
+  "updated_at": "2025-10-30"
+}

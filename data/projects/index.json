@@ -1,0 +1,24 @@
+[
+  {
+    "id": "damipapa-blog",
+    "slug": "damipapa-blog",
+    "title": "다미파파 블로그",
+    "description": "100% 바이브코딩으로 만들어가는 풀스택 개인 블로그",
+    "status": "completed",
+    "icon": null,
+    "iconColor": "#6366f1",
+    "order": 1
+  },
+  {
+    "id": "ev-subsidy-helper",
+    "slug": "ev-subsidy-helper",
+    "title": "전기차 보조금 도우미",
+    "description": "전국 161개 지역별 전기차 보조금을 실시간으로 조회하는 Flutter 크로스플랫폼 앱",
+    "status": "completed",
+    "icon": "⚡️",
+    "iconColor": "#10b981",
+    "order": 2
+  }
+]
+
+

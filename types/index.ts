@@ -148,3 +148,58 @@ export interface CareerData {
   careers: Career[]
 }
 
+// 프로젝트 관련 타입들
+export interface ProjectIcon {
+  type: 'image' | 'text' | 'auto'
+  value: string // 이미지 경로 또는 텍스트
+  color: string
+}
+
+export interface ProjectLinks {
+  web?: string
+  ios?: string
+  android?: string
+  github?: string
+}
+
+export interface ProjectMetadata {
+  id: string
+  title: string
+  subtitle: string
+  description: string
+  status: 'planning' | 'in-progress' | 'completed' | 'launched' | 'paused'
+  category: string
+  tech_stack: string[]
+  icon: ProjectIcon
+  links: ProjectLinks
+  features: string[]
+  created_at: string
+  updated_at: string
+}
+
+export interface ProjectListItem {
+  id: string
+  slug: string
+  title: string
+  description: string
+  status: string
+  icon: string | null
+  iconColor: string
+  iconType?: 'image' | 'text'
+  order: number
+}
+
+export interface Project extends ProjectMetadata {
+  slug: string
+  content: string
+}
+
+export interface ProjectStats {
+  total: number
+  planning: number
+  inProgress: number
+  completed: number
+  launched: number
+  paused: number
+}
+

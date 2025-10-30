@@ -1,19 +1,18 @@
 import { Metadata } from 'next'
+import { readCareerData } from '@/lib/career'
 
 async function getCareerData() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
-    const response = await fetch(`${baseUrl}/career`, {
-      next: { revalidate: 3600 }
-    })
-    if (!response.ok) throw new Error('Failed to fetch')
-    return await response.json()
+    // 실제 career.json 파일에서 데이터를 읽어옴
+    return await readCareerData()
   } catch (error) {
-    // 기본값 반환
+    console.error('Career data 로딩 실패:', error)
+    // 에러 발생 시 기본값 반환
     return {
       profile: {
         name: '정재한',
-        bio: 'Senior Developer'
+        bio: 'Senior Developer',
+        avatar: null
       }
     }
   }
