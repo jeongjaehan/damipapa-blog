@@ -21,9 +21,16 @@ export NODE_ENV=production
 echo -e "${YELLOW}📦 Installing dependencies (production mode)...${NC}"
 npm ci
 
-# ✅ Seed 실행을 위해 tsx만 설치
-echo -e "${YELLOW}🌱 Installing tsx for seeding...${NC}"
-npm install --save-dev tsx
+# ✅ 누락된 의존성 체크 및 설치
+echo -e "${YELLOW}🔍 Checking and installing missing dependencies...${NC}"
+if ! npm list mime-types > /dev/null 2>&1; then
+  echo -e "${YELLOW}📦 Installing mime-types...${NC}"
+  npm install mime-types
+fi
+
+# ✅ Seed 및 빌드를 위한 dev dependencies 설치
+echo -e "${YELLOW}🛠️ Installing dev dependencies for build...${NC}"
+npm install --save-dev tsx typescript @types/mime-types eslint
 
 echo -e "${YELLOW}🔧 Generating Prisma client...${NC}"
 npx prisma generate
@@ -34,12 +41,16 @@ npx prisma db push
 echo -e "${YELLOW}🌱 Seeding initial data...${NC}"
 npm run prisma:seed
 
-# ✅ Seed 후 dev dependencies 제거
+echo -e "${YELLOW}🏗️ Building application (with memory limit: 1024MB)...${NC}"
+NODE_OPTIONS="--max-old-space-size=1024" NEXT_TELEMETRY_DISABLED=1 npm run build
+
+# ✅ 빌드 후 dev dependencies 제거 (공간 절약)
 echo -e "${YELLOW}🧹 Removing dev dependencies to save space...${NC}"
 npm prune --production
 
-echo -e "${YELLOW}🏗️ Building application (with memory limit: 1024MB)...${NC}"
-NODE_OPTIONS="--max-old-space-size=1024" NEXT_TELEMETRY_DISABLED=1 npm run build
+# ✅ 프로덕션에 필요한 의존성은 유지
+echo -e "${YELLOW}📦 Ensuring production dependencies...${NC}"
+npm install mime-types --save
 
 echo -e "${YELLOW}📊 Checking memory usage...${NC}"
 free -h
