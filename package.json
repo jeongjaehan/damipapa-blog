@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:prod": "NODE_OPTIONS='--max-old-space-size=1024' next build",
-    "start": "NODE_OPTIONS='--max-old-space-size=768' next start",
+    "build:prod": "NODE_OPTIONS='--max-old-space-size=1024' DEPLOY_ENV=production next build",
+    "build:local": "DEPLOY_ENV=local next build",
+    "start": "next start",
     "start:prod": "NODE_OPTIONS='--max-old-space-size=768' node server.js",
     "lint": "next lint",
     "prisma:generate": "prisma generate",

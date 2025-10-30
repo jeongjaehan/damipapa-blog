@@ -42,7 +42,7 @@ echo -e "${YELLOW}🌱 Seeding initial data...${NC}"
 npm run prisma:seed
 
 echo -e "${YELLOW}🏗️ Building application (with memory limit: 1024MB)...${NC}"
-NODE_OPTIONS="--max-old-space-size=1024" NEXT_TELEMETRY_DISABLED=1 npm run build
+NODE_OPTIONS="--max-old-space-size=1024" DEPLOY_ENV=production NEXT_TELEMETRY_DISABLED=1 npm run build:prod
 
 # ✅ 빌드 후 dev dependencies 제거 (공간 절약)
 echo -e "${YELLOW}🧹 Removing dev dependencies to save space...${NC}"
@@ -53,15 +53,20 @@ echo -e "${YELLOW}📦 Ensuring production dependencies...${NC}"
 npm install mime-types --save
 
 echo -e "${YELLOW}📊 Checking memory usage...${NC}"
-free -h
+# Linux 환경에서만 free 명령어 실행
+if command -v free &> /dev/null; then
+  free -h
+else
+  echo "Memory check skipped (free command not available)"
+fi
 
 # PM2가 이미 실행 중인지 확인
 if pm2 list | grep -q "damipapa-blog"; then
   echo -e "${YELLOW}♻️ Restarting PM2...${NC}"
-  pm2 restart ecosystem.config.js
+  pm2 restart ecosystem.production.config.js
 else
   echo -e "${YELLOW}🚀 Starting PM2...${NC}"
-  pm2 start ecosystem.config.js
+  pm2 start ecosystem.production.config.js
   pm2 save
 fi
 
