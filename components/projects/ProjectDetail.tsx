@@ -34,7 +34,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       <h3 className="text-lg sm:text-xl font-medium text-gray-700 mb-2 sm:mb-3 mt-4 sm:mt-5 break-words">{children}</h3>
     ),
     p: ({ children }: any) => (
-      <p className="text-gray-700 leading-relaxed mb-3 sm:mb-4 break-words">{children}</p>
+      <p className="text-gray-700 leading-relaxed mb-3 sm:mb-4 break-words max-w-full overflow-hidden">{children}</p>
     ),
     ul: ({ children }: any) => (
       <ul className="list-disc list-inside text-gray-700 mb-3 sm:mb-4 space-y-1 ml-2 sm:ml-0">{children}</ul>
@@ -59,22 +59,34 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       
       if (isBlock) {
         return (
-          <div className="my-3 sm:my-4 -mx-2 sm:mx-0">
-            <pre className="bg-gray-100 rounded-lg p-3 sm:p-4 overflow-x-auto text-sm">
-              <code className={className}>{children}</code>
+          <div className="my-3 sm:my-4 -mx-2 sm:mx-0 overflow-hidden">
+            <pre className="bg-gray-100 rounded-lg p-3 sm:p-4 overflow-x-auto text-sm max-w-full">
+              <code className={`${className} block max-w-full overflow-x-auto whitespace-pre-wrap break-words`}>
+                {children}
+              </code>
             </pre>
           </div>
         )
       }
       
       return (
-        <code className="bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs sm:text-sm font-mono break-all">
+        <code className="bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs sm:text-sm font-mono break-all max-w-full inline-block">
           {children}
         </code>
       )
     },
     strong: ({ children }: any) => (
-      <strong className="font-semibold text-gray-900 break-words">{children}</strong>
+      <strong className="font-semibold text-gray-900 break-words max-w-full overflow-hidden">{children}</strong>
+    ),
+    a: ({ children, href }: any) => (
+      <a 
+        href={href} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="text-blue-600 underline break-all max-w-full overflow-hidden inline-block"
+      >
+        {children}
+      </a>
     ),
   }
 
@@ -188,12 +200,14 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
           <Card className="border-gray-200">
             <div className="p-4 sm:p-6 lg:p-8">
               <div className="prose prose-gray max-w-none break-words overflow-hidden">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={markdownComponents}
-                >
-                  {project.content}
-                </ReactMarkdown>
+                <div className="max-w-full overflow-x-hidden">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={markdownComponents}
+                  >
+                    {project.content}
+                  </ReactMarkdown>
+                </div>
               </div>
             </div>
           </Card>
