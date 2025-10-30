@@ -18,6 +18,16 @@
     "icon": "⚡️",
     "iconColor": "#10b981",
     "order": 2
+  },
+  {
+    "id": "tetris-game",
+    "slug": "tetris-game",
+    "title": "테트리스 게임",
+    "description": "블로그에 통합된 클래식 테트리스 미니게임",
+    "status": "completed",
+    "icon": "🎮",
+    "iconColor": "#8b5cf6",
+    "order": 3
   }
 ]
 

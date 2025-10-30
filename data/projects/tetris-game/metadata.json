@@ -1,0 +1,35 @@
+{
+  "id": "tetris-game",
+  "title": "테트리스 게임",
+  "subtitle": "클래식 테트리스 미니게임",
+  "description": "블로그에 통합된 웹 기반 테트리스 게임. Web Audio API를 활용한 사운드 효과와 반응형 디자인을 지원합니다.",
+  "status": "completed",
+  "category": "웹 게임",
+  "tech_stack": ["Next.js 15", "TypeScript", "React", "Web Audio API", "Tailwind CSS"],
+  "icon": {
+    "type": "auto",
+    "value": "🎮",
+    "color": "#8b5cf6"
+  },
+  "links": {
+    "web": "/game/tetris"
+  },
+  "features": [
+    "7가지 테트로미노 (I, O, T, S, Z, J, L)",
+    "Bag 알고리즘으로 공정한 블록 배치",
+    "라인 클리어 및 점수 시스템",
+    "레벨 시스템 (속도 증가)",
+    "다음 블록 미리보기 (3개)",
+    "홀드 기능",
+    "Web Audio API 기반 사운드 효과",
+    "키보드 조작 지원",
+    "모바일 터치 제스처 지원 (스와이프, 탭, 길게 누르기)",
+    "거리 기반 블록 이동 (손가락이 멈춘 지점까지만 이동)",
+    "속도 기반 빠른 조작",
+    "모바일 컨트롤 버튼",
+    "반응형 디자인"
+  ],
+  "created_at": "2025-10-31",
+  "updated_at": "2025-10-31"
+}
+
