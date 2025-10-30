@@ -8,6 +8,7 @@ import {
   GameAction,
   TetrominoType,
   CellState,
+  Tetromino,
 } from './types'
 import {
   createEmptyBoard,
