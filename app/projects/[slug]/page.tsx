@@ -47,13 +47,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
       {/* 뒤로 가기 버튼 */}
-      <div className="mb-6">
+      <div className="mb-4 sm:mb-6">
         <Link href="/projects">
-          <Button variant="ghost" className="gap-2 text-gray-600 hover:text-gray-900">
+          <Button variant="ghost" className="gap-2 text-gray-600 hover:text-gray-900 text-sm sm:text-base">
             <ArrowLeft className="w-4 h-4" />
-            프로젝트 목록으로
+            <span className="hidden sm:inline">프로젝트 목록으로</span>
+            <span className="sm:hidden">목록</span>
           </Button>
         </Link>
       </div>
