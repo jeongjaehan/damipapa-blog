@@ -28,7 +28,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { name, bio, email, linkedin, avatar } = body
+    const { name, bio, email, linkedin, facebook, avatar } = body
 
     // 필수 필드 검증
     if (!name || !bio || !email || !linkedin) {
@@ -44,6 +44,7 @@ export async function PUT(request: NextRequest) {
       bio,
       email,
       linkedin,
+      facebook: facebook || undefined,
       avatar: avatar || '',
     }
 

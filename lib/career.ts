@@ -20,6 +20,7 @@ export async function readCareerData(): Promise<CareerData> {
         bio: '풀스택 개발자 | 블로그 운영자',
         email: 'contact@damipapa.com',
         linkedin: 'https://linkedin.com/in/damipapa',
+        facebook: undefined,
       },
       careers: [],
     }

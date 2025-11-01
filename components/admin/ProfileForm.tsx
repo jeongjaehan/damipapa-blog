@@ -18,6 +18,7 @@ export default function ProfileForm({ profile, onSave, onCancel }: ProfileFormPr
   const [bio, setBio] = useState(profile.bio)
   const [email, setEmail] = useState(profile.email)
   const [linkedin, setLinkedin] = useState(profile.linkedin)
+  const [facebook, setFacebook] = useState(profile.facebook || '')
   const [avatar, setAvatar] = useState(profile.avatar || '')
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -59,6 +60,7 @@ export default function ProfileForm({ profile, onSave, onCancel }: ProfileFormPr
       bio,
       email,
       linkedin,
+      facebook: facebook || undefined,
       avatar: avatar || undefined,
     })
   }
@@ -135,6 +137,21 @@ export default function ProfileForm({ profile, onSave, onCancel }: ProfileFormPr
               className={errors.linkedin ? 'border-red-500' : ''}
             />
             {errors.linkedin && <p className="text-red-500 text-sm mt-1">{errors.linkedin}</p>}
+          </div>
+
+          {/* Facebook */}
+          <div>
+            <label htmlFor="facebook" className="block text-sm font-medium text-gray-700 mb-2">
+              Facebook URL (선택)
+            </label>
+            <Input
+              id="facebook"
+              type="url"
+              value={facebook}
+              onChange={(e) => setFacebook(e.target.value)}
+              placeholder="https://facebook.com/jaehan.jeong.7"
+              style={{ color: '#111827', backgroundColor: '#ffffff' }}
+            />
           </div>
 
           {/* 프로필 사진 */}

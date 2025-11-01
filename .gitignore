@@ -54,5 +54,8 @@ data/career.json
 # Cursor
 .cursor/
 
+# VS Code
+.vscode/
+
 # logs
 logs/

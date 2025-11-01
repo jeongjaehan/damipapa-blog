@@ -131,6 +131,7 @@ export interface CareerProfile {
   bio: string           // 한줄소개
   email: string
   linkedin: string
+  facebook?: string     // Facebook URL (선택)
   avatar?: string       // 프로필 사진 (선택)
 }
 
