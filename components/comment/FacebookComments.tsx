@@ -7,16 +7,10 @@ interface FacebookCommentsProps {
   url: string
 }
 
-declare global {
-  interface Window {
-    FB?: any
-  }
-}
-
 export default function FacebookComments({ url }: FacebookCommentsProps) {
   useEffect(() => {
     // Facebook SDK가 로드된 후 Comments 파싱
-    if (window.FB) {
+    if (window.FB?.XFBML) {
       window.FB.XFBML.parse()
     }
   }, [url])

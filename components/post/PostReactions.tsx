@@ -10,15 +10,6 @@ interface PostReactionsProps {
   postId: number
 }
 
-declare global {
-  interface Window {
-    FB?: {
-      getLoginStatus: (callback: (response: any) => void) => void
-      init: (params: any) => void
-    }
-  }
-}
-
 export default function PostReactions({ postId }: PostReactionsProps) {
   const [reactionStats, setReactionStats] = useState<PostReactionResponse | null>(null)
   const [loading, setLoading] = useState(true)
