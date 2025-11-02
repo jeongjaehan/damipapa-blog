@@ -28,18 +28,19 @@ model User {
 }
 
 model Post {
-  id          Int        @id @default(autoincrement())
-  title       String     @db.VarChar(200)
-  content     String     @db.LongText
-  tags        String?    @db.Text // JSON array stringified
-  isPrivate   Boolean    @default(false) @map("is_private")
-  secretToken String?    @unique @map("secret_token") @db.VarChar(36)
-  viewCount   Int        @default(0) @map("view_count")
-  authorId    Int        @map("author_id")
-  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
+  id          Int            @id @default(autoincrement())
+  title       String         @db.VarChar(200)
+  content     String         @db.LongText
+  tags        String?        @db.Text // JSON array stringified
+  isPrivate   Boolean        @default(false) @map("is_private")
+  secretToken String?        @unique @map("secret_token") @db.VarChar(36)
+  viewCount   Int            @default(0) @map("view_count")
+  authorId    Int            @map("author_id")
+  author      User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
   postViews   PostView[]
+  reactions   PostReaction[]
 
   @@map("posts")
 }
@@ -53,6 +54,20 @@ model PostView {
 
   @@unique([postId, ipAddress])
   @@map("post_views")
+}
+
+model PostReaction {
+  id           Int       @id @default(autoincrement())
+  postId       Int       @map("post_id")
+  reactionType String    @map("reaction_type") @db.VarChar(10) // LIKE or DISLIKE
+  facebookId   String?   @map("facebook_id") @db.VarChar(100)
+  ipAddress    String?   @map("ip_address") @db.VarChar(50)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  post         Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, facebookId])
+  @@unique([postId, ipAddress])
+  @@map("post_reactions")
 }
 
 model Template {

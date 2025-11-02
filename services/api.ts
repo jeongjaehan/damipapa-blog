@@ -15,6 +15,7 @@ import type {
   Career,
   CareerData,
   CareerProfile,
+  PostReactionResponse,
 } from '@/types'
 
 const API_URL = '/api'  // Next.js API Routes 사용
@@ -96,6 +97,33 @@ export const updatePost = async (id: number, data: UpdatePostRequest): Promise<P
 
 export const deletePost = async (id: number): Promise<void> => {
   await api.delete(`/posts/${id}`)
+}
+
+// Post Reaction APIs
+export const getPostReactions = async (
+  postId: number,
+  facebookId?: string | null
+): Promise<PostReactionResponse> => {
+  const params = new URLSearchParams()
+  if (facebookId) {
+    params.append('facebookId', facebookId)
+  }
+  const response = await api.get<PostReactionResponse>(
+    `/posts/${postId}/reactions?${params.toString()}`
+  )
+  return response.data
+}
+
+export const togglePostReaction = async (
+  postId: number,
+  reactionType: 'LIKE' | 'DISLIKE',
+  facebookId?: string | null
+): Promise<PostReactionResponse> => {
+  const response = await api.post<PostReactionResponse>(`/posts/${postId}/reactions`, {
+    reactionType,
+    facebookId: facebookId || null,
+  })
+  return response.data
 }
 
 export const searchPosts = async (

@@ -32,6 +32,25 @@ export interface PostDetail {
   viewCount: number
   isPrivate?: boolean
   secretToken?: string
+  reactionStats?: PostReactionStats
+}
+
+export interface PostReactionStats {
+  likeCount: number
+  dislikeCount: number
+  userReaction: {
+    type: 'LIKE' | 'DISLIKE'
+    createdAt: string
+  } | null
+}
+
+export interface PostReactionResponse {
+  likeCount: number
+  dislikeCount: number
+  userReaction: {
+    type: 'LIKE' | 'DISLIKE'
+    createdAt: string
+  } | null
 }
 
 export interface PageResponse<T> {

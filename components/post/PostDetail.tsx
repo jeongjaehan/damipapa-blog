@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Eye, Calendar, Edit, Trash2, EyeOff } from 'lucide-react'
 import OptimizedImage from '@/components/common/OptimizedImage'
+import PostReactions from './PostReactions'
 
 interface PostDetailProps {
   post: PostDetailType
@@ -209,6 +210,9 @@ export default function PostDetail({ post }: PostDetailProps) {
               {post.content}
             </ReactMarkdown>
           </div>
+
+          {/* 좋아요/싫어요 버튼 */}
+          <PostReactions postId={post.id} />
         </div>
       </div>
     </article>
