@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter} from 'next/navigation'
-import { createPost, updatePost, uploadFile, getTags, getTemplates } from '@/services/api'
+import { createPost, updatePost, uploadFile, getTags, getTemplates, suggestPostTitle } from '@/services/api'
 import { PostDetail, Template } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import TipTapEditor from './TipTapEditor'
-import { Save, X } from 'lucide-react'
+import { Save, X, Sparkles } from 'lucide-react'
 import { trackPostCreate } from '@/lib/gtag'
 import { smartCompressImage } from '@/utils/imageUtils'
 
@@ -30,6 +30,9 @@ export default function PostEditor({ post }: PostEditorProps) {
   const [selectedTemplate, setSelectedTemplate] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [suggestingTitle, setSuggestingTitle] = useState(false)
+  const [titleSuggestions, setTitleSuggestions] = useState<string[]>([])
+  const [showSuggestionModal, setShowSuggestionModal] = useState(false)
 
   // 기존 태그 목록 및 템플릿 로드
   useEffect(() => {
@@ -91,6 +94,32 @@ export default function PostEditor({ post }: PostEditorProps) {
     setSelectedTemplate('')
   }
 
+  const handleSuggestTitle = async () => {
+    if (!content || content.trim().length === 0) {
+      setError('제목을 추천받으려면 먼저 본문 내용을 작성해주세요.')
+      return
+    }
+
+    setSuggestingTitle(true)
+    setError('')
+
+    try {
+      const suggestions = await suggestPostTitle(content)
+      setTitleSuggestions(suggestions)
+      setShowSuggestionModal(true)
+    } catch (err: any) {
+      setError(err.response?.data?.message || '제목 추천 중 오류가 발생했습니다.')
+    } finally {
+      setSuggestingTitle(false)
+    }
+  }
+
+  const handleSelectSuggestion = (suggestion: string) => {
+    setTitle(suggestion)
+    setShowSuggestionModal(false)
+    setTitleSuggestions([])
+  }
+
   const handleImageUpload = async (file: File): Promise<string> => {
     console.log('이미지 업로드 시작:', file.name, file.size, 'bytes')
     
@@ -150,9 +179,22 @@ export default function PostEditor({ post }: PostEditorProps) {
 
       <div className="bg-white rounded-lg shadow-md p-6 space-y-4">
         <div>
-          <label htmlFor="title" className="block text-sm font-medium mb-2">
-            제목 *
-          </label>
+          <div className="flex items-center justify-between mb-2">
+            <label htmlFor="title" className="block text-sm font-medium">
+              제목 *
+            </label>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleSuggestTitle}
+              disabled={suggestingTitle || !content}
+              className="gap-2"
+            >
+              <Sparkles className="w-4 h-4" />
+              {suggestingTitle ? 'AI 생성 중...' : 'AI 제목 추천'}
+            </Button>
+          </div>
           <input
             id="title"
             type="text"
@@ -282,6 +324,54 @@ export default function PostEditor({ post }: PostEditorProps) {
           {loading ? '저장 중...' : post ? '수정' : '발행'}
         </Button>
       </div>
+
+      {/* 제목 추천 모달 */}
+      {showSuggestionModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-yellow-500" />
+                AI 제목 추천
+              </h3>
+              <button
+                onClick={() => setShowSuggestionModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 mb-4">
+              본문 내용을 분석해서 생성한 제목입니다. 마음에 드는 제목을 클릭하세요.
+            </p>
+            <div className="space-y-3">
+              {titleSuggestions.map((suggestion, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSelectSuggestion(suggestion)}
+                  className="w-full text-left p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors"
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-medium">
+                      {index + 1}
+                    </span>
+                    <span className="flex-1 text-gray-800">{suggestion}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+            <div className="mt-6 flex justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowSuggestionModal(false)}
+              >
+                취소
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </form>
   )
 }

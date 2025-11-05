@@ -288,5 +288,13 @@ export const deleteCareer = async (id: string): Promise<void> => {
   await api.delete(`/career/${id}`)
 }
 
+// OpenAI Title Suggestion API
+export const suggestPostTitle = async (content: string): Promise<string[]> => {
+  const response = await api.post<{ suggestions: string[] }>('/admin/posts/suggest-title', {
+    content,
+  })
+  return response.data.suggestions
+}
+
 export default api
 
