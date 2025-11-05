@@ -76,12 +76,11 @@ export default function TipTapEditor({
   onImageUpload,
 }: TipTapEditorProps) {
   const [isGrammarModalOpen, setIsGrammarModalOpen] = useState(false)
-  const [grammarCheckLoading, setGrammarCheckLoading] = useState(false)
-  const [grammarResult, setGrammarResult] = useState<{
-    original: string
-    corrected: string
-    changes: Array<{ original: string; corrected: string; reason: string }>
-  } | null>(null)
+  const [originalText, setOriginalText] = useState('')
+  const [streamingContent, setStreamingContent] = useState('')
+  const [isStreaming, setIsStreaming] = useState(false)
+  const [streamController, setStreamController] = useState<AbortController | null>(null)
+  const [streamError, setStreamError] = useState<string | undefined>()
   
   // 프롬프트 편집 상태
   const [promptSettings, setPromptSettings] = useState<GrammarPromptSettings>(DEFAULT_GRAMMAR_PROMPT_SETTINGS)
@@ -231,8 +230,8 @@ export default function TipTapEditor({
     return false
   }
 
-  // Grammar check function
-  const handleGrammarCheck = async () => {
+  // Grammar check function - open modal
+  const handleGrammarCheck = () => {
     if (!editor) return
 
     const html = editor.getHTML()
@@ -243,50 +242,130 @@ export default function TipTapEditor({
       return
     }
 
-    setGrammarCheckLoading(true)
+    setOriginalText(markdown)
+    setStreamingContent('')
+    setStreamError(undefined)
     setIsGrammarModalOpen(true)
-    setGrammarResult(null)
+  }
+
+  // Start streaming grammar check
+  const handleStartStreaming = async () => {
+    if (!originalText) return
+
+    // 이전 스트림이 있다면 취소
+    if (streamController) {
+      streamController.abort()
+    }
+
+    const controller = new AbortController()
+    setStreamController(controller)
+    setIsStreaming(true)
+    setStreamingContent('')
+    setStreamError(undefined)
 
     try {
-      const response = await api.post('/grammar/check', { 
-        text: markdown,
-        systemPrompt: promptSettings.systemPrompt,
-        temperature: promptSettings.temperature,
-        maxTokens: promptSettings.maxTokens,
+      const response = await fetch('/api/grammar/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: originalText,
+          systemPrompt: promptSettings.systemPrompt,
+          temperature: promptSettings.temperature,
+          maxTokens: promptSettings.maxTokens,
+        }),
+        signal: controller.signal,
       })
 
-      const data = response.data
-      setGrammarResult({
-        original: data.original,
-        corrected: data.corrected,
-        changes: data.changes,
-      })
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || '문법 검사 중 오류가 발생했습니다.')
+      }
+
+      const reader = response.body?.getReader()
+      if (!reader) {
+        throw new Error('스트리밍 응답을 받을 수 없습니다.')
+      }
+
+      const decoder = new TextDecoder()
+      
+      while (true) {
+        const { done, value } = await reader.read()
+        
+        if (done) break
+
+        const chunk = decoder.decode(value, { stream: true })
+        const lines = chunk.split('\n')
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6))
+              
+              if (data.error) {
+                throw new Error(data.error)
+              }
+              
+              if (data.fullContent) {
+                setStreamingContent(data.fullContent)
+              }
+              
+              if (data.done) {
+                setIsStreaming(false)
+                setStreamController(null)
+                return
+              }
+            } catch (parseError) {
+              console.error('JSON parsing error:', parseError)
+            }
+          }
+        }
+      }
     } catch (error: any) {
-      console.error('Grammar check error:', error)
-      alert(error.response?.data?.error || '문법 검사 중 오류가 발생했습니다.')
-      setIsGrammarModalOpen(false)
-    } finally {
-      setGrammarCheckLoading(false)
+      console.error('Streaming error:', error)
+      if (error.name === 'AbortError') {
+        console.log('스트리밍이 사용자에 의해 취소되었습니다.')
+      } else {
+        setStreamError(error.message || '문법 검사 중 오류가 발생했습니다.')
+      }
+      setIsStreaming(false)
+      setStreamController(null)
     }
+  }
+
+  // Cancel streaming
+  const handleCancelStreaming = () => {
+    if (streamController) {
+      streamController.abort()
+      setStreamController(null)
+    }
+    setIsStreaming(false)
   }
 
   // Apply grammar corrections
   const handleApplyCorrections = () => {
-    if (!editor || !grammarResult) return
+    if (!editor || !streamingContent) return
 
     // Convert markdown to HTML and set as editor content
-    const html = marked.parse(grammarResult.corrected) as string
+    const html = marked.parse(streamingContent) as string
     editor.commands.setContent(html)
-    onChange(grammarResult.corrected)
+    onChange(streamingContent)
 
     setIsGrammarModalOpen(false)
-    setGrammarResult(null)
+    setStreamingContent('')
+    setOriginalText('')
   }
 
   // Close grammar modal
   const handleCloseGrammarModal = () => {
+    // 스트리밍 중이라면 취소
+    handleCancelStreaming()
+    
     setIsGrammarModalOpen(false)
-    setGrammarResult(null)
+    setStreamingContent('')
+    setOriginalText('')
+    setStreamError(undefined)
   }
 
   // 프롬프트 설정 업데이트 및 서버 저장
@@ -479,7 +558,7 @@ export default function TipTapEditor({
           variant="ghost"
           size="sm"
           onClick={handleGrammarCheck}
-          disabled={grammarCheckLoading}
+          disabled={isStreaming}
           className="text-purple-600 hover:text-purple-800 hover:bg-purple-50"
           title="문법 검사 (AI)"
         >
@@ -518,12 +597,13 @@ export default function TipTapEditor({
       <GrammarCheckModal
         isOpen={isGrammarModalOpen}
         onClose={handleCloseGrammarModal}
-        original={grammarResult?.original || ''}
-        corrected={grammarResult?.corrected || ''}
-        changes={grammarResult?.changes || []}
+        originalText={originalText}
+        streamingContent={streamingContent}
+        isStreaming={isStreaming}
+        onStartStreaming={handleStartStreaming}
+        onCancelStreaming={handleCancelStreaming}
         onApply={handleApplyCorrections}
-        onRetry={handleGrammarCheck}
-        loading={grammarCheckLoading}
+        error={streamError}
         // 프롬프트 편집 관련 props
         systemPrompt={promptSettings.systemPrompt}
         onSystemPromptChange={(value) => updatePromptSettings({ systemPrompt: value })}
