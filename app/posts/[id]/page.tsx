@@ -58,9 +58,71 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
 
   const title = post.title
-  const description = post.content
-    ?.replace(/<[^>]*>/g, '')
-    ?.substring(0, 160) || '다미파파의 블로그'
+  
+  // 포스트 내용에서 텍스트 추출 (HTML 태그, 마크다운 링크, 이미지 제거)
+  const extractText = (content: string): string => {
+    if (!content) return '다미파파의 블로그'
+    
+    // HTML 태그 제거
+    let text = content.replace(/<[^>]*>/g, '')
+    
+    // 마크다운 이미지 제거: ![alt](url) 형식
+    text = text.replace(/!\[.*?\]\(.*?\)/g, '')
+    
+    // 마크다운 링크 제거: [text](url) 형식, 텍스트만 남김
+    text = text.replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+    
+    // 마크다운 헤더 제거 (# 제거)
+    text = text.replace(/^#{1,6}\s+/gm, '')
+    
+    // 코드 블록 제거
+    text = text.replace(/```[\s\S]*?```/g, '')
+    text = text.replace(/`[^`]+`/g, '')
+    
+    // 여러 공백을 하나로
+    text = text.replace(/\s+/g, ' ').trim()
+    
+    return text.substring(0, 160) || '다미파파의 블로그'
+  }
+  
+  const description = extractText(post.content || '')
+  
+  // 포스트 내용에서 첫 이미지 URL 추출
+  const extractFirstImage = (content: string): string | null => {
+    if (!content) return null
+    
+    // 마크다운 이미지 형식: ![alt](url)
+    const markdownImageMatch = content.match(/!\[.*?\]\((.*?)\)/)
+    if (markdownImageMatch && markdownImageMatch[1]) {
+      const imageUrl = markdownImageMatch[1]
+      // 절대 URL인 경우 그대로 사용, 상대 URL인 경우 baseUrl 추가
+      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        return imageUrl
+      }
+      if (imageUrl.startsWith('/')) {
+        return `${baseUrl}${imageUrl}`
+      }
+      return `${baseUrl}/${imageUrl}`
+    }
+    
+    // HTML img 태그 형식
+    const htmlImageMatch = content.match(/<img[^>]+src=["']([^"']+)["']/)
+    if (htmlImageMatch && htmlImageMatch[1]) {
+      const imageUrl = htmlImageMatch[1]
+      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        return imageUrl
+      }
+      if (imageUrl.startsWith('/')) {
+        return `${baseUrl}${imageUrl}`
+      }
+      return `${baseUrl}/${imageUrl}`
+    }
+    
+    return null
+  }
+  
+  const firstImage = extractFirstImage(post.content || '')
+  const ogImage = firstImage || `${baseUrl}/og-image.png`
   
   const siteTitle = '다미파파의 블로그'
   const fullTitle = `${siteTitle} - ${title}`
@@ -72,28 +134,29 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     authors: [{ name: post.author?.name || '다미파파' }],
     openGraph: {
       type: 'article',
-      title: fullTitle,
+      title: title, // 제목에 사이트명 중복 제거
       description: description,
       url: postUrl,
       siteName: siteTitle,
+      locale: 'ko_KR',
       publishedTime: post.createdAt,
       modifiedTime: post.updatedAt,
       authors: [post.author?.name || '다미파파'],
       tags: post.tags || [],
       images: [
         {
-          url: `${baseUrl}/og-image.png`,
+          url: ogImage,
           width: 1200,
           height: 630,
-          alt: fullTitle,
+          alt: title,
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: fullTitle,
+      title: title,
       description: description,
-      images: [`${baseUrl}/og-image.png`],
+      images: [ogImage],
     },
     alternates: {
       canonical: postUrl,

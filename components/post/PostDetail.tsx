@@ -14,6 +14,7 @@ import { Separator } from '@/components/ui/separator'
 import { Eye, Calendar, Edit, Trash2, EyeOff } from 'lucide-react'
 import OptimizedImage from '@/components/common/OptimizedImage'
 import PostReactions from './PostReactions'
+import PostShare from './PostShare'
 
 interface PostDetailProps {
   post: PostDetailType
@@ -210,6 +211,9 @@ export default function PostDetail({ post }: PostDetailProps) {
               {post.content}
             </ReactMarkdown>
           </div>
+
+          {/* 공유하기 버튼 */}
+          <PostShare postId={post.id} postTitle={post.title} />
 
           {/* 좋아요/싫어요 버튼 */}
           <PostReactions postId={post.id} />
