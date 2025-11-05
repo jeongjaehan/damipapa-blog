@@ -145,6 +145,39 @@ export interface GrammarSettings {
   maxTokens: number
 }
 
+export interface PromptTemplate {
+  id: number
+  title: string
+  description?: string
+  systemPrompt: string
+  temperature: number
+  maxTokens: number
+  model: string
+  order: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreatePromptTemplateRequest {
+  title: string
+  description?: string
+  systemPrompt: string
+  temperature: number
+  maxTokens: number
+  model?: string
+  order?: number
+}
+
+export interface UpdatePromptTemplateRequest {
+  title?: string
+  description?: string
+  systemPrompt?: string
+  temperature?: number
+  maxTokens?: number
+  model?: string
+  order?: number
+}
+
 export interface CareerProfile {
   name: string
   bio: string           // 한줄소개

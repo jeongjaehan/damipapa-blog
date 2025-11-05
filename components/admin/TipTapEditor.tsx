@@ -36,6 +36,8 @@ import GrammarCheckModal from './GrammarCheckModal'
 import UrlInputModal from './UrlInputModal'
 import api from '@/services/api'
 import { DEFAULT_GRAMMAR_PROMPT_SETTINGS, GrammarPromptSettings } from '@/lib/prompts'
+import { getPromptTemplatesList } from '@/services/api'
+import { PromptTemplate } from '@/types'
 
 const lowlight = createLowlight(common)
 
@@ -83,7 +85,9 @@ export default function TipTapEditor({
   const [streamController, setStreamController] = useState<AbortController | null>(null)
   const [streamError, setStreamError] = useState<string | undefined>()
   
-  // 프롬프트 편집 상태
+  // 프롬프트 템플릿 상태
+  const [promptTemplates, setPromptTemplates] = useState<PromptTemplate[]>([])
+  const [selectedTemplateId, setSelectedTemplateId] = useState<number | null>(null)
   const [promptSettings, setPromptSettings] = useState<GrammarPromptSettings>(DEFAULT_GRAMMAR_PROMPT_SETTINGS)
   const [showPromptEditor, setShowPromptEditor] = useState(false)
   const [settingsLoaded, setSettingsLoaded] = useState(false)
@@ -92,22 +96,50 @@ export default function TipTapEditor({
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
   const [isYoutubeModalOpen, setIsYoutubeModalOpen] = useState(false)
 
-  // 초기 설정 로딩
+  // 프롬프트 템플릿 목록 로드
   useEffect(() => {
-    const loadSettings = async () => {
+    const loadTemplates = async () => {
       try {
-        const response = await api.get('/admin/grammar-settings')
-        setPromptSettings(response.data)
+        const templates = await getPromptTemplatesList()
+        setPromptTemplates(templates)
+        
+        // 첫 번째 템플릿이 있으면 자동 선택
+        if (templates.length > 0) {
+          const firstTemplate = templates[0]
+          setSelectedTemplateId(firstTemplate.id)
+          setPromptSettings({
+            systemPrompt: firstTemplate.systemPrompt,
+            temperature: firstTemplate.temperature,
+            maxTokens: firstTemplate.maxTokens,
+          })
+        } else {
+          // 템플릿이 없으면 기본값 사용
+          setPromptSettings(DEFAULT_GRAMMAR_PROMPT_SETTINGS)
+        }
       } catch (error) {
-        console.error('설정 로딩 실패:', error)
+        console.error('프롬프트 템플릿 로딩 실패:', error)
         // API 호출 실패 시 기본값 사용
         setPromptSettings(DEFAULT_GRAMMAR_PROMPT_SETTINGS)
       } finally {
         setSettingsLoaded(true)
       }
     }
-    loadSettings()
+    loadTemplates()
   }, [])
+
+  // 선택된 템플릿 변경 시 설정 업데이트
+  useEffect(() => {
+    if (selectedTemplateId !== null) {
+      const template = promptTemplates.find(t => t.id === selectedTemplateId)
+      if (template) {
+        setPromptSettings({
+          systemPrompt: template.systemPrompt,
+          temperature: template.temperature,
+          maxTokens: template.maxTokens,
+        })
+      }
+    }
+  }, [selectedTemplateId, promptTemplates])
 
   const editor = useEditor({
     extensions: [
@@ -375,29 +407,33 @@ export default function TipTapEditor({
     setStreamError(undefined)
   }
 
-  // 프롬프트 설정 업데이트 및 서버 저장
-  const updatePromptSettings = async (newSettings: Partial<GrammarPromptSettings>) => {
-    const updatedSettings = { ...promptSettings, ...newSettings }
-    setPromptSettings(updatedSettings)
-    
-    // API로 저장
-    try {
-      await api.put('/admin/grammar-settings', updatedSettings)
-    } catch (error) {
-      console.error('설정 저장 실패:', error)
-      alert('설정 저장에 실패했습니다. 다시 시도해주세요.')
+  // 프롬프트 템플릿 선택 핸들러
+  const handleTemplateSelect = (templateId: number | null) => {
+    setSelectedTemplateId(templateId)
+    if (templateId === null) {
+      setPromptSettings(DEFAULT_GRAMMAR_PROMPT_SETTINGS)
     }
   }
 
-  // 기본값 복원
-  const resetPromptSettings = async () => {
-    setPromptSettings(DEFAULT_GRAMMAR_PROMPT_SETTINGS)
-    
+  // 프롬프트 업데이트 후 템플릿 목록 다시 로드
+  const handlePromptUpdate = async () => {
     try {
-      await api.put('/admin/grammar-settings', DEFAULT_GRAMMAR_PROMPT_SETTINGS)
+      const templates = await getPromptTemplatesList()
+      setPromptTemplates(templates)
+      
+      // 현재 선택된 템플릿이 있으면 업데이트
+      if (selectedTemplateId) {
+        const updatedTemplate = templates.find(t => t.id === selectedTemplateId)
+        if (updatedTemplate) {
+          setPromptSettings({
+            systemPrompt: updatedTemplate.systemPrompt,
+            temperature: updatedTemplate.temperature,
+            maxTokens: updatedTemplate.maxTokens,
+          })
+        }
+      }
     } catch (error) {
-      console.error('설정 복원 실패:', error)
-      alert('설정 복원에 실패했습니다. 다시 시도해주세요.')
+      console.error('프롬프트 템플릿 목록 새로고침 실패:', error)
     }
   }
 
@@ -611,18 +647,15 @@ export default function TipTapEditor({
         onCancelStreaming={handleCancelStreaming}
         onApply={handleApplyCorrections}
         error={streamError}
-        // 프롬프트 편집 관련 props
+        // 프롬프트 템플릿 관련 props
+        promptTemplates={promptTemplates}
+        selectedTemplateId={selectedTemplateId}
+        onTemplateSelect={handleTemplateSelect}
         systemPrompt={promptSettings.systemPrompt}
-        onSystemPromptChange={(value) => updatePromptSettings({ systemPrompt: value })}
         temperature={promptSettings.temperature}
-        onTemperatureChange={(value) => updatePromptSettings({ temperature: value })}
         maxTokens={promptSettings.maxTokens}
-        onMaxTokensChange={(value) => updatePromptSettings({ maxTokens: value })}
-        showPromptEditor={showPromptEditor}
-        onTogglePromptEditor={setShowPromptEditor}
-        defaultSystemPrompt={DEFAULT_GRAMMAR_PROMPT_SETTINGS.systemPrompt}
-        onResetPromptSettings={resetPromptSettings}
         settingsLoaded={settingsLoaded}
+        onPromptUpdate={handlePromptUpdate}
       />
 
       {/* Link Input Modal */}

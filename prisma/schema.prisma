@@ -15,11 +15,6 @@ model User {
   bio       String?  @db.Text
   role      String   @default("USER")
   
-  // 프롬프트 설정 추가
-  grammarSystemPrompt   String?  @db.LongText @map("grammar_system_prompt")
-  grammarTemperature    Float?   @default(0.3) @map("grammar_temperature")
-  grammarMaxTokens      Int?     @default(4096) @map("grammar_max_tokens")
-  
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   posts     Post[]
@@ -80,5 +75,20 @@ model Template {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("templates")
+}
+
+model PromptTemplate {
+  id           Int      @id @default(autoincrement())
+  title        String   @db.VarChar(200)
+  description  String?  @db.VarChar(500)
+  systemPrompt String   @db.LongText @map("system_prompt")
+  temperature  Float    @default(0.3)
+  maxTokens    Int      @default(4096) @map("max_tokens")
+  model        String   @default("gpt-4o-mini") @db.VarChar(50)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("prompt_templates")
 }
 

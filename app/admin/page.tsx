@@ -8,7 +8,7 @@ import { DashboardStats } from '@/types'
 import Loading from '@/components/common/Loading'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { FileText, CheckCircle, EyeOff, Eye } from 'lucide-react'
+import { FileText, CheckCircle, EyeOff, Eye, Sparkles } from 'lucide-react'
 
 export default function AdminDashboard() {
   const { isAdmin, loading: authLoading } = useAuth()
@@ -89,6 +89,36 @@ export default function AdminDashboard() {
             <div className="text-3xl font-bold text-purple-600">{stats?.totalViews?.toLocaleString()}</div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* 관리 메뉴 */}
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">관리 메뉴</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Link href="/admin/prompts">
+            <Card className="hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer border-stone-200">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">프롬프트 관리</CardTitle>
+                <Sparkles className="w-5 h-5 text-blue-600" />
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600">AI 문장 개선용 프롬프트 템플릿 관리</p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/admin/templates">
+            <Card className="hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer border-stone-200">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">템플릿 관리</CardTitle>
+                <FileText className="w-5 h-5 text-green-600" />
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600">포스트 템플릿 관리</p>
+              </CardContent>
+            </Card>
+          </Link>
+        </div>
       </div>
 
     </div>

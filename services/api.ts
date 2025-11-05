@@ -16,6 +16,9 @@ import type {
   CareerData,
   CareerProfile,
   PostReactionResponse,
+  PromptTemplate,
+  CreatePromptTemplateRequest,
+  UpdatePromptTemplateRequest,
 } from '@/types'
 
 const API_URL = '/api'  // Next.js API Routes 사용
@@ -208,6 +211,46 @@ export const updateTemplate = async (id: number, data: UpdateTemplateRequest): P
 
 export const deleteTemplate = async (id: number): Promise<void> => {
   await api.delete(`/admin/templates/${id}`)
+}
+
+// Prompt Template APIs
+export const getPromptTemplates = async (
+  page = 0,
+  size = 10
+): Promise<PageResponse<PromptTemplate>> => {
+  const response = await api.get<PageResponse<PromptTemplate>>(
+    `/admin/prompts?page=${page}&size=${size}`
+  )
+  return response.data
+}
+
+export const getPromptTemplatesList = async (): Promise<PromptTemplate[]> => {
+  const response = await api.get<PromptTemplate[]>('/admin/prompts/list')
+  return response.data
+}
+
+export const getPromptTemplate = async (id: number): Promise<PromptTemplate> => {
+  const response = await api.get<PromptTemplate>(`/admin/prompts/${id}`)
+  return response.data
+}
+
+export const createPromptTemplate = async (
+  data: CreatePromptTemplateRequest
+): Promise<PromptTemplate> => {
+  const response = await api.post<PromptTemplate>('/admin/prompts', data)
+  return response.data
+}
+
+export const updatePromptTemplate = async (
+  id: number,
+  data: UpdatePromptTemplateRequest
+): Promise<PromptTemplate> => {
+  const response = await api.put<PromptTemplate>(`/admin/prompts/${id}`, data)
+  return response.data
+}
+
+export const deletePromptTemplate = async (id: number): Promise<void> => {
+  await api.delete(`/admin/prompts/${id}`)
 }
 
 // Career APIs
