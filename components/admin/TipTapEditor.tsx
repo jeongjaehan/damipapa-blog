@@ -33,6 +33,7 @@ import {
   SpellCheck,
 } from 'lucide-react'
 import GrammarCheckModal from './GrammarCheckModal'
+import UrlInputModal from './UrlInputModal'
 import api from '@/services/api'
 import { DEFAULT_GRAMMAR_PROMPT_SETTINGS, GrammarPromptSettings } from '@/lib/prompts'
 
@@ -86,6 +87,10 @@ export default function TipTapEditor({
   const [promptSettings, setPromptSettings] = useState<GrammarPromptSettings>(DEFAULT_GRAMMAR_PROMPT_SETTINGS)
   const [showPromptEditor, setShowPromptEditor] = useState(false)
   const [settingsLoaded, setSettingsLoaded] = useState(false)
+
+  // URL 입력 모달 상태
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
+  const [isYoutubeModalOpen, setIsYoutubeModalOpen] = useState(false)
 
   // 초기 설정 로딩
   useEffect(() => {
@@ -166,10 +171,11 @@ export default function TipTapEditor({
   }
 
   const addLink = () => {
-    const url = window.prompt('URL을 입력하세요:')
-    if (url) {
-      editor.chain().focus().setLink({ href: url }).run()
-    }
+    setIsLinkModalOpen(true)
+  }
+
+  const handleLinkSubmit = (url: string) => {
+    editor.chain().focus().setLink({ href: url }).run()
   }
 
   const addImage = async () => {
@@ -197,10 +203,11 @@ export default function TipTapEditor({
   }
 
   const addYoutube = () => {
-    const url = window.prompt('YouTube URL을 입력하세요:\n예: https://www.youtube.com/watch?v=dQw4w9WgXcQ')
-    if (url) {
-      editor.chain().focus().setYoutubeVideo({ src: url }).run()
-    }
+    setIsYoutubeModalOpen(true)
+  }
+
+  const handleYoutubeSubmit = (url: string) => {
+    editor.chain().focus().setYoutubeVideo({ src: url }).run()
   }
 
   // Handle paste events to upload base64 images
@@ -616,6 +623,26 @@ export default function TipTapEditor({
         defaultSystemPrompt={DEFAULT_GRAMMAR_PROMPT_SETTINGS.systemPrompt}
         onResetPromptSettings={resetPromptSettings}
         settingsLoaded={settingsLoaded}
+      />
+
+      {/* Link Input Modal */}
+      <UrlInputModal
+        isOpen={isLinkModalOpen}
+        onClose={() => setIsLinkModalOpen(false)}
+        onSubmit={handleLinkSubmit}
+        title="링크 추가"
+        placeholder="https://example.com"
+        example="예: https://example.com"
+      />
+
+      {/* YouTube URL Input Modal */}
+      <UrlInputModal
+        isOpen={isYoutubeModalOpen}
+        onClose={() => setIsYoutubeModalOpen(false)}
+        onSubmit={handleYoutubeSubmit}
+        title="YouTube 동영상 추가"
+        placeholder="https://www.youtube.com/watch?v=..."
+        example="예: https://www.youtube.com/watch?v=dQw4w9WgXcQ"
       />
     </div>
   )
