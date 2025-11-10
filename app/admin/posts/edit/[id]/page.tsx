@@ -49,7 +49,7 @@ export default function EditPostPage() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <h1 className="text-4xl font-bold mb-8">포스트 편집</h1>
+      <h1 className="text-4xl font-bold mb-8 text-foreground">포스트 편집</h1>
       <PostEditor post={post} />
     </div>
   )

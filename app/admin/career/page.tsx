@@ -105,7 +105,7 @@ function AdminCareerContent() {
   if (!data) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="text-center text-gray-500">
+        <div className="text-center text-muted-foreground">
           <p>경력 정보를 불러올 수 없습니다.</p>
         </div>
       </div>
@@ -115,7 +115,7 @@ function AdminCareerContent() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 tracking-tight">프로필 관리</h1>
+        <h1 className="text-4xl font-bold text-foreground tracking-tight">프로필 관리</h1>
         <div className="flex gap-3">
           <Button onClick={() => setShowPreview(!showPreview)} variant="outline">
             <Eye className="w-4 h-4 mr-2" />
@@ -148,22 +148,22 @@ function AdminCareerContent() {
           }}
         />
       ) : showPreview ? (
-        <Card className="border-stone-200">
+        <Card className="border-border">
           <CardHeader>
-            <CardTitle>미리 보기</CardTitle>
+            <CardTitle className="text-foreground">미리 보기</CardTitle>
           </CardHeader>
           <CardContent>
             <CareerTimeline profile={data.profile} careers={data.careers} />
           </CardContent>
         </Card>
       ) : (
-        <Card className="border-stone-200">
+        <Card className="border-border">
           <CardHeader>
-            <CardTitle>경력 목록</CardTitle>
+            <CardTitle className="text-foreground">경력 목록</CardTitle>
           </CardHeader>
           <CardContent>
             {data.careers.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-muted-foreground">
                 <p>등록된 경력이 없습니다.</p>
                 <Button onClick={handleAdd} className="mt-4 gap-2">
                   <Plus className="w-4 h-4" />
@@ -174,21 +174,21 @@ function AdminCareerContent() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b-2 border-gray-200">
-                      <th className="px-4 py-3 text-left">시작일자</th>
-                      <th className="px-4 py-3 text-left">종료일자</th>
-                      <th className="px-4 py-3 text-left">제목</th>
-                      <th className="px-4 py-3 text-left">부제목</th>
-                      <th className="px-4 py-3 text-left">관리</th>
+                    <tr className="border-b-2 border-border">
+                      <th className="px-4 py-3 text-left text-muted-foreground">시작일자</th>
+                      <th className="px-4 py-3 text-left text-muted-foreground">종료일자</th>
+                      <th className="px-4 py-3 text-left text-muted-foreground">제목</th>
+                      <th className="px-4 py-3 text-left text-muted-foreground">부제목</th>
+                      <th className="px-4 py-3 text-left text-muted-foreground">관리</th>
                     </tr>
                   </thead>
                   <tbody>
                     {data.careers.map((career) => (
-                      <tr key={career.id} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="px-4 py-3 font-semibold">{career.startDate}</td>
-                        <td className="px-4 py-3">{career.endDate || '현재'}</td>
-                        <td className="px-4 py-3">{career.title}</td>
-                        <td className="px-4 py-3 text-gray-600">{career.subtitle}</td>
+                      <tr key={career.id} className="border-b border-border hover:bg-muted/50">
+                        <td className="px-4 py-3 font-semibold text-foreground">{career.startDate}</td>
+                        <td className="px-4 py-3 text-foreground">{career.endDate || '현재'}</td>
+                        <td className="px-4 py-3 text-foreground">{career.title}</td>
+                        <td className="px-4 py-3 text-muted-foreground">{career.subtitle}</td>
                         <td className="px-4 py-3">
                           <div className="flex gap-2">
                             <Button
@@ -204,7 +204,7 @@ function AdminCareerContent() {
                               variant="outline"
                               size="sm"
                               onClick={() => handleDelete(career.id)}
-                              className="gap-1 text-red-600 hover:text-red-700"
+                              className="gap-1 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
                             >
                               <Trash2 className="w-3 h-3" />
                               삭제

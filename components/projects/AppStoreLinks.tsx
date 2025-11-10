@@ -15,14 +15,14 @@ export default function AppStoreLinks({ links, title }: AppStoreLinksProps) {
   if (!hasAnyLink) {
     return (
       <div className="text-center py-6">
-        <p className="text-gray-500 text-sm">아직 링크가 제공되지 않습니다</p>
+        <p className="text-muted-foreground text-sm">아직 링크가 제공되지 않습니다</p>
       </div>
     )
   }
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-900">다운로드 & 링크</h3>
+      <h3 className="text-lg font-semibold text-foreground">다운로드 & 링크</h3>
       
       <div className="grid gap-3">
         {/* 웹 애플리케이션 링크 */}
@@ -57,16 +57,16 @@ export default function AppStoreLinks({ links, title }: AppStoreLinksProps) {
           >
             <Button 
               variant="outline" 
-              className="w-full border-gray-300 hover:border-gray-400 gap-3 py-6"
+              className="w-full gap-3 py-6"
             >
               <div className="w-5 h-5 bg-black rounded-md flex items-center justify-center">
                 <Smartphone className="w-3 h-3 text-white" />
               </div>
               <div className="flex flex-col items-start">
-                <span className="font-semibold text-gray-900">App Store</span>
-                <span className="text-xs text-gray-500">iOS 앱 다운로드</span>
+                <span className="font-semibold text-foreground">App Store</span>
+                <span className="text-xs text-muted-foreground">iOS 앱 다운로드</span>
               </div>
-              <ExternalLink className="w-4 h-4 ml-auto text-gray-400" />
+              <ExternalLink className="w-4 h-4 ml-auto text-muted-foreground" />
             </Button>
           </a>
         )}

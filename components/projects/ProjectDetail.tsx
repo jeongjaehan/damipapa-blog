@@ -25,28 +25,28 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   // 마크다운 컴포넌트 정의
   const markdownComponents = {
     h1: ({ children }: any) => (
-      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 mt-6 sm:mt-8 first:mt-0 break-words">{children}</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-4 sm:mb-6 mt-6 sm:mt-8 first:mt-0 break-words">{children}</h1>
     ),
     h2: ({ children }: any) => (
-      <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4 mt-5 sm:mt-6 break-words">{children}</h2>
+      <h2 className="text-xl sm:text-2xl font-semibold text-foreground mb-3 sm:mb-4 mt-5 sm:mt-6 break-words">{children}</h2>
     ),
     h3: ({ children }: any) => (
-      <h3 className="text-lg sm:text-xl font-medium text-gray-700 mb-2 sm:mb-3 mt-4 sm:mt-5 break-words">{children}</h3>
+      <h3 className="text-lg sm:text-xl font-medium text-foreground mb-2 sm:mb-3 mt-4 sm:mt-5 break-words">{children}</h3>
     ),
     p: ({ children }: any) => (
-      <p className="text-gray-700 leading-relaxed mb-3 sm:mb-4 break-words max-w-full overflow-hidden">{children}</p>
+      <p className="text-foreground leading-relaxed mb-3 sm:mb-4 break-words max-w-full overflow-hidden">{children}</p>
     ),
     ul: ({ children }: any) => (
-      <ul className="list-disc list-inside text-gray-700 mb-3 sm:mb-4 space-y-1 ml-2 sm:ml-0">{children}</ul>
+      <ul className="list-disc list-inside text-foreground mb-3 sm:mb-4 space-y-1 ml-2 sm:ml-0">{children}</ul>
     ),
     ol: ({ children }: any) => (
-      <ol className="list-decimal list-inside text-gray-700 mb-3 sm:mb-4 space-y-1 ml-2 sm:ml-0">{children}</ol>
+      <ol className="list-decimal list-inside text-foreground mb-3 sm:mb-4 space-y-1 ml-2 sm:ml-0">{children}</ol>
     ),
     li: ({ children }: any) => (
       <li className="ml-1 sm:ml-2 break-words">{children}</li>
     ),
     blockquote: ({ children }: any) => (
-      <blockquote className="border-l-4 border-indigo-200 pl-3 sm:pl-4 italic text-gray-600 my-3 sm:my-4 break-words">
+      <blockquote className="border-l-4 border-primary/50 dark:border-primary/30 pl-3 sm:pl-4 italic text-foreground/90 my-3 sm:my-4 break-words">
         {children}
       </blockquote>
     ),
@@ -60,8 +60,8 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       if (isBlock) {
         return (
           <div className="my-3 sm:my-4 -mx-2 sm:mx-0 overflow-hidden">
-            <pre className="bg-gray-100 rounded-lg p-3 sm:p-4 overflow-x-auto text-sm max-w-full">
-              <code className={`${className} block max-w-full overflow-x-auto whitespace-pre-wrap break-words`}>
+            <pre className="bg-muted rounded-lg p-3 sm:p-4 overflow-x-auto text-sm max-w-full">
+              <code className={`${className} block max-w-full overflow-x-auto whitespace-pre-wrap break-words text-foreground`}>
                 {children}
               </code>
             </pre>
@@ -70,20 +70,20 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       }
       
       return (
-        <code className="bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs sm:text-sm font-mono break-all max-w-full inline-block">
+        <code className="bg-muted px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs sm:text-sm font-mono break-all max-w-full inline-block text-foreground">
           {children}
         </code>
       )
     },
     strong: ({ children }: any) => (
-      <strong className="font-semibold text-gray-900 break-words max-w-full overflow-hidden">{children}</strong>
+      <strong className="font-semibold text-foreground break-words max-w-full overflow-hidden">{children}</strong>
     ),
     a: ({ children, href }: any) => (
       <a 
         href={href} 
         target="_blank" 
         rel="noopener noreferrer"
-        className="text-blue-600 underline break-all max-w-full overflow-hidden inline-block"
+        className="text-primary underline break-all max-w-full overflow-hidden inline-block hover:text-primary/80"
       >
         {children}
       </a>
@@ -93,7 +93,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   return (
     <div className="max-w-4xl mx-auto">
       {/* 프로젝트 헤더 */}
-      <Card className="border-gray-200 mb-6 sm:mb-8">
+      <Card className="border-border mb-6 sm:mb-8">
         <div className="p-4 sm:p-6 lg:p-8">
           <div className="flex items-start gap-4 sm:gap-6 mb-4 sm:mb-6">
             {/* 프로젝트 아이콘 */}
@@ -120,7 +120,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
             {/* 프로젝트 정보 */}
             <div className="flex-1 min-w-0">
               <div className="flex flex-col gap-2 mb-3 sm:mb-4">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 break-words hyphens-auto leading-tight">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground break-words hyphens-auto leading-tight">
                   {project.title}
                 </h1>
                 <Badge 
@@ -131,16 +131,16 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                 </Badge>
               </div>
               
-              <p className="text-base sm:text-lg text-gray-600 mb-3 sm:mb-4 leading-relaxed break-words">
+              <p className="text-base sm:text-lg text-muted-foreground mb-3 sm:mb-4 leading-relaxed break-words">
                 {project.subtitle}
               </p>
               
-              <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6 break-words leading-relaxed">
+              <p className="text-sm sm:text-base text-foreground mb-4 sm:mb-6 break-words leading-relaxed">
                 {project.description}
               </p>
 
               {/* 메타 정보 */}
-              <div className="space-y-2 sm:grid sm:grid-cols-2 sm:gap-4 sm:space-y-0 text-xs sm:text-sm text-gray-600">
+              <div className="space-y-2 sm:grid sm:grid-cols-2 sm:gap-4 sm:space-y-0 text-xs sm:text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Tag className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                   <span className="break-words">{project.category}</span>
@@ -162,8 +162,8 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
           {project.tech_stack && project.tech_stack.length > 0 && (
             <div className="mb-4 sm:mb-6">
               <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                <Code className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 flex-shrink-0" />
-                <span className="text-xs sm:text-sm font-medium text-gray-700">기술 스택</span>
+                <Code className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground flex-shrink-0" />
+                <span className="text-xs sm:text-sm font-medium text-foreground">기술 스택</span>
               </div>
               <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {project.tech_stack.map((tech, index) => (
@@ -179,8 +179,8 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
           {project.features && project.features.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                <Layers className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 flex-shrink-0" />
-                <span className="text-xs sm:text-sm font-medium text-gray-700">주요 기능</span>
+                <Layers className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground flex-shrink-0" />
+                <span className="text-xs sm:text-sm font-medium text-foreground">주요 기능</span>
               </div>
               <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {project.features.map((feature, index) => (
@@ -197,7 +197,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       {/* 프로젝트 상세 내용 */}
       <div className="grid gap-4 sm:gap-6 lg:gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <Card className="border-gray-200">
+          <Card className="border-border">
             <div className="p-4 sm:p-6 lg:p-8">
               <div className="prose prose-gray max-w-none break-words overflow-hidden">
                 <div className="max-w-full overflow-x-hidden">
@@ -216,20 +216,20 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
         {/* 사이드바 */}
         <div className="space-y-4 sm:space-y-6">
           {/* 다운로드 링크 */}
-          <Card className="border-gray-200">
+          <Card className="border-border">
             <div className="p-4 sm:p-6">
               <AppStoreLinks links={project.links} title={project.title} />
             </div>
           </Card>
 
           {/* 프로젝트 정보 */}
-          <Card className="border-gray-200">
+          <Card className="border-border">
             <div className="p-4 sm:p-6">
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">프로젝트 정보</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">프로젝트 정보</h3>
               
               <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                  <span className="text-gray-500 font-medium">상태:</span>
+                  <span className="text-muted-foreground font-medium">상태:</span>
                   <Badge 
                     className="w-fit text-white text-xs px-2 py-1"
                     style={{ backgroundColor: statusColor }}
@@ -239,20 +239,20 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                 </div>
                 
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                  <span className="text-gray-500 font-medium">카테고리:</span>
-                  <span className="text-gray-900 break-words">{project.category}</span>
+                  <span className="text-muted-foreground font-medium">카테고리:</span>
+                  <span className="text-foreground break-words">{project.category}</span>
                 </div>
                 
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                  <span className="text-gray-500 font-medium">시작일:</span>
-                  <span className="text-gray-900">
+                  <span className="text-muted-foreground font-medium">시작일:</span>
+                  <span className="text-foreground">
                     {new Date(project.created_at).toLocaleDateString('ko-KR')}
                   </span>
                 </div>
                 
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                  <span className="text-gray-500 font-medium">최근 업데이트:</span>
-                  <span className="text-gray-900">
+                  <span className="text-muted-foreground font-medium">최근 업데이트:</span>
+                  <span className="text-foreground">
                     {new Date(project.updated_at).toLocaleDateString('ko-KR')}
                   </span>
                 </div>

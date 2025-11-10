@@ -38,8 +38,8 @@ export default function CareerPage() {
   if (!data) {
     return (
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <Card className="border-stone-200">
-          <div className="p-8 text-center text-gray-500">
+        <Card className="border-border">
+          <div className="p-8 text-center text-muted-foreground">
             <p>경력 정보를 불러올 수 없습니다.</p>
           </div>
         </Card>
@@ -49,10 +49,10 @@ export default function CareerPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
-      <Card className="border-stone-200">
+      <Card className="border-border">
         <div className="p-4 sm:p-8">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-4xl font-bold text-gray-900">프로필</h1>
+            <h1 className="text-2xl sm:text-4xl font-bold text-foreground">프로필</h1>
             {isAdmin && (
               <div className="flex justify-end">
                 <Link href="/admin/career">
@@ -66,7 +66,7 @@ export default function CareerPage() {
           </div>
 
           {data.careers.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-muted-foreground">
               <p>등록된 경력이 없습니다.</p>
             </div>
           ) : (

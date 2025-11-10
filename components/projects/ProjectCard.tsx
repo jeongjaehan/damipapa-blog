@@ -15,7 +15,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
   return (
     <Link href={`/projects/${project.slug}`}>
-      <div className="group flex flex-col items-center space-y-2 p-3 rounded-2xl hover:bg-gray-50/80 transition-all duration-200 cursor-pointer">
+      <div className="group flex flex-col items-center space-y-2 p-3 rounded-2xl hover:bg-muted/50 transition-all duration-200 cursor-pointer">
         {/* 앱 아이콘 */}
         <div className="relative">
           <div
@@ -48,11 +48,11 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
         {/* 프로젝트 정보 */}
         <div className="text-center space-y-1 min-h-[3rem] flex flex-col justify-center">
-          <h3 className="text-sm sm:text-base font-medium text-gray-900 leading-tight break-words max-w-[80px] sm:max-w-[100px]">
+          <h3 className="text-sm sm:text-base font-medium text-foreground leading-tight break-words max-w-[80px] sm:max-w-[100px]">
             {project.title}
           </h3>
           {project.description && (
-            <p className="text-xs text-gray-500 leading-tight break-words max-w-[80px] sm:max-w-[100px]">
+            <p className="text-xs text-muted-foreground leading-tight break-words max-w-[80px] sm:max-w-[100px]">
               {project.description.length > 20 
                 ? `${project.description.slice(0, 20)}...` 
                 : project.description

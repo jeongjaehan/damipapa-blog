@@ -90,7 +90,7 @@ export default function PostReactions({ postId }: PostReactionsProps) {
 
   if (loading || !reactionStats) {
     return (
-      <div className="flex items-center gap-4 py-6 border-t border-gray-200">
+      <div className="flex items-center gap-4 py-6 border-t border-border">
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" disabled>
             <ThumbsUp className="w-4 h-4 mr-2" />
@@ -109,7 +109,7 @@ export default function PostReactions({ postId }: PostReactionsProps) {
   const isDisliked = reactionStats.userReaction?.type === 'DISLIKE'
 
   return (
-    <div className="flex items-center gap-4 py-6 border-t border-gray-200">
+    <div className="flex items-center gap-4 py-6 border-t border-border">
       <Button
         variant={isLiked ? 'default' : 'outline'}
         size="sm"

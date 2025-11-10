@@ -86,13 +86,13 @@ function HomeContent() {
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       <div>
-        <h1 className="text-5xl font-bold text-gray-900 tracking-tight">최신 포스트</h1>
-        <p className="text-gray-600 mt-3">블로그의 최신 글을 확인하세요</p>
+        <h1 className="text-5xl font-bold text-foreground tracking-tight">최신 포스트</h1>
+        <p className="text-muted-foreground mt-3">블로그의 최신 글을 확인하세요</p>
       </div>
 
       {tag && (
         <div className="flex gap-2">
-          <Badge variant="outline" className="border-primary-200 text-primary-700">
+          <Badge variant="outline" className="border-primary-200 text-primary-700 dark:border-primary-800 dark:text-primary-300">
             태그: {tag}
           </Badge>
         </div>
@@ -106,7 +106,7 @@ function HomeContent() {
 
       {/* Intersection Observer 트리거 */}
       <div ref={observerTarget} className="h-20 flex items-center justify-center">
-        {isLoadingMore && <p className="text-gray-500">로딩 중...</p>}
+        {isLoadingMore && <p className="text-muted-foreground">로딩 중...</p>}
       </div>
     </div>
   )

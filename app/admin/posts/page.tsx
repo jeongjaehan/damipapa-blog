@@ -145,41 +145,41 @@ function AdminPostsPageContent() {
     <div className="max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-4xl font-bold text-gray-900 tracking-tight">포스트 관리</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-4xl font-bold text-foreground tracking-tight">포스트 관리</h1>
+          <p className="text-muted-foreground mt-2">
             {filter === 'private' ? '비공개 포스트를 관리하세요' : '모든 포스트를 관리하세요'}
           </p>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="bg-card rounded-lg shadow-md overflow-hidden border border-border">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-muted">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 제목
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 상태
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 작성일
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 댓글
               </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 관리
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-card divide-y divide-border">
             {allPosts.map((post) => (
               <tr key={post.id}>
                 <td className="px-6 py-4">
                   <Link
                     href={`/posts/${post.id}`}
-                    className="text-primary-600 hover:text-primary-800"
+                    className="text-primary hover:text-primary/80"
                   >
                     {post.title}
                   </Link>
@@ -187,17 +187,17 @@ function AdminPostsPageContent() {
                 <td className="px-6 py-4">
                   <div className="flex gap-2">
                     {post.isPrivate && (
-                      <span className="px-2 py-1 rounded text-xs bg-red-100 text-red-800 flex items-center gap-1">
+                      <span className="px-2 py-1 rounded text-xs bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 flex items-center gap-1">
                         <EyeOff className="w-3 h-3" />
                         비공개
                       </span>
                     )}
                   </div>
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-500">
+                <td className="px-6 py-4 text-sm text-muted-foreground">
                   {formatDate(post.createdAt)}
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-500">
+                <td className="px-6 py-4 text-sm text-muted-foreground">
                   {post.commentCount}
                 </td>
                 <td className="px-6 py-4 text-right text-sm space-x-2">
@@ -229,7 +229,7 @@ function AdminPostsPageContent() {
         </table>
 
         {allPosts.length === 0 && !loading && (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-muted-foreground">
             <p>포스트가 없습니다</p>
           </div>
         )}
@@ -237,11 +237,11 @@ function AdminPostsPageContent() {
 
       {/* Intersection Observer 트리거 */}
       <div ref={observerTarget} className="h-20 flex items-center justify-center mt-8">
-        {isLoadingMore && <p className="text-gray-500">로딩 중...</p>}
+        {isLoadingMore && <p className="text-muted-foreground">로딩 중...</p>}
       </div>
 
       {!hasMore && allPosts.length > 0 && (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-muted-foreground">
           <p className="text-sm">더 이상 포스트가 없습니다</p>
         </div>
       )}

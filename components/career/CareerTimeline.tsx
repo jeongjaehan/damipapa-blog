@@ -140,35 +140,35 @@ export default function CareerTimeline({ profile, careers }: CareerTimelineProps
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-6">
               <a
                 href={`mailto:${profile.email}`}
-                className="group flex items-center gap-3 px-3 sm:px-4 py-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all text-gray-700 hover:text-blue-600 text-sm sm:text-base"
+                className="group flex items-center gap-3 px-3 sm:px-4 py-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all text-gray-700 hover:text-blue-600 text-sm sm:text-base border border-gray-200"
               >
                 <div className="p-1.5 sm:p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors flex-shrink-0">
-                  <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
                 </div>
-                <span className="font-medium truncate">{profile.email}</span>
+                <span className="font-medium truncate text-gray-700">{profile.email}</span>
               </a>
               <a
                 href={profile.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center gap-3 px-3 sm:px-4 py-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all text-gray-700 hover:text-blue-600 text-sm sm:text-base"
+                className="group flex items-center gap-3 px-3 sm:px-4 py-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all text-gray-700 hover:text-blue-600 text-sm sm:text-base border border-gray-200"
               >
                 <div className="p-1.5 sm:p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors flex-shrink-0">
-                  <Linkedin className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <Linkedin className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
                 </div>
-                <span className="font-medium">LinkedIn</span>
+                <span className="font-medium text-gray-700">LinkedIn</span>
               </a>
               {profile.facebook && (
                 <a
                   href={profile.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-3 px-3 sm:px-4 py-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all text-gray-700 hover:text-blue-600 text-sm sm:text-base"
+                  className="group flex items-center gap-3 px-3 sm:px-4 py-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all text-gray-700 hover:text-blue-600 text-sm sm:text-base border border-gray-200"
                 >
                   <div className="p-1.5 sm:p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors flex-shrink-0">
-                    <FacebookIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <FacebookIcon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
                   </div>
-                  <span className="font-medium">Facebook</span>
+                  <span className="font-medium text-gray-700">Facebook</span>
                 </a>
               )}
             </div>
@@ -231,8 +231,8 @@ export default function CareerTimeline({ profile, careers }: CareerTimelineProps
                     <div className="flex-1 min-w-0">
                       <h3 className="text-lg sm:text-2xl font-bold text-gray-900 mb-1 break-words">{career.title}</h3>
                       <p className="text-sm sm:text-lg text-gray-600 flex items-start sm:items-center gap-2 break-words">
-                        <Building2 className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5 sm:mt-0" />
-                        <span className="break-words">{career.subtitle}</span>
+                        <Building2 className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5 sm:mt-0 text-gray-600" />
+                        <span className="break-words text-gray-600">{career.subtitle}</span>
                       </p>
                     </div>
                   </div>

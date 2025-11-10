@@ -153,7 +153,7 @@ export default function TipTapEditor({
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-blue-600 hover:text-blue-800 underline',
+          class: 'text-primary hover:text-primary/80 underline',
         },
       }),
       Placeholder.configure({
@@ -180,7 +180,7 @@ export default function TipTapEditor({
     editorProps: {
       attributes: {
         class:
-          'prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none focus:outline-none min-h-[400px] px-4 py-3',
+          'prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none focus:outline-none min-h-[400px] px-4 py-3 prose-headings:text-foreground prose-p:text-foreground prose-strong:text-foreground prose-em:text-foreground prose-code:text-foreground prose-pre:bg-muted prose-pre:text-foreground prose-blockquote:text-foreground prose-blockquote:border-border prose-a:text-primary dark:prose-invert',
       },
       handlePaste: (view, event) => {
         return handlePaste(view, event)
@@ -438,16 +438,16 @@ export default function TipTapEditor({
   }
 
   return (
-    <div className="border rounded-lg overflow-hidden bg-white">
+    <div className="border border-border rounded-lg overflow-hidden bg-card">
       {/* Toolbar */}
-      <div className="border-b bg-gray-50 p-2 flex flex-wrap gap-1">
+      <div className="border-b border-border bg-muted p-2 flex flex-wrap gap-1">
         {/* Text Formatting */}
         <Button
           type="button"
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={editor.isActive('bold') ? 'bg-gray-200' : ''}
+          className={editor.isActive('bold') ? 'bg-background' : ''}
           title="굵게 (Ctrl+B)"
         >
           <Bold className="w-4 h-4" />
@@ -457,7 +457,7 @@ export default function TipTapEditor({
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={editor.isActive('italic') ? 'bg-gray-200' : ''}
+          className={editor.isActive('italic') ? 'bg-background' : ''}
           title="기울임 (Ctrl+I)"
         >
           <Italic className="w-4 h-4" />
@@ -467,7 +467,7 @@ export default function TipTapEditor({
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={editor.isActive('strike') ? 'bg-gray-200' : ''}
+          className={editor.isActive('strike') ? 'bg-background' : ''}
           title="취소선"
         >
           <Strikethrough className="w-4 h-4" />
@@ -477,13 +477,13 @@ export default function TipTapEditor({
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleCode().run()}
-          className={editor.isActive('code') ? 'bg-gray-200' : ''}
+          className={editor.isActive('code') ? 'bg-background' : ''}
           title="인라인 코드"
         >
           <Code className="w-4 h-4" />
         </Button>
 
-        <div className="w-px h-6 bg-gray-300 mx-1" />
+        <div className="w-px h-6 bg-border mx-1" />
 
         {/* Headings */}
         <Button
@@ -491,7 +491,7 @@ export default function TipTapEditor({
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          className={editor.isActive('heading', { level: 1 }) ? 'bg-gray-200' : ''}
+          className={editor.isActive('heading', { level: 1 }) ? 'bg-background' : ''}
           title="제목 1"
         >
           <Heading1 className="w-4 h-4" />
@@ -501,7 +501,7 @@ export default function TipTapEditor({
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          className={editor.isActive('heading', { level: 2 }) ? 'bg-gray-200' : ''}
+          className={editor.isActive('heading', { level: 2 }) ? 'bg-background' : ''}
           title="제목 2"
         >
           <Heading2 className="w-4 h-4" />
@@ -511,13 +511,13 @@ export default function TipTapEditor({
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          className={editor.isActive('heading', { level: 3 }) ? 'bg-gray-200' : ''}
+          className={editor.isActive('heading', { level: 3 }) ? 'bg-background' : ''}
           title="제목 3"
         >
           <Heading3 className="w-4 h-4" />
         </Button>
 
-        <div className="w-px h-6 bg-gray-300 mx-1" />
+        <div className="w-px h-6 bg-border mx-1" />
 
         {/* Lists */}
         <Button
@@ -525,7 +525,7 @@ export default function TipTapEditor({
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editor.isActive('bulletList') ? 'bg-gray-200' : ''}
+          className={editor.isActive('bulletList') ? 'bg-background' : ''}
           title="목록"
         >
           <List className="w-4 h-4" />
@@ -535,7 +535,7 @@ export default function TipTapEditor({
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={editor.isActive('orderedList') ? 'bg-gray-200' : ''}
+          className={editor.isActive('orderedList') ? 'bg-background' : ''}
           title="번호 목록"
         >
           <ListOrdered className="w-4 h-4" />
@@ -545,7 +545,7 @@ export default function TipTapEditor({
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={editor.isActive('blockquote') ? 'bg-gray-200' : ''}
+          className={editor.isActive('blockquote') ? 'bg-background' : ''}
           title="인용"
         >
           <Quote className="w-4 h-4" />
@@ -555,13 +555,13 @@ export default function TipTapEditor({
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={editor.isActive('codeBlock') ? 'bg-gray-200' : ''}
+          className={editor.isActive('codeBlock') ? 'bg-background' : ''}
           title="코드 블록"
         >
           <Code2 className="w-4 h-4" />
         </Button>
 
-        <div className="w-px h-6 bg-gray-300 mx-1" />
+        <div className="w-px h-6 bg-border mx-1" />
 
         {/* Link & Image */}
         <Button
@@ -569,7 +569,7 @@ export default function TipTapEditor({
           variant="ghost"
           size="sm"
           onClick={addLink}
-          className={editor.isActive('link') ? 'bg-gray-200' : ''}
+          className={editor.isActive('link') ? 'bg-background' : ''}
           title="링크"
         >
           <LinkIcon className="w-4 h-4" />
@@ -593,7 +593,7 @@ export default function TipTapEditor({
           <Play className="w-4 h-4" />
         </Button>
 
-        <div className="w-px h-6 bg-gray-300 mx-1" />
+        <div className="w-px h-6 bg-border mx-1" />
 
         {/* Grammar Check */}
         <Button
@@ -602,13 +602,13 @@ export default function TipTapEditor({
           size="sm"
           onClick={handleGrammarCheck}
           disabled={isStreaming}
-          className="text-purple-600 hover:text-purple-800 hover:bg-purple-50"
+          className="text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-950/30"
           title="문법 검사 (AI)"
         >
           <SpellCheck className="w-4 h-4" />
         </Button>
 
-        <div className="w-px h-6 bg-gray-300 mx-1" />
+        <div className="w-px h-6 bg-border mx-1" />
 
         {/* Undo/Redo */}
         <Button

@@ -26,7 +26,7 @@ export default function NewPostPage() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <h1 className="text-4xl font-bold mb-8">새 포스트 작성</h1>
+      <h1 className="text-4xl font-bold mb-8 text-foreground">새 포스트 작성</h1>
       <PostEditor />
     </div>
   )

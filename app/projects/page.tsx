@@ -22,23 +22,23 @@ export default async function ProjectsPage() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* 페이지 헤더 */}
       <div className="text-center mb-12">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+        <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
           사이드 프로젝트
         </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           저에게 또는 누군가에게 필요한 프로덕틀 만드는 것을 좋아합니다.
           서비스가 잘되면 더 좋지만, 잘 안되더라도 만들어보는 것을 좋아합니다.
         </p>
       </div>
 
       {/* 프로젝트 그리드 */}
-      <Card className="border-gray-200 bg-gray-50/30">
+      <Card className="border-border bg-muted/30">
         <div className="p-6 sm:p-8">
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            <h2 className="text-xl font-semibold text-foreground mb-2">
               다양한 프로젝트들을 둘러보세요
             </h2>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               각 프로젝트를 클릭하면 자세한 정보를 확인할 수 있어요.
             </p>
           </div>
@@ -49,9 +49,9 @@ export default async function ProjectsPage() {
 
       {/* 하단 안내 */}
       <div className="text-center mt-12">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-full">
-          <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-          <span className="text-sm text-indigo-700">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 dark:bg-indigo-950/30 rounded-full">
+          <div className="w-2 h-2 bg-indigo-500 dark:bg-indigo-400 rounded-full"></div>
+          <span className="text-sm text-indigo-700 dark:text-indigo-300">
             새로운 프로젝트가 계속 추가될 예정입니다
           </span>
         </div>

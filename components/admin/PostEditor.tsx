@@ -172,15 +172,15 @@ export default function PostEditor({ post }: PostEditorProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <div className="bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded">
           {error}
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow-md p-6 space-y-4">
+      <div className="bg-card rounded-lg shadow-md p-6 space-y-4 border border-border">
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label htmlFor="title" className="block text-sm font-medium">
+            <label htmlFor="title" className="block text-sm font-medium text-foreground">
               제목 *
             </label>
             <Button
@@ -202,13 +202,13 @@ export default function PostEditor({ post }: PostEditorProps) {
             onChange={(e) => setTitle(e.target.value)}
             required
             maxLength={200}
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full px-4 py-2 border border-input rounded bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             placeholder="포스트 제목을 입력하세요"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">태그</label>
+          <label className="block text-sm font-medium mb-2 text-foreground">태그</label>
           <div className="relative">
             <div className="flex gap-2 mb-2">
               <input
@@ -218,7 +218,7 @@ export default function PostEditor({ post }: PostEditorProps) {
                 onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleTagAdd())}
                 onFocus={() => tagInput && filteredTags.length > 0 && setShowSuggestions(true)}
                 onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                className="flex-1 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="flex-1 px-4 py-2 border border-input rounded bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 placeholder="태그를 입력하고 엔터를 누르세요"
               />
               <Button type="button" onClick={() => handleTagAdd()} size="sm">
@@ -228,13 +228,13 @@ export default function PostEditor({ post }: PostEditorProps) {
             
             {/* 태그 자동완성 드롭다운 */}
             {showSuggestions && filteredTags.length > 0 && (
-              <div className="absolute z-10 w-full bg-white border rounded-md shadow-lg max-h-60 overflow-y-auto">
+              <div className="absolute z-10 w-full bg-card border border-border rounded-md shadow-lg max-h-60 overflow-y-auto">
                 {filteredTags.map((tag) => (
                   <button
                     key={tag}
                     type="button"
                     onClick={() => handleTagAdd(tag)}
-                    className="w-full px-4 py-2 text-left hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                    className="w-full px-4 py-2 text-left text-foreground hover:bg-muted focus:bg-muted focus:outline-none"
                   >
                     {tag}
                   </button>
@@ -246,13 +246,13 @@ export default function PostEditor({ post }: PostEditorProps) {
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center gap-2"
+                className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-sm flex items-center gap-2"
               >
                 {tag}
                 <button
                   type="button"
                   onClick={() => handleTagRemove(tag)}
-                  className="text-blue-600 hover:text-blue-800"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
                 >
                   ×
                 </button>
@@ -267,23 +267,23 @@ export default function PostEditor({ post }: PostEditorProps) {
               type="checkbox"
               checked={isPrivate}
               onChange={(e) => setIsPrivate(e.target.checked)}
-              className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+              className="w-4 h-4 text-primary border-input rounded focus:ring-ring"
             />
-            <span className="text-sm font-medium text-gray-700">나만 보기 (비공개)</span>
+            <span className="text-sm font-medium text-foreground">나만 보기 (비공개)</span>
           </label>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             체크하면 관리자만 볼 수 있는 비공개 포스트로 설정됩니다.
           </p>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <label className="block text-sm font-medium mb-4">템플릿 (선택사항)</label>
+      <div className="bg-card rounded-lg shadow-md p-6 border border-border">
+        <label className="block text-sm font-medium mb-4 text-foreground">템플릿 (선택사항)</label>
         <div className="flex gap-2 mb-4">
           <select
             value={selectedTemplate}
             onChange={(e) => handleApplyTemplate(e.target.value)}
-            className="flex-1 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="flex-1 px-4 py-2 border border-input rounded bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           >
             <option value="">템플릿 선택...</option>
             {templates.map((template) => (
@@ -300,8 +300,8 @@ export default function PostEditor({ post }: PostEditorProps) {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <label className="block text-sm font-medium mb-4">내용 *</label>
+      <div className="bg-card rounded-lg shadow-md p-6 border border-border">
+        <label className="block text-sm font-medium mb-4 text-foreground">내용 *</label>
         <TipTapEditor
           content={content}
           onChange={setContent}
@@ -328,20 +328,20 @@ export default function PostEditor({ post }: PostEditorProps) {
       {/* 제목 추천 모달 */}
       {showSuggestionModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+          <div className="bg-card rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto border border-border">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold flex items-center gap-2">
+              <h3 className="text-lg font-semibold flex items-center gap-2 text-foreground">
                 <Sparkles className="w-5 h-5 text-yellow-500" />
                 AI 제목 추천
               </h3>
               <button
                 onClick={() => setShowSuggestionModal(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               본문 내용을 분석해서 생성한 제목입니다. 마음에 드는 제목을 클릭하세요.
             </p>
             <div className="space-y-3">
@@ -349,13 +349,13 @@ export default function PostEditor({ post }: PostEditorProps) {
                 <button
                   key={index}
                   onClick={() => handleSelectSuggestion(suggestion)}
-                  className="w-full text-left p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors"
+                  className="w-full text-left p-4 border-2 border-border rounded-lg hover:border-primary hover:bg-muted transition-colors"
                 >
                   <div className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-medium">
+                    <span className="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-medium">
                       {index + 1}
                     </span>
-                    <span className="flex-1 text-gray-800">{suggestion}</span>
+                    <span className="flex-1 text-foreground">{suggestion}</span>
                   </div>
                 </button>
               ))}

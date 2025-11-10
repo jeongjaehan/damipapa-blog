@@ -78,10 +78,10 @@ export default function PostDetail({ post }: PostDetailProps) {
 
   return (
     <article className="max-w-4xl mx-auto">
-      <div className="bg-white rounded-lg shadow-sm border border-stone-200 overflow-hidden">
-        <header className="px-4 sm:px-8 py-8 sm:py-12 bg-gradient-to-b from-stone-50 to-white">
+      <div className="bg-card rounded-lg shadow-sm dark:shadow-lg border border-border overflow-hidden">
+        <header className="px-4 sm:px-8 py-8 sm:py-12 bg-gradient-to-b from-muted/30 to-card">
           {/* 제목 - 모바일 친화적 크기 */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight tracking-tight mb-6">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight tracking-tight mb-6">
             {post.title}
           </h1>
           
@@ -103,8 +103,8 @@ export default function PostDetail({ post }: PostDetailProps) {
 
           {/* 메타데이터 - 모바일 친화적 배치 */}
           <div className="space-y-3 mb-6">
-            <div className="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
-              <span className="font-medium text-gray-900">{post.author.name}</span>
+            <div className="flex items-center gap-4 text-sm text-foreground flex-wrap">
+              <span className="font-medium text-foreground">{post.author.name}</span>
               <span className="flex items-center gap-1.5">
                 <Calendar className="w-4 h-4" />
                 {formatFullDate(post.createdAt)}
@@ -118,13 +118,13 @@ export default function PostDetail({ post }: PostDetailProps) {
             {/* 비공개 포스트 배지와 수정일시 */}
             <div className="flex items-center gap-2 flex-wrap">
               {post.isPrivate && isAdmin && (
-                <span className="flex items-center gap-1 px-2 py-1 bg-red-100 text-red-800 rounded text-xs">
+                <span className="flex items-center gap-1 px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 rounded text-xs">
                   <EyeOff className="w-3 h-3" />
                   비공개 포스트
                 </span>
               )}
               {post.createdAt !== post.updatedAt && (
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-foreground/70">
                   (수정됨: {formatFullDate(post.updatedAt)})
                 </span>
               )}
@@ -136,7 +136,7 @@ export default function PostDetail({ post }: PostDetailProps) {
             <div className="flex flex-wrap gap-2">
               {post.tags.map((tag) => (
                 <Link key={tag} href={`/?tag=${tag}`}>
-                  <Badge variant="outline" className="border-primary-200 text-primary-700 hover:bg-primary-50 text-sm">
+                  <Badge variant="outline" className="border-primary-200 dark:border-primary-800 text-primary-700 dark:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-sm">
                     #{tag}
                   </Badge>
                 </Link>

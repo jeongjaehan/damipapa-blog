@@ -5,36 +5,38 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Menu, X, PenSquare, LayoutDashboard, Settings } from 'lucide-react'
+import { ThemeToggle } from '@/components/common/ThemeToggle'
 
 export default function Header() {
   const { user, isAuthenticated, isAdmin, logout } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-stone-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-gray-900 hover:text-primary-600 transition-colors">
+          <Link href="/" className="text-2xl font-bold text-foreground hover:text-primary-600 transition-colors">
             다미파파의 블로그
           </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link href="/" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
+            <Link href="/" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
               홈
             </Link>
-            <Link href="/career" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
+            <Link href="/career" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
               프로필
             </Link>
-            <Link href="/projects" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
+            <Link href="/projects" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
               프로젝트
             </Link>
-            <Link href="/search" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
+            <Link href="/search" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
               검색
             </Link>
-            <Link href="/tags" className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
+            <Link href="/tags" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
               태그
             </Link>
+            <ThemeToggle />
             {isAuthenticated && (
               <>
                 {isAdmin && (
@@ -61,7 +63,7 @@ export default function Header() {
                     </Button>
                   </Link>
                 )}
-                <span className="text-sm text-gray-600">{user?.name}</span>
+                <span className="text-sm text-foreground/70">{user?.name}</span>
                 <Button variant="ghost" size="sm" onClick={logout}>
                   로그아웃
                 </Button>
@@ -89,46 +91,49 @@ export default function Header() {
           <div className="md:hidden mt-4 space-y-2">
             <Link
               href="/"
-              className="block py-2 text-gray-700 hover:text-primary-600"
+              className="block py-2 text-foreground/70 hover:text-primary-600"
               onClick={() => setMobileMenuOpen(false)}
             >
               홈
             </Link>
             <Link
               href="/career"
-              className="block py-2 text-gray-700 hover:text-primary-600"
+              className="block py-2 text-foreground/70 hover:text-primary-600"
               onClick={() => setMobileMenuOpen(false)}
             >
               프로필
             </Link>
             <Link
               href="/projects"
-              className="block py-2 text-gray-700 hover:text-primary-600"
+              className="block py-2 text-foreground/70 hover:text-primary-600"
               onClick={() => setMobileMenuOpen(false)}
             >
               프로젝트
             </Link>
             <Link
               href="/search"
-              className="block py-2 text-gray-700 hover:text-primary-600"
+              className="block py-2 text-foreground/70 hover:text-primary-600"
               onClick={() => setMobileMenuOpen(false)}
             >
               검색
             </Link>
             <Link
               href="/tags"
-              className="block py-2 text-gray-700 hover:text-primary-600"
+              className="block py-2 text-foreground/70 hover:text-primary-600"
               onClick={() => setMobileMenuOpen(false)}
             >
               태그
             </Link>
+            <div className="py-2">
+              <ThemeToggle />
+            </div>
             {isAuthenticated && (
               <>
                 {isAdmin && (
                   <>
                     <Link
                       href="/admin"
-                      className="block py-2 text-gray-700 hover:text-primary-600"
+                      className="block py-2 text-foreground/70 hover:text-primary-600"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       관리자
@@ -149,13 +154,13 @@ export default function Header() {
                     </Link>
                   </>
                 )}
-                <span className="block py-2 text-gray-700">{user?.name}</span>
+                <span className="block py-2 text-foreground/70">{user?.name}</span>
                 <button
                   onClick={() => {
                     logout()
                     setMobileMenuOpen(false)
                   }}
-                  className="block py-2 text-gray-700 hover:text-primary-600 w-full text-left"
+                  className="block py-2 text-foreground/70 hover:text-primary-600 w-full text-left"
                 >
                   로그아웃
                 </button>

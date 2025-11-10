@@ -46,8 +46,8 @@ export default function PostShare({ postId, postTitle }: PostShareProps) {
   }
 
   return (
-    <div className="flex items-center gap-3 py-4 border-t border-gray-200 flex-wrap">
-      <span className="text-sm text-gray-600 font-medium">공유하기:</span>
+    <div className="flex items-center gap-3 py-4 border-t border-border flex-wrap">
+      <span className="text-sm text-foreground font-medium">공유하기:</span>
       <div className="flex items-center gap-2">
         <Button
           variant="outline"

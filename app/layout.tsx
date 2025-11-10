@@ -4,6 +4,7 @@ import Script from 'next/script'
 import { Suspense } from 'react'
 import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
+import { ThemeProvider } from '@/contexts/ThemeContext'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import Analytics from '@/components/common/Analytics'
@@ -53,11 +54,6 @@ export const metadata: Metadata = {
     title: '다미파파의 블로그',
     description: '100% 바이브 코딩으로 만든  블로그',
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
   icons: {
     // 다양한 해상도 favicon (ICO 파일 우선, PNG 보조)
     icon: [
@@ -90,6 +86,12 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/manifest.json',
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
 }
 
 export default function RootLayout({
@@ -144,18 +146,20 @@ export default function RootLayout({
         </Script>
         <div id="fb-root"></div>
         
-        <AuthProvider>
-          <Suspense fallback={<Loading />}>
-            <Analytics />
-          </Suspense>
-          <div className="min-h-screen flex flex-col">
-            <Header />
-            <main className="flex-grow container mx-auto px-4 py-8">
-              {children}
-            </main>
-            <Footer />
-          </div>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <Suspense fallback={<Loading />}>
+              <Analytics />
+            </Suspense>
+            <div className="min-h-screen flex flex-col bg-background">
+              <Header />
+              <main className="flex-grow container mx-auto px-4 py-8 bg-background">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
