@@ -327,21 +327,21 @@ export default function PostEditor({ post }: PostEditorProps) {
 
       {/* 제목 추천 모달 */}
       {showSuggestionModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-card rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto border border-border">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-card rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl border-2 border-gray-200 dark:border-border">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold flex items-center gap-2 text-foreground">
-                <Sparkles className="w-5 h-5 text-yellow-500" />
+              <h3 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-foreground">
+                <Sparkles className="w-6 h-6 text-yellow-500" />
                 AI 제목 추천
               </h3>
               <button
                 onClick={() => setShowSuggestionModal(false)}
-                className="text-muted-foreground hover:text-foreground"
+                className="text-gray-500 hover:text-gray-900 dark:text-muted-foreground dark:hover:text-foreground transition-colors p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-gray-600 dark:text-muted-foreground mb-6 bg-blue-50 dark:bg-blue-950/30 p-3 rounded-lg border border-blue-200 dark:border-blue-900">
               본문 내용을 분석해서 생성한 제목입니다. 마음에 드는 제목을 클릭하세요.
             </p>
             <div className="space-y-3">
@@ -349,13 +349,13 @@ export default function PostEditor({ post }: PostEditorProps) {
                 <button
                   key={index}
                   onClick={() => handleSelectSuggestion(suggestion)}
-                  className="w-full text-left p-4 border-2 border-border rounded-lg hover:border-primary hover:bg-muted transition-colors"
+                  className="w-full text-left p-4 bg-white dark:bg-gray-800/50 border-2 border-gray-300 dark:border-border rounded-xl hover:border-blue-500 dark:hover:border-primary hover:bg-blue-50 dark:hover:bg-blue-950/20 hover:shadow-md transition-all"
                 >
                   <div className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-medium">
+                    <span className="flex-shrink-0 w-7 h-7 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-md">
                       {index + 1}
                     </span>
-                    <span className="flex-1 text-foreground">{suggestion}</span>
+                    <span className="flex-1 text-gray-900 dark:text-foreground font-medium leading-relaxed">{suggestion}</span>
                   </div>
                 </button>
               ))}
@@ -365,6 +365,7 @@ export default function PostEditor({ post }: PostEditorProps) {
                 type="button"
                 variant="outline"
                 onClick={() => setShowSuggestionModal(false)}
+                className="border-gray-300 dark:border-border hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 취소
               </Button>

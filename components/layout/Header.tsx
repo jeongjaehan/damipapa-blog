@@ -1,21 +1,55 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Menu, X, PenSquare, LayoutDashboard, Settings } from 'lucide-react'
 import { ThemeToggle } from '@/components/common/ThemeToggle'
 
 export default function Header() {
+  const router = useRouter()
   const { user, isAuthenticated, isAdmin, logout } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [logoClickCount, setLogoClickCount] = useState(0)
+  const lastClickTimeRef = useRef<number>(0)
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    // 이미 로그인되어 있으면 클릭 카운트 무시
+    if (isAuthenticated) return
+
+    const now = Date.now()
+    
+    // 1초 이내 클릭만 카운트
+    if (now - lastClickTimeRef.current < 1000) {
+      const newCount = logoClickCount + 1
+      setLogoClickCount(newCount)
+      
+      // 5번 클릭하면 로그인 페이지로 이동
+      if (newCount >= 5) {
+        e.preventDefault()
+        setLogoClickCount(0)
+        router.push('/auth/login')
+        return
+      }
+    } else {
+      // 1초 이상 지났으면 카운트 리셋
+      setLogoClickCount(1)
+    }
+    
+    lastClickTimeRef.current = now
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-foreground hover:text-primary-600 transition-colors">
+          <Link 
+            href="/" 
+            className="text-2xl font-bold text-foreground hover:text-primary-600 transition-colors select-none"
+            onClick={handleLogoClick}
+          >
             다미파파의 블로그
           </Link>
 
