@@ -21,6 +21,8 @@ export default function CareerForm({ career, onSave, onCancel }: CareerFormProps
   const [title, setTitle] = useState('')
   const [subtitle, setSubtitle] = useState('')
   const [description, setDescription] = useState('')
+  const [summaryDescription, setSummaryDescription] = useState('')
+  const [narrativeDescription, setNarrativeDescription] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   useEffect(() => {
@@ -31,6 +33,8 @@ export default function CareerForm({ career, onSave, onCancel }: CareerFormProps
       setTitle(career.title)
       setSubtitle(career.subtitle)
       setDescription(career.description || '')
+      setSummaryDescription(career.summaryDescription || '')
+      setNarrativeDescription(career.narrativeDescription || '')
     } else {
       setStartDate('')
       setEndDate('')
@@ -38,6 +42,8 @@ export default function CareerForm({ career, onSave, onCancel }: CareerFormProps
       setTitle('')
       setSubtitle('')
       setDescription('')
+      setSummaryDescription('')
+      setNarrativeDescription('')
     }
   }, [career])
 
@@ -90,6 +96,8 @@ export default function CareerForm({ career, onSave, onCancel }: CareerFormProps
       title: title.trim(),
       subtitle: subtitle.trim(),
       description: description.trim() || undefined,
+      summaryDescription: summaryDescription.trim() || undefined,
+      narrativeDescription: narrativeDescription.trim() || undefined,
     })
   }
 
@@ -183,19 +191,52 @@ export default function CareerForm({ career, onSave, onCancel }: CareerFormProps
             {errors.subtitle && <p className="text-red-500 text-sm mt-1">{errors.subtitle}</p>}
           </div>
 
-          {/* 상세 설명 */}
+          {/* 요약형 설명 */}
+          <div>
+            <label htmlFor="summaryDescription" className="block text-sm font-medium text-gray-700 mb-2">
+              요약형 설명
+            </label>
+            <Textarea
+              id="summaryDescription"
+              value={summaryDescription}
+              onChange={(e) => setSummaryDescription(e.target.value)}
+              placeholder="요약 형식의 간결한 설명을 입력하세요"
+              rows={6}
+              style={{ color: '#111827', backgroundColor: '#ffffff' }}
+            />
+            <p className="text-xs text-gray-500 mt-1">간결하고 요약된 형식으로 작성해주세요</p>
+          </div>
+
+          {/* 서술형 설명 */}
+          <div>
+            <label htmlFor="narrativeDescription" className="block text-sm font-medium text-gray-700 mb-2">
+              서술형 설명
+            </label>
+            <Textarea
+              id="narrativeDescription"
+              value={narrativeDescription}
+              onChange={(e) => setNarrativeDescription(e.target.value)}
+              placeholder="서술 형식의 자세한 설명을 입력하세요"
+              rows={8}
+              style={{ color: '#111827', backgroundColor: '#ffffff' }}
+            />
+            <p className="text-xs text-gray-500 mt-1">자세하고 이야기 형식으로 작성해주세요</p>
+          </div>
+
+          {/* 기존 상세 설명 (하위 호환성) */}
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-              상세 설명 (호버 시 표시)
+              기존 상세 설명 (하위 호환성)
             </label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="마우스 호버 시 표시할 상세 설명을 입력하세요"
+              placeholder="기존 description 필드 (요약형/서술형 버전이 없을 때 사용)"
               rows={4}
               style={{ color: '#111827', backgroundColor: '#ffffff' }}
             />
+            <p className="text-xs text-gray-500 mt-1">요약형/서술형 버전이 모두 없을 때만 사용됩니다</p>
           </div>
 
           {/* 버튼 */}

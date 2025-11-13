@@ -43,7 +43,7 @@ export async function PUT(
     }
 
     const body = await request.json()
-    const { startDate, endDate, title, subtitle, description } = body
+    const { startDate, endDate, title, subtitle, description, summaryDescription, narrativeDescription } = body
 
     const data = await readCareerData()
     const careerIndex = data.careers.findIndex((c: Career) => c.id === id)
@@ -77,6 +77,8 @@ export async function PUT(
     if (title) data.careers[careerIndex].title = title
     if (subtitle) data.careers[careerIndex].subtitle = subtitle
     if (description !== undefined) data.careers[careerIndex].description = description
+    if (summaryDescription !== undefined) data.careers[careerIndex].summaryDescription = summaryDescription
+    if (narrativeDescription !== undefined) data.careers[careerIndex].narrativeDescription = narrativeDescription
 
     await writeCareerData(data)
 

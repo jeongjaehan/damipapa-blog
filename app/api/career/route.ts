@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { startDate, endDate, title, subtitle, description } = body
+    const { startDate, endDate, title, subtitle, description, summaryDescription, narrativeDescription } = body
 
     // 필수 필드 검증
     if (!startDate || !title || !subtitle) {
@@ -76,6 +76,8 @@ export async function POST(request: NextRequest) {
       title,
       subtitle,
       description,
+      summaryDescription,
+      narrativeDescription,
     }
 
     data.careers.push(newCareer)

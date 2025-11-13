@@ -193,7 +193,9 @@ export interface Career {
   endDate: string | null // YYYY-MM-DD or null
   title: string
   subtitle: string
-  description?: string
+  description?: string   // 하위 호환성을 위해 유지
+  summaryDescription?: string  // 요약형 설명
+  narrativeDescription?: string   // 서술형 설명
 }
 
 export interface CareerData {

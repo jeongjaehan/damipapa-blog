@@ -1,8 +1,9 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Career, CareerProfile } from '@/types'
-import { Mail, Linkedin, Building2, Briefcase } from 'lucide-react'
+import { Mail, Linkedin, Building2, Briefcase, FileText, BookOpen } from 'lucide-react'
+import { SegmentedControl } from '@/components/ui/segmented-control'
 
 // Facebook 아이콘 SVG
 const FacebookIcon = ({ className }: { className?: string }) => (
@@ -22,6 +23,7 @@ interface CareerTimelineProps {
 }
 
 export default function CareerTimeline({ profile, careers }: CareerTimelineProps) {
+  const [viewMode, setViewMode] = useState<'resume' | 'story'>('resume')
 
   const formatDate = (dateStr: string): string => {
     const date = new Date(dateStr)
@@ -176,6 +178,18 @@ export default function CareerTimeline({ profile, careers }: CareerTimelineProps
         </div>
       </div>
 
+      {/* 세그먼트 컨트롤 */}
+      <div className="w-full">
+        <SegmentedControl
+          options={[
+            { value: 'resume', label: '요약형', icon: FileText },
+            { value: 'story', label: '서술형', icon: BookOpen },
+          ]}
+          value={viewMode}
+          onChange={(value) => setViewMode(value as 'resume' | 'story')}
+        />
+      </div>
+
       {/* 경력 타임라인 */}
       <div className="relative">
         {/* 수직 타임라인 */}
@@ -238,13 +252,23 @@ export default function CareerTimeline({ profile, careers }: CareerTimelineProps
                   </div>
 
                   {/* 상세 설명 */}
-                  {career.description && (
-                    <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100">
-                      <div className="text-xs sm:text-sm text-gray-700 leading-relaxed whitespace-pre-wrap break-words">
-                        {career.description}
+                  {(() => {
+                    // 선택된 버전에 따라 설명 선택
+                    let description: string | undefined
+                    if (viewMode === 'resume') {
+                      description = career.summaryDescription || career.description
+                    } else {
+                      description = career.narrativeDescription || career.description
+                    }
+
+                    return description ? (
+                      <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100">
+                        <div className="text-xs sm:text-sm text-gray-700 leading-relaxed whitespace-pre-wrap break-words">
+                          {description}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    ) : null
+                  })()}
                 </div>
               </div>
             )
