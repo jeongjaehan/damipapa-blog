@@ -26,8 +26,7 @@ export default async function ProjectsPage() {
           사이드 프로젝트
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          저에게 또는 누군가에게 필요한 프로덕틀 만드는 것을 좋아합니다.
-          서비스가 잘되면 더 좋지만, 잘 안되더라도 만들어보는 것을 좋아합니다.
+          떠오른 아이디어를 실제 프로덕트로 만드는 것을 좋아합니다.
         </p>
       </div>
 
@@ -38,9 +37,6 @@ export default async function ProjectsPage() {
             <h2 className="text-xl font-semibold text-foreground mb-2">
               다양한 프로젝트들을 둘러보세요
             </h2>
-            <p className="text-sm text-muted-foreground">
-              각 프로젝트를 클릭하면 자세한 정보를 확인할 수 있어요.
-            </p>
           </div>
           
           <ProjectGrid projects={projects} />
