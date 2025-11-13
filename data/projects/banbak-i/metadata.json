@@ -1,0 +1,37 @@
+{
+  "id": "banbak-i",
+  "title": "반박이",
+  "subtitle": "AI 기반 논리적 오류 분석 및 반박문 생성 시스템",
+  "description": "온라인 콘텐츠의 논리적 구조를 분석하고 논리적 오류를 감지하여 팩트 기반 반박문을 자동 생성하는 웹 애플리케이션",
+  "status": "in-progress",
+  "category": "웹 애플리케이션",
+  "tech_stack": [
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "Node.js",
+    "Express",
+    "OpenAI GPT-4",
+    "Playwright"
+  ],
+  "icon": {
+    "type": "auto",
+    "value": "🎯",
+    "color": "#ef4444"
+  },
+  "links": {
+    
+  },
+  "features": [
+    "URL 기반 콘텐츠 자동 크롤링 및 추출",
+    "논리적 구조 분석 (주장, 근거, 추론 분리)",
+    "8가지 논리적 오류 자동 감지",
+    "3가지 스타일 반박문 생성 (논리 중심, 팩트 중심, 감정적 균형형)",
+    "주요 주장 및 반박 요약 제공",
+    "신뢰도 점수 및 근거 수준 평가",
+    "실시간 분석 진행 상태 표시"
+  ],
+  "created_at": "2025-11-11",
+  "updated_at": "2025-11-13"
+}
+

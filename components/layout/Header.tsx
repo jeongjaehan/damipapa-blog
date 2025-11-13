@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
-import { Menu, X, PenSquare, LayoutDashboard, Settings } from 'lucide-react'
+import { Menu, X, PenSquare, LayoutDashboard, Settings, Github } from 'lucide-react'
 import { ThemeToggle } from '@/components/common/ThemeToggle'
 
 export default function Header() {
@@ -62,7 +62,7 @@ export default function Header() {
               프로필
             </Link>
             <Link href="/projects" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
-              프로젝트
+              놀이터
             </Link>
             <Link href="/search" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
               검색
@@ -70,6 +70,15 @@ export default function Header() {
             <Link href="/tags" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
               태그
             </Link>
+            <a 
+              href="https://github.com/jeongjaehan/damipapa-blog" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground/70 hover:text-primary-600 transition-colors"
+              aria-label="GitHub"
+            >
+              <Github className="w-5 h-5" />
+            </a>
             <ThemeToggle />
             {isAuthenticated && (
               <>
@@ -142,7 +151,7 @@ export default function Header() {
               className="block py-2 text-foreground/70 hover:text-primary-600"
               onClick={() => setMobileMenuOpen(false)}
             >
-              프로젝트
+              놀이터
             </Link>
             <Link
               href="/search"
@@ -158,6 +167,16 @@ export default function Header() {
             >
               태그
             </Link>
+            <a
+              href="https://github.com/jeongjaehan/damipapa-blog"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 py-2 text-foreground/70 hover:text-primary-600"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Github className="w-5 h-5" />
+              <span>GitHub</span>
+            </a>
             <div className="py-2">
               <ThemeToggle />
             </div>

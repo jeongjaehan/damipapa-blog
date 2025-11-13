@@ -1,12 +1,12 @@
 [
   {
-    "id": "damipapa-blog",
-    "slug": "damipapa-blog",
-    "title": "다미파파 블로그",
-    "description": "100% 바이브코딩으로 만들어가는 풀스택 개인 블로그",
-    "status": "completed",
-    "icon": null,
-    "iconColor": "#6366f1",
+    "id": "banbak-i",
+    "slug": "banbak-i",
+    "title": "반박이",
+    "description": "온라인 콘텐츠의 논리적 구조를 분석하고 AI 기반 반박문을 자동 생성하는 웹 애플리케이션",
+    "status": "in-progress",
+    "icon": "🎯",
+    "iconColor": "#ef4444",
     "order": 1
   },
   {

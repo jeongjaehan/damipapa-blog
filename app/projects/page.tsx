@@ -4,12 +4,12 @@ import { Card } from '@/components/ui/card'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '사이드 프로젝트 | 다미파파의 블로그',
-  description: '다미파파가 개발한 다양한 사이드 프로젝트들을 소개합니다. 웹 애플리케이션부터 모바일 앱까지 다양한 프로젝트를 확인해보세요.',
-  keywords: '사이드 프로젝트, 개발 프로젝트, 포트폴리오, 앱 개발, 웹 개발',
+  title: '놀이터 | 다미파파의 블로그',
+  description: '떠오른 아이디어를 실제 프로덕트로 만드는 것을 좋아합니다.',
+  keywords: '놀이터, 사이트 프로젝트, 개발 프로젝트, 포트폴리오, 앱 개발, 웹 개발',
   openGraph: {
-    title: '다미파파의 사이드 프로젝트',
-    description: '다양한 기술로 구현된 창의적인 프로젝트들을 만나보세요.',
+    title: '다미파파의 놀이터',
+    description: '떠오른 아이디어를 실제 프로덕트로 만드는 것을 좋아합니다.',
     type: 'website',
     url: 'https://damipapa.com/projects',
   },
@@ -20,13 +20,10 @@ export default async function ProjectsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* 페이지 헤더 */}
+      {/* 인트로 문구 */}
       <div className="text-center mb-12">
-        <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-          사이드 프로젝트
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          떠오른 아이디어를 실제 프로덕트로 만드는 것을 좋아합니다.
+        <p className="text-xl sm:text-2xl text-muted-foreground font-medium italic max-w-3xl mx-auto leading-relaxed">
+          떠오른 아이디어를 실제 프로덕트로 만드는 것을 좋아합니다
         </p>
       </div>
 
