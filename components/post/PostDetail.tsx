@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Eye, Calendar, Edit, Trash2, EyeOff } from 'lucide-react'
 import OptimizedImage from '@/components/common/OptimizedImage'
+ㅜimport MermaidDiagram from '@/components/projects/MermaidDiagram'
 import PostReactions from './PostReactions'
 import PostShare from './PostShare'
 
@@ -152,6 +153,26 @@ export default function PostDetail({ post }: PostDetailProps) {
             <ReactMarkdown 
               remarkPlugins={[remarkGfm]}
               components={{
+                code: ({ node, inline, className, children, ...props }: any) => {
+                  const match = /language-(\w+)/.exec(className || '')
+                  const language = match ? match[1] : ''
+                  
+                  // Mermaid 코드 블록인 경우
+                  if (!inline && language === 'mermaid') {
+                    return (
+                      <div className="my-6">
+                        <MermaidDiagram chart={String(children).trim()} />
+                      </div>
+                    )
+                  }
+                  
+                  // 일반 코드 블록은 기본 렌더링
+                  return (
+                    <code className={className} {...props}>
+                      {children}
+                    </code>
+                  )
+                },
                 a: ({ node, href, children, ...props }) => {
                   // Check if link is a YouTube URL
                   if (href?.includes('youtube.com') || href?.includes('youtu.be')) {
