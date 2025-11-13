@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Eye, Calendar, Edit, Trash2, EyeOff } from 'lucide-react'
 import OptimizedImage from '@/components/common/OptimizedImage'
-ㅜimport MermaidDiagram from '@/components/projects/MermaidDiagram'
+import MermaidDiagram from '@/components/projects/MermaidDiagram'
 import PostReactions from './PostReactions'
 import PostShare from './PostShare'
 
