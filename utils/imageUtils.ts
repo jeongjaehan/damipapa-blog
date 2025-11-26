@@ -112,16 +112,16 @@ export const supportsWebP = (): Promise<boolean> => {
   })
 }
 
-// 스마트 압축 (웹 최적화된 고압축 설정)
+// 스마트 압축 (품질과 파일 크기의 균형)
 export const smartCompressImage = async (file: File): Promise<File> => {
   const webpSupported = await supportsWebP()
   
   return compressImage(file, {
-    maxWidth: 1200,  // 1920 → 1200 (웹에 충분한 해상도)
-    maxHeight: 800,  // 1080 → 800 (모바일도 고려)
-    quality: 0.7,    // 0.85 → 0.7 (품질 약간 낮춤, 압축률 대폭 증가)
+    maxWidth: 1600,  // 더 큰 해상도 유지
+    maxHeight: 1200, // 더 큰 해상도 유지
+    quality: 0.85,   // 85% 품질 (선명한 이미지)
     targetFormat: webpSupported ? 'webp' : 'jpeg',
-    maxSizeKB: 300   // 800KB → 300KB (더 공격적인 압축)
+    maxSizeKB: 500   // 500KB 이하
   })
 }
 
