@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server'
 import { verifyToken } from '@/lib/auth'
+import {
+  ALLOWED_IMAGE_EXTENSIONS,
+  ALLOWED_IMAGE_MIME_TYPES,
+  verifyImageSignature,
+  isValidFilename,
+} from '@/lib/security'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { randomUUID } from 'crypto'
 
 const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads')
-const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB (압축된 파일 크기에 맞춰 조정)
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'] // WebP 지원 유지
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 
 export async function POST(request: Request) {
   try {
@@ -45,9 +50,39 @@ export async function POST(request: Request) {
       )
     }
 
-    if (!ALLOWED_TYPES.includes(file.type)) {
+    // 🔒 보안: 파일명 검증 (Path Traversal 방지)
+    if (!isValidFilename(file.name)) {
+      return NextResponse.json(
+        { message: '유효하지 않은 파일명입니다' },
+        { status: 400 }
+      )
+    }
+
+    // 🔒 보안: MIME type 검증 (클라이언트 제공)
+    if (!ALLOWED_IMAGE_MIME_TYPES.includes(file.type)) {
       return NextResponse.json(
         { message: '지원하지 않는 파일 형식입니다' },
+        { status: 400 }
+      )
+    }
+
+    // 🔒 보안: 파일명에서 확장자 검증
+    const ext = file.name.split('.').pop()?.toLowerCase()
+    if (!ext || !ALLOWED_IMAGE_EXTENSIONS.includes(ext)) {
+      return NextResponse.json(
+        { message: '지원하지 않는 파일 확장자입니다' },
+        { status: 400 }
+      )
+    }
+
+    // 파일 내용 읽기
+    const bytes = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
+
+    // 🔒 보안: 파일 매직 바이트 검증 (실제 파일 내용 확인)
+    if (!verifyImageSignature(buffer, ext)) {
+      return NextResponse.json(
+        { message: '파일 형식이 올바르지 않습니다. 이미지 파일만 업로드 가능합니다.' },
         { status: 400 }
       )
     }
@@ -55,11 +90,8 @@ export async function POST(request: Request) {
     // 업로드 디렉토리 생성
     await mkdir(UPLOAD_DIR, { recursive: true })
 
-    // 파일 저장
-    const ext = file.name.split('.').pop()
+    // 🔒 보안: UUID를 사용한 안전한 파일명 생성
     const filename = `${randomUUID()}.${ext}`
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
 
     await writeFile(join(UPLOAD_DIR, filename), buffer)
 

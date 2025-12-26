@@ -1,7 +1,15 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'default-secret-key'
+// 🔒 보안: JWT_SECRET 환경변수가 없으면 에러 발생 (기본값 사용 금지)
+const JWT_SECRET = process.env.JWT_SECRET || ''
+if (!JWT_SECRET || JWT_SECRET === 'default-secret-key' || JWT_SECRET.length < 32) {
+  console.error('❌ 보안 오류: JWT_SECRET 환경변수가 설정되지 않았거나 안전하지 않습니다.')
+  console.error('최소 32자 이상의 안전한 랜덤 문자열을 설정하세요.')
+  console.error('생성 방법: openssl rand -base64 64')
+  throw new Error('JWT_SECRET is not properly configured')
+}
+
 const JWT_EXPIRATION = '12h'
 
 export interface JWTPayload {

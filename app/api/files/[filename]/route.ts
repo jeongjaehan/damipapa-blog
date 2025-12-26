@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
+import { isValidFilename, isValidUUIDFilename } from '@/lib/security'
 
 const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads')
 
@@ -10,6 +11,16 @@ export async function GET(
 ) {
   try {
     const { filename } = await params
+    
+    // 🔒 보안: 파일명 검증 (Path Traversal 공격 방지)
+    if (!isValidFilename(filename)) {
+      return new NextResponse('Invalid filename', { status: 400 })
+    }
+    
+    // 🔒 보안: UUID 패턴 검증 (업로드 시 UUID로 생성됨)
+    if (!isValidUUIDFilename(filename)) {
+      return new NextResponse('Invalid filename format', { status: 400 })
+    }
     
     // 파일 경로 생성
     const filePath = join(UPLOAD_DIR, filename)

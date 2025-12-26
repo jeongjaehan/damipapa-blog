@@ -1,69 +1,33 @@
-# Build outputs
-blog-backend/build/
-blog-backend/.gradle/
-blog-frontend/.next/
-blog-frontend/out/
-blog-frontend/node_modules/
+# Cursor AI가 접근하지 않아야 할 민감한 파일들
 
-# Dependencies
-**/node_modules/
-**/.pnp/
-**/.pnp.js
-**/package-lock.json
-**/yarn.lock
+# 환경변수 파일
+.env
+.env.local
+.env.production
+.env.development
 
-# Gradle
-**/.gradle/
-**/build/
-**/gradle/wrapper/gradle-wrapper.jar
+# 데이터베이스
+*.db
+*.sqlite
+*.sqlite3
+prisma/dev.db
 
-# IDE
-**/.idea/
-**/.vscode/
-**/*.iml
-**/*.ipr
-**/*.iws
+# 로그 파일
+logs/
+*.log
 
-# OS
-**/.DS_Store
-**/Thumbs.db
+# 업로드된 파일
+public/uploads/
 
-# Logs
-**/*.log
-**/logs/
+# Node modules
+node_modules/
 
-# Database
-**/*.db
-**/*.sqlite
+# 빌드 결과물
+.next/
+out/
+dist/
+build/
 
-# Uploads
-blog-backend/uploads/
-
-# Environment
-**/.env
-**/.env.local
-**/.env.*.local
-
-# Docker
-**/.docker/
-
-# Test coverage
-**/coverage/
-**/.nyc_output/
-
-# Generated files
-blog-frontend/.eslintcache
-**/dist/
-
-# Temporary files
-**/*.swp
-**/*.swo
-**/*~
-**/.*.swp
-
-# Large binary files
-**/*.jar
-**/*.war
-**/*.zip
-**/*.tar.gz
-
+# 시스템 파일
+.DS_Store
+Thumbs.db

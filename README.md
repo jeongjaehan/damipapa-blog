@@ -75,13 +75,22 @@ npm run dev
 
 ```bash
 DATABASE_URL="mysql://user:password@localhost:3307/blog"
-JWT_SECRET="your-random-secret-key"
+
+# 🔒 보안: JWT_SECRET은 최소 32자 이상의 안전한 랜덤 문자열 사용 (필수!)
+# 생성 방법: openssl rand -base64 64
+JWT_SECRET="your-64-character-random-secret-key"
+
 ADMIN_EMAIL="admin@example.com"
 ADMIN_PASSWORD="your-password"
 ADMIN_NAME="관리자"
 NEXT_PUBLIC_FACEBOOK_APP_ID="your-facebook-app-id"
 OPENAI_API_KEY="your-openai-api-key" # AI 제목 추천용
 ```
+
+**⚠️ 보안 주의사항:**
+- `JWT_SECRET`은 반드시 32자 이상의 안전한 랜덤 문자열을 사용하세요
+- `.env` 파일은 절대 Git에 커밋하지 마세요
+- 프로덕션 환경에서는 강력한 비밀번호를 사용하세요
 
 ## 📁 프로젝트 구조
 
@@ -120,6 +129,34 @@ prisma/               # DB 스키마
 - ✅ 포스트별 메타데이터 & 이미지
 
 **설정**: `.env.local`에 `NEXT_PUBLIC_BASE_URL` 추가
+
+## 🔒 보안
+
+이 프로젝트는 다음 보안 기능을 포함합니다:
+
+- ✅ **Path Traversal 방지**: 파일 경로 검증 및 UUID 패턴 강제
+- ✅ **파일 업로드 보안**: 매직 바이트 검증으로 실제 파일 형식 확인
+- ✅ **JWT 보안**: 강력한 Secret 키 필수, 기본값 사용 불가
+- ✅ **XSS/CSRF 방지**: 보안 헤더 및 입력값 검증
+- ✅ **실행 파일 차단**: 위험한 확장자 업로드 차단
+- ✅ **Rate Limiting 준비**: IP 기반 제한 기능 구현 가능
+
+### 보안 점검
+
+정기적으로 보안 점검을 실행하세요:
+
+```bash
+# 보안 스크립트 실행 (xmrig 등 악성 프로세스 탐지)
+./scripts/security-check.sh
+
+# npm 취약점 확인
+npm audit
+
+# 의존성 업데이트
+npm audit fix
+```
+
+자세한 내용은 [SECURITY.md](SECURITY.md)를 참조하세요.
 
 ## 🚀 배포
 
