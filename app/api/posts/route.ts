@@ -22,7 +22,12 @@ export async function GET(request: Request) {
     const [posts, total] = await Promise.all([
       prisma.post.findMany({
         where,
-        include: { author: true },
+        include: { 
+          author: true,
+          category: {
+            select: { id: true, name: true, slug: true }
+          }
+        },
         orderBy: { createdAt: 'desc' },
         skip,
         take,
@@ -38,6 +43,9 @@ export async function GET(request: Request) {
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       viewCount: post.viewCount,
+      categoryId: post.categoryId,
+      categoryName: post.category?.name ?? null,
+      categorySlug: post.category?.slug ?? null,
     }))
 
     return NextResponse.json({
@@ -78,7 +86,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const { title, content, tags, isPrivate } = await request.json()
+    const { title, content, tags, isPrivate, categoryId } = await request.json()
 
     const user = await prisma.user.findUnique({
       where: { email: payload.email },
@@ -102,8 +110,14 @@ export async function POST(request: Request) {
         isPrivate: isPrivate || false,
         secretToken,
         authorId: user.id,
+        categoryId: categoryId ?? null,
       } as any,
-      include: { author: true },
+      include: { 
+        author: true,
+        category: {
+          select: { id: true, name: true, slug: true }
+        }
+      },
     })
 
     return NextResponse.json({
@@ -122,6 +136,8 @@ export async function POST(request: Request) {
       viewCount: post.viewCount,
       isPrivate: (post as any).isPrivate,
       secretToken: (post as any).secretToken,
+      categoryId: post.categoryId,
+      category: post.category,
     })
   } catch (error) {
     console.error('Create post error:', error)

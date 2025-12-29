@@ -32,6 +32,8 @@ model Post {
   viewCount   Int            @default(0) @map("view_count")
   authorId    Int            @map("author_id")
   author      User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  categoryId  Int?           @map("category_id")
+  category    Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   createdAt   DateTime       @default(now()) @map("created_at")
   updatedAt   DateTime       @updatedAt @map("updated_at")
   postViews   PostView[]
@@ -90,5 +92,23 @@ model PromptTemplate {
   updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@map("prompt_templates")
+}
+
+model Category {
+  id          Int        @id @default(autoincrement())
+  name        String     @db.VarChar(100)
+  slug        String     @unique @db.VarChar(100)
+  description String?    @db.VarChar(500)
+  isPrivate   Boolean    @default(false) @map("is_private")
+  order       Int        @default(0)
+  depth       Int        @default(0) // 0~4 (최대 5 depth)
+  parentId    Int?       @map("parent_id")
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Category[] @relation("CategoryHierarchy")
+  posts       Post[]
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  @@map("categories")
 }
 

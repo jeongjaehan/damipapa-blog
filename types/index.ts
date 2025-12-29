@@ -19,6 +19,9 @@ export interface PostSummary {
   commentCount: number
   isPrivate?: boolean
   secretToken?: string
+  categoryId?: number | null
+  categoryName?: string | null
+  categorySlug?: string | null
 }
 
 export interface PostDetail {
@@ -33,6 +36,8 @@ export interface PostDetail {
   isPrivate?: boolean
   secretToken?: string
   reactionStats?: PostReactionStats
+  categoryId?: number | null
+  category?: CategorySummary | null
 }
 
 export interface PostReactionStats {
@@ -78,6 +83,7 @@ export interface CreatePostRequest {
   content: string
   tags: string[]
   isPrivate?: boolean
+  categoryId?: number | null
 }
 
 export interface UpdatePostRequest {
@@ -85,6 +91,7 @@ export interface UpdatePostRequest {
   content?: string
   tags?: string[]
   isPrivate?: boolean
+  categoryId?: number | null
 }
 
 export interface DashboardStats {
@@ -256,5 +263,62 @@ export interface ProjectStats {
   completed: number
   launched: number
   paused: number
+}
+
+// 카테고리 관련 타입들
+export interface CategorySummary {
+  id: number
+  name: string
+  slug: string
+  isPrivate: boolean
+}
+
+export interface Category {
+  id: number
+  name: string
+  slug: string
+  description?: string | null
+  isPrivate: boolean
+  order: number
+  depth: number
+  parentId?: number | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CategoryWithChildren extends Category {
+  children: CategoryWithChildren[]
+  postCount: number
+}
+
+export interface CategoryTree {
+  categories: CategoryWithChildren[]
+  uncategorizedCount: number
+}
+
+export interface CreateCategoryRequest {
+  name: string
+  slug: string
+  description?: string
+  isPrivate?: boolean
+  order?: number
+  parentId?: number | null
+}
+
+export interface UpdateCategoryRequest {
+  name?: string
+  slug?: string
+  description?: string
+  isPrivate?: boolean
+  order?: number
+  parentId?: number | null
+}
+
+// 대시보드 관련 타입
+export interface BlogDashboardData {
+  totalPosts: number
+  totalViews: number
+  recentPosts: PostSummary[]
+  popularPosts: PostSummary[]
 }
 

@@ -1,19 +1,137 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useRouter} from 'next/navigation'
-import { createPost, updatePost, uploadFile, getTags, getTemplates, suggestPostTitle } from '@/services/api'
-import { PostDetail, Template } from '@/types'
+import { createPost, updatePost, uploadFile, getTags, getTemplates, suggestPostTitle, getAdminCategoryTree, createCategory } from '@/services/api'
+import { PostDetail, Template, CategoryWithChildren } from '@/types'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import TipTapEditor from './TipTapEditor'
-import { Save, X, Sparkles } from 'lucide-react'
+import { Save, X, Sparkles, Plus, Loader2, Folder, ChevronDown, Check } from 'lucide-react'
 import { trackPostCreate } from '@/lib/gtag'
 import { smartCompressImage } from '@/utils/imageUtils'
 
 interface PostEditorProps {
   post?: PostDetail
+}
+
+// 카테고리 선택 컴포넌트 (포스트 관리와 동일한 UX)
+interface CategorySelectProps {
+  categoryId: number | null
+  categories: CategoryWithChildren[]
+  onChange: (categoryId: number | null) => void
+  onCreateNew: () => void
+}
+
+function CategorySelect({ categoryId, categories, onChange, onCreateNew }: CategorySelectProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const selectedCategory = categoryId ? categories.find(c => c.id === categoryId) : null
+
+  // 외부 클릭 시 드롭다운 닫기
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const handleSelect = (id: number | null) => {
+    onChange(id)
+    setIsOpen(false)
+  }
+
+  return (
+    <div ref={dropdownRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className={`
+          flex items-center gap-2 px-3 py-2 text-sm rounded-lg border transition-colors w-full
+          ${selectedCategory 
+            ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300' 
+            : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400'}
+          hover:bg-gray-100 dark:hover:bg-gray-700
+        `}
+      >
+        <Folder className="w-4 h-4" />
+        <span className="flex-1 text-left truncate">
+          {selectedCategory ? (
+            <>
+              {'　'.repeat(selectedCategory.depth)}{selectedCategory.name}
+              {selectedCategory.isPrivate && ' 🔒'}
+            </>
+          ) : '미분류'}
+        </span>
+        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      {isOpen && (
+        <div className="absolute z-50 mt-1 w-full bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 max-h-60 overflow-auto">
+          {/* 미분류 옵션 */}
+          <button
+            type="button"
+            onClick={() => handleSelect(null)}
+            className={`
+              w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800
+              ${categoryId === null ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300'}
+            `}
+          >
+            <Folder className="w-4 h-4 text-gray-400" />
+            <span>미분류</span>
+            {categoryId === null && <Check className="w-4 h-4 ml-auto" />}
+          </button>
+
+          <div className="border-t border-gray-200 dark:border-gray-700 my-1" />
+
+          {/* 카테고리 목록 */}
+          {categories.map((cat) => (
+            <button
+              type="button"
+              key={cat.id}
+              onClick={() => handleSelect(cat.id)}
+              className={`
+                w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800
+                ${categoryId === cat.id ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300'}
+              `}
+              style={{ paddingLeft: `${12 + cat.depth * 16}px` }}
+            >
+              <Folder className="w-4 h-4 text-amber-500" />
+              <span className="truncate">
+                {cat.name}
+                {cat.isPrivate && ' 🔒'}
+              </span>
+              {categoryId === cat.id && <Check className="w-4 h-4 ml-auto shrink-0" />}
+            </button>
+          ))}
+
+          {categories.length === 0 && (
+            <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
+              카테고리가 없습니다
+            </div>
+          )}
+
+          <div className="border-t border-gray-200 dark:border-gray-700 my-1" />
+
+          {/* 신규 생성 옵션 */}
+          <button
+            type="button"
+            onClick={() => {
+              setIsOpen(false)
+              onCreateNew()
+            }}
+            className="w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-green-50 dark:hover:bg-green-900/30 text-green-600 dark:text-green-400"
+          >
+            <Plus className="w-4 h-4" />
+            <span>신규 카테고리 생성</span>
+          </button>
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default function PostEditor({ post }: PostEditorProps) {
@@ -22,6 +140,13 @@ export default function PostEditor({ post }: PostEditorProps) {
   const [content, setContent] = useState(post?.content || '')
   const [tags, setTags] = useState<string[]>(post?.tags ? Array.from(post.tags) : [])
   const [isPrivate, setIsPrivate] = useState(post?.isPrivate || false)
+  const [categoryId, setCategoryId] = useState<number | null>(post?.categoryId ?? null)
+  const [allCategories, setAllCategories] = useState<CategoryWithChildren[]>([])
+  const [showCategoryCreate, setShowCategoryCreate] = useState(false)
+  const [newCategoryName, setNewCategoryName] = useState('')
+  const [newCategoryParentId, setNewCategoryParentId] = useState<number | null>(null)
+  const [creatingCategory, setCreatingCategory] = useState(false)
+  const [categoryError, setCategoryError] = useState('')
   const [tagInput, setTagInput] = useState('')
   const [allTags, setAllTags] = useState<string[]>([])
   const [filteredTags, setFilteredTags] = useState<string[]>([])
@@ -34,16 +159,18 @@ export default function PostEditor({ post }: PostEditorProps) {
   const [titleSuggestions, setTitleSuggestions] = useState<string[]>([])
   const [showSuggestionModal, setShowSuggestionModal] = useState(false)
 
-  // 기존 태그 목록 및 템플릿 로드
+  // 기존 태그 목록, 템플릿, 카테고리 로드
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [tagsData, templatesData] = await Promise.all([
+        const [tagsData, templatesData, categoryData] = await Promise.all([
           getTags(),
           getTemplates(),
+          getAdminCategoryTree(),
         ])
         setAllTags(tagsData)
         setTemplates(templatesData)
+        setAllCategories(flattenCategories(categoryData.categories))
       } catch (error) {
         console.error('데이터 로딩 실패:', error)
       }
@@ -140,6 +267,55 @@ export default function PostEditor({ post }: PostEditorProps) {
     }
   }
 
+  // 카테고리 인라인 생성 핸들러
+  const handleCreateCategory = async () => {
+    if (!newCategoryName.trim()) {
+      setCategoryError('카테고리 이름을 입력하세요.')
+      return
+    }
+
+    setCreatingCategory(true)
+    setCategoryError('')
+
+    try {
+      // 슬러그 자동 생성 (한글 포함, 공백은 하이픈으로)
+      const slug = newCategoryName
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9가-힣\-]/g, '')
+
+      const newCategory = await createCategory({
+        name: newCategoryName.trim(),
+        slug,
+        parentId: newCategoryParentId,
+      })
+
+      // 카테고리 목록 갱신
+      const categoryData = await getAdminCategoryTree()
+      setAllCategories(flattenCategories(categoryData.categories))
+
+      // 새로 생성된 카테고리 선택
+      setCategoryId(newCategory.id)
+
+      // 폼 초기화
+      setNewCategoryName('')
+      setNewCategoryParentId(null)
+      setShowCategoryCreate(false)
+    } catch (err: any) {
+      setCategoryError(err.response?.data?.message || '카테고리 생성에 실패했습니다.')
+    } finally {
+      setCreatingCategory(false)
+    }
+  }
+
+  const handleCancelCategoryCreate = () => {
+    setShowCategoryCreate(false)
+    setNewCategoryName('')
+    setNewCategoryParentId(null)
+    setCategoryError('')
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
@@ -151,6 +327,7 @@ export default function PostEditor({ post }: PostEditorProps) {
         content,
         tags,
         isPrivate,
+        categoryId,
       }
 
       if (post) {
@@ -275,6 +452,104 @@ export default function PostEditor({ post }: PostEditorProps) {
             체크하면 관리자만 볼 수 있는 비공개 포스트로 설정됩니다.
           </p>
         </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2 text-foreground">카테고리</label>
+          
+          {!showCategoryCreate ? (
+            // 카테고리 선택 모드
+            <div className="space-y-2">
+              <CategorySelect
+                categoryId={categoryId}
+                categories={allCategories}
+                onChange={setCategoryId}
+                onCreateNew={() => setShowCategoryCreate(true)}
+              />
+              <p className="text-xs text-muted-foreground">
+                포스트가 속할 카테고리를 선택하세요. 비워두면 미분류로 표시됩니다.
+              </p>
+            </div>
+          ) : (
+            // 카테고리 인라인 생성 모드
+            <div className="space-y-3 p-4 bg-muted/50 rounded-lg border border-border">
+              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                <Plus className="w-4 h-4" />
+                신규 카테고리 생성
+              </div>
+              
+              {categoryError && (
+                <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded">
+                  {categoryError}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs text-muted-foreground mb-1">카테고리 이름 *</label>
+                <input
+                  type="text"
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      handleCreateCategory()
+                    } else if (e.key === 'Escape') {
+                      handleCancelCategoryCreate()
+                    }
+                  }}
+                  placeholder="예: 개발, 일상, 여행"
+                  className="w-full px-3 py-2 text-sm border border-input rounded bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  autoFocus
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs text-muted-foreground mb-1">상위 카테고리 (선택사항)</label>
+                <select
+                  value={newCategoryParentId ?? ''}
+                  onChange={(e) => setNewCategoryParentId(e.target.value ? parseInt(e.target.value) : null)}
+                  className="w-full px-3 py-2 text-sm border border-input rounded bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                >
+                  <option value="">없음 (최상위)</option>
+                  {allCategories
+                    .filter((c) => c.depth < 4)
+                    .map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {'　'.repeat(category.depth)}{category.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCancelCategoryCreate}
+                  disabled={creatingCategory}
+                >
+                  취소
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={handleCreateCategory}
+                  disabled={creatingCategory || !newCategoryName.trim()}
+                >
+                  {creatingCategory ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                      생성 중...
+                    </>
+                  ) : (
+                    '생성'
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="bg-card rounded-lg shadow-md p-6 border border-border">
@@ -377,3 +652,14 @@ export default function PostEditor({ post }: PostEditorProps) {
   )
 }
 
+// 카테고리 트리를 평탄화
+function flattenCategories(categories: CategoryWithChildren[]): CategoryWithChildren[] {
+  const result: CategoryWithChildren[] = []
+  for (const cat of categories) {
+    result.push(cat)
+    if (cat.children && cat.children.length > 0) {
+      result.push(...flattenCategories(cat.children))
+    }
+  }
+  return result
+}

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
-import { Menu, X, PenSquare, LayoutDashboard, Settings, Github } from 'lucide-react'
+import { Menu, X, PenSquare, Github } from 'lucide-react'
 import { ThemeToggle } from '@/components/common/ThemeToggle'
 
 export default function Header() {
@@ -83,14 +83,6 @@ export default function Header() {
             {isAuthenticated && (
               <>
                 {isAdmin && (
-                  <Link href="/admin">
-                    <Button variant="ghost" size="sm" className="gap-2">
-                      <LayoutDashboard className="w-4 h-4" />
-                      대시보드
-                    </Button>
-                  </Link>
-                )}
-                {isAdmin && (
                   <Link href="/admin/posts/new">
                     <Button size="sm" className="gap-2">
                       <PenSquare className="w-4 h-4" />
@@ -98,15 +90,13 @@ export default function Header() {
                     </Button>
                   </Link>
                 )}
-                {isAdmin && (
-                  <Link href="/admin/templates">
-                    <Button size="sm" className="gap-2">
-                      <Settings className="w-4 h-4" />
-                      템플릿 관리
-                    </Button>
+                {isAdmin ? (
+                  <Link href="/admin" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
+                    관리자
                   </Link>
+                ) : (
+                  <span className="text-sm text-foreground/70">{user?.name}</span>
                 )}
-                <span className="text-sm text-foreground/70">{user?.name}</span>
                 <Button variant="ghost" size="sm" onClick={logout}>
                   로그아웃
                 </Button>
@@ -198,16 +188,8 @@ export default function Header() {
                     >
                       글쓰기
                     </Link>
-                    <Link
-                      href="/admin/templates"
-                      className="block py-2 bg-primary-600 text-white px-4 rounded hover:bg-primary-700"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      템플릿 관리
-                    </Link>
                   </>
                 )}
-                <span className="block py-2 text-foreground/70">{user?.name}</span>
                 <button
                   onClick={() => {
                     logout()

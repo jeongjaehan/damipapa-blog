@@ -24,7 +24,12 @@ export async function GET(
 
     const post = await prisma.post.findFirst({
       where: { id },
-      include: { author: true },
+      include: { 
+        author: true,
+        category: {
+          select: { id: true, name: true, slug: true, isPrivate: true }
+        }
+      },
     })
 
     if (!post) {
@@ -43,6 +48,14 @@ export async function GET(
           { status: 403 }
         )
       }
+    }
+
+    // 비공개 카테고리의 포스트 접근 권한 확인
+    if (post.category?.isPrivate && !isAdmin) {
+      return NextResponse.json(
+        { message: '접근 권한이 없습니다' },
+        { status: 403 }
+      )
     }
 
     // 공개 포스트이거나 접근 권한이 있는 경우에만 조회수 증가
@@ -78,6 +91,8 @@ export async function GET(
       viewCount: post.viewCount,
       isPrivate: (post as any).isPrivate,
       secretToken: (post as any).secretToken,
+      categoryId: post.categoryId,
+      category: post.category,
     })
   } catch (error) {
     console.error('Get post error:', error)
@@ -131,10 +146,20 @@ export async function PUT(
       }
     }
 
+    // categoryId 필드 처리 (null 허용)
+    if (data.categoryId !== undefined) {
+      updateData.categoryId = data.categoryId
+    }
+
     const post = await prisma.post.update({
       where: { id },
       data: updateData,
-      include: { author: true },
+      include: { 
+        author: true,
+        category: {
+          select: { id: true, name: true, slug: true }
+        }
+      },
     })
 
     return NextResponse.json({
@@ -153,6 +178,8 @@ export async function PUT(
       viewCount: post.viewCount,
       isPrivate: (post as any).isPrivate,
       secretToken: (post as any).secretToken,
+      categoryId: post.categoryId,
+      category: post.category,
     })
   } catch (error) {
     console.error('Update post error:', error)

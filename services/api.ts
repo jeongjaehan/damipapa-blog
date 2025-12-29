@@ -19,6 +19,11 @@ import type {
   PromptTemplate,
   CreatePromptTemplateRequest,
   UpdatePromptTemplateRequest,
+  CategoryTree,
+  Category,
+  CreateCategoryRequest,
+  UpdateCategoryRequest,
+  BlogDashboardData,
 } from '@/types'
 
 const API_URL = '/api'  // Next.js API Routes 사용
@@ -294,6 +299,59 @@ export const suggestPostTitle = async (content: string): Promise<string[]> => {
     content,
   })
   return response.data.suggestions
+}
+
+// Category APIs (Public)
+export const getCategoryTree = async (includePrivate = false): Promise<CategoryTree> => {
+  const params = includePrivate ? '?includePrivate=true' : ''
+  const response = await api.get<CategoryTree>(`/categories${params}`)
+  return response.data
+}
+
+export const getCategoryPosts = async (
+  slug: string,
+  page = 0,
+  size = 10
+): Promise<{
+  category: Category & { postCount?: number }
+  posts: PageResponse<PostSummary>
+}> => {
+  const response = await api.get(`/categories/${slug}?page=${page}&size=${size}`)
+  return response.data
+}
+
+// Category APIs (Admin)
+export const getAdminCategoryTree = async (): Promise<CategoryTree> => {
+  const response = await api.get<CategoryTree>('/admin/categories')
+  return response.data
+}
+
+export const getAdminCategory = async (id: number): Promise<Category> => {
+  const response = await api.get<Category>(`/admin/categories/${id}`)
+  return response.data
+}
+
+export const createCategory = async (data: CreateCategoryRequest): Promise<Category> => {
+  const response = await api.post<Category>('/admin/categories', data)
+  return response.data
+}
+
+export const updateCategory = async (
+  id: number,
+  data: UpdateCategoryRequest
+): Promise<Category> => {
+  const response = await api.put<Category>(`/admin/categories/${id}`, data)
+  return response.data
+}
+
+export const deleteCategory = async (id: number): Promise<void> => {
+  await api.delete(`/admin/categories/${id}`)
+}
+
+// Blog Dashboard API (Public)
+export const getBlogDashboard = async (isAdmin = false): Promise<BlogDashboardData> => {
+  const response = await api.get<BlogDashboardData>(`/dashboard${isAdmin ? '?admin=true' : ''}`)
+  return response.data
 }
 
 export default api

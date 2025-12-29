@@ -11,7 +11,7 @@ import { deletePost } from '@/services/api'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { Eye, Calendar, Edit, Trash2, EyeOff } from 'lucide-react'
+import { Eye, Calendar, Edit, Trash2, EyeOff, Folder } from 'lucide-react'
 import OptimizedImage from '@/components/common/OptimizedImage'
 import MermaidDiagram from '@/components/projects/MermaidDiagram'
 import PostReactions from './PostReactions'
@@ -131,6 +131,19 @@ export default function PostDetail({ post }: PostDetailProps) {
               )}
             </div>
           </div>
+
+          {/* 카테고리 */}
+          {post.category && (
+            <div className="mb-4">
+              <Link 
+                href={`/categories/${post.category.slug}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 rounded-lg text-sm hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
+              >
+                <Folder className="w-4 h-4" />
+                {post.category.name}
+              </Link>
+            </div>
+          )}
 
           {/* 태그 - 모바일 친화적 배치 */}
           {post.tags && post.tags.length > 0 && (

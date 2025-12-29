@@ -39,7 +39,12 @@ export async function GET(request: Request) {
     const [posts, total] = await Promise.all([
       prisma.post.findMany({
         where,
-        include: { author: true },
+        include: { 
+          author: true,
+          category: {
+            select: { id: true, name: true, slug: true }
+          }
+        },
         orderBy: { createdAt: 'desc' },
         skip,
         take,
@@ -57,6 +62,9 @@ export async function GET(request: Request) {
       viewCount: post.viewCount,
       isPrivate: (post as any).isPrivate,
       secretToken: (post as any).secretToken,
+      categoryId: post.categoryId,
+      categoryName: post.category?.name ?? null,
+      categorySlug: post.category?.slug ?? null,
     }))
 
     return NextResponse.json({

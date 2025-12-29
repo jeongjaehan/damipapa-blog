@@ -8,7 +8,6 @@ import { DashboardStats } from '@/types'
 import Loading from '@/components/common/Loading'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { 
   FileText, 
   EyeOff, 
@@ -16,11 +15,10 @@ import {
   Sparkles, 
   LayoutDashboard,
   PenSquare,
-  Settings,
   TrendingUp,
   ArrowRight,
-  Plus,
-  BarChart3
+  BarChart3,
+  FolderTree
 } from 'lucide-react'
 
 export default function AdminDashboard() {
@@ -78,28 +76,6 @@ export default function AdminDashboard() {
             <p className="text-muted-foreground text-lg">블로그 통계와 관리 기능을 한눈에 확인하세요</p>
           </div>
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        </div>
-
-        {/* Quick Actions */}
-        <div className="flex flex-wrap gap-3">
-          <Link href="/admin/posts/new">
-            <Button size="lg" className="gap-2 shadow-lg hover:shadow-xl transition-all">
-              <Plus className="w-5 h-5" />
-              새 포스트 작성
-            </Button>
-          </Link>
-          <Link href="/admin/posts">
-            <Button variant="outline" size="lg" className="gap-2">
-              <FileText className="w-5 h-5" />
-              포스트 관리
-            </Button>
-          </Link>
-          <Link href="/admin/templates">
-            <Button variant="outline" size="lg" className="gap-2">
-              <Settings className="w-5 h-5" />
-              템플릿 관리
-            </Button>
-          </Link>
         </div>
 
         {/* Stats Cards */}
@@ -245,6 +221,26 @@ export default function AdminDashboard() {
                 <CardContent className="relative z-10">
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     모든 포스트를 확인하고 수정, 삭제할 수 있습니다
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/admin/categories">
+              <Card className="group relative overflow-hidden border border-border hover:border-amber-500/50 dark:hover:border-amber-500/50 transition-all duration-300 hover:shadow-xl dark:hover:shadow-lg cursor-pointer h-full">
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 dark:from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <CardHeader className="relative z-10">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-3 bg-amber-500/10 dark:bg-amber-500/20 rounded-xl group-hover:bg-amber-500/20 dark:group-hover:bg-amber-500/30 transition-colors">
+                      <FolderTree className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                    </div>
+                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-amber-600 dark:group-hover:text-amber-400 group-hover:translate-x-1 transition-all" />
+                  </div>
+                  <CardTitle className="text-lg font-semibold mb-2">카테고리 관리</CardTitle>
+                </CardHeader>
+                <CardContent className="relative z-10">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    계층형 카테고리를 생성하고 관리합니다 (최대 5단계)
                   </p>
                 </CardContent>
               </Card>
