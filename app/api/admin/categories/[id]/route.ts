@@ -44,7 +44,7 @@ async function hasCircularReference(
   let currentId: number | null = newParentId
   while (currentId !== null) {
     if (currentId === categoryId) return true
-    const parent = await prisma.category.findUnique({
+    const parent: { parentId: number | null } | null = await prisma.category.findUnique({
       where: { id: currentId },
       select: { parentId: true },
     })
