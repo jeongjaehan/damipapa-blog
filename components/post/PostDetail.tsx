@@ -11,11 +11,12 @@ import { deletePost } from '@/services/api'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { Eye, Calendar, Edit, Trash2, EyeOff, Folder } from 'lucide-react'
+import { Eye, Calendar, Edit, Trash2, EyeOff, Folder, Clock } from 'lucide-react'
 import OptimizedImage from '@/components/common/OptimizedImage'
 import MermaidDiagram from '@/components/projects/MermaidDiagram'
 import PostReactions from './PostReactions'
 import PostShare from './PostShare'
+import { calculateReadingTime, formatReadingTime } from '@/utils/readingTime'
 
 interface PostDetailProps {
   post: PostDetailType
@@ -61,6 +62,9 @@ const YoutubeEmbed = ({ src }: { src: string }) => {
 export default function PostDetail({ post }: PostDetailProps) {
   const { isAdmin } = useAuth()
   const router = useRouter()
+  
+  // 읽기 시간 계산
+  const readingTime = calculateReadingTime(post.content)
 
   const handleDelete = async () => {
     if (!confirm(`"${post.title}" 포스트를 삭제하시겠습니까?`)) {
@@ -113,6 +117,10 @@ export default function PostDetail({ post }: PostDetailProps) {
               <span className="flex items-center gap-1.5">
                 <Eye className="w-4 h-4" />
                 {post.viewCount.toLocaleString()} 조회
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Clock className="w-4 h-4" />
+                {formatReadingTime(readingTime)}
               </span>
             </div>
             
