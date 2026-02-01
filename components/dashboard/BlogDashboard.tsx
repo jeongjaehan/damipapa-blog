@@ -1,10 +1,12 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { BlogDashboardData, PostSummary } from '@/types'
-import { FileText, Eye, TrendingUp, Clock, Users, UserCheck } from 'lucide-react'
+import { FileText, Eye, TrendingUp, Clock, Users, UserCheck, ChevronDown } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { ko } from 'date-fns/locale'
+import { getPosts } from '@/services/api'
 
 interface BlogDashboardProps {
   data: BlogDashboardData
@@ -87,6 +89,58 @@ function PostListItem({ post, showViews = false }: PostListItemProps) {
 }
 
 export default function BlogDashboard({ data }: BlogDashboardProps) {
+  // 최근 포스트 상태
+  const [recentPosts, setRecentPosts] = useState(data.recentPosts)
+  const [recentPage, setRecentPage] = useState(1)
+  const [recentLoading, setRecentLoading] = useState(false)
+  const [recentHasMore, setRecentHasMore] = useState(data.totalPosts > 5)
+  
+  // 인기 포스트 상태
+  const [popularPosts, setPopularPosts] = useState(data.popularPosts)
+  const [popularPage, setPopularPage] = useState(1)
+  const [popularLoading, setPopularLoading] = useState(false)
+  const [popularHasMore, setPopularHasMore] = useState(data.totalPosts > 5)
+
+  // 최근 포스트 더보기
+  const loadMoreRecent = async () => {
+    setRecentLoading(true)
+    try {
+      const result = await getPosts(recentPage, 5, undefined, 'recent')
+      
+      // 중복 제거: 이미 있는 ID는 필터링
+      const existingIds = new Set(recentPosts.map(p => p.id))
+      const newPosts = result.content.filter(p => !existingIds.has(p.id))
+      
+      setRecentPosts([...recentPosts, ...newPosts])
+      setRecentPage(recentPage + 1)
+      setRecentHasMore(!result.last)
+    } catch (error) {
+      console.error('더보기 로딩 실패:', error)
+    } finally {
+      setRecentLoading(false)
+    }
+  }
+
+  // 인기 포스트 더보기
+  const loadMorePopular = async () => {
+    setPopularLoading(true)
+    try {
+      const result = await getPosts(popularPage, 5, undefined, 'popular')
+      
+      // 중복 제거: 이미 있는 ID는 필터링
+      const existingIds = new Set(popularPosts.map(p => p.id))
+      const newPosts = result.content.filter(p => !existingIds.has(p.id))
+      
+      setPopularPosts([...popularPosts, ...newPosts])
+      setPopularPage(popularPage + 1)
+      setPopularHasMore(!result.last)
+    } catch (error) {
+      console.error('더보기 로딩 실패:', error)
+    } finally {
+      setPopularLoading(false)
+    }
+  }
+
   return (
     <div className="space-y-6">
       {/* 통계 카드 */}
@@ -124,8 +178,8 @@ export default function BlogDashboard({ data }: BlogDashboardProps) {
           <h3 className="font-semibold text-gray-900 dark:text-gray-100">최근 포스트</h3>
         </div>
         <div className="divide-y divide-gray-100 dark:divide-gray-700/50">
-          {data.recentPosts.length > 0 ? (
-            data.recentPosts.map((post) => (
+          {recentPosts.length > 0 ? (
+            recentPosts.map((post) => (
               <PostListItem key={post.id} post={post} />
             ))
           ) : (
@@ -134,6 +188,27 @@ export default function BlogDashboard({ data }: BlogDashboardProps) {
             </p>
           )}
         </div>
+        {recentHasMore && (
+          <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+            <button
+              onClick={loadMoreRecent}
+              disabled={recentLoading}
+              className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg
+                bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700
+                text-gray-700 dark:text-gray-300 text-sm font-medium
+                transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {recentLoading ? (
+                <>로딩 중...</>
+              ) : (
+                <>
+                  <span>더보기</span>
+                  <ChevronDown className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* 인기 포스트 */}
@@ -143,8 +218,8 @@ export default function BlogDashboard({ data }: BlogDashboardProps) {
           <h3 className="font-semibold text-gray-900 dark:text-gray-100">인기 포스트</h3>
         </div>
         <div className="divide-y divide-gray-100 dark:divide-gray-700/50">
-          {data.popularPosts.length > 0 ? (
-            data.popularPosts.map((post) => (
+          {popularPosts.length > 0 ? (
+            popularPosts.map((post) => (
               <PostListItem key={post.id} post={post} showViews />
             ))
           ) : (
@@ -153,6 +228,27 @@ export default function BlogDashboard({ data }: BlogDashboardProps) {
             </p>
           )}
         </div>
+        {popularHasMore && (
+          <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+            <button
+              onClick={loadMorePopular}
+              disabled={popularLoading}
+              className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg
+                bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700
+                text-gray-700 dark:text-gray-300 text-sm font-medium
+                transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {popularLoading ? (
+                <>로딩 중...</>
+              ) : (
+                <>
+                  <span>더보기</span>
+                  <ChevronDown className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

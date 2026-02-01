@@ -8,6 +8,7 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '0')
     const size = parseInt(searchParams.get('size') || '10')
     const tag = searchParams.get('tag')
+    const sortBy = searchParams.get('sortBy') || 'recent'
 
     const skip = page * size
     const take = size
@@ -19,6 +20,11 @@ export async function GET(request: Request) {
       where.tags = { contains: tag }
     }
 
+    // 정렬 조건
+    const orderBy = sortBy === 'popular' 
+      ? { viewCount: 'desc' as const } 
+      : { createdAt: 'desc' as const }
+
     const [posts, total] = await Promise.all([
       prisma.post.findMany({
         where,
@@ -28,7 +34,7 @@ export async function GET(request: Request) {
             select: { id: true, name: true, slug: true }
           }
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy,
         skip,
         take,
       }),
