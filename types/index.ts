@@ -318,6 +318,8 @@ export interface UpdateCategoryRequest {
 export interface BlogDashboardData {
   totalPosts: number
   totalViews: number
+  todayVisitors: number
+  totalVisitors: number
   recentPosts: PostSummary[]
   popularPosts: PostSummary[]
 }

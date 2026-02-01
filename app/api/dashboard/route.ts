@@ -26,8 +26,12 @@ export async function GET(request: NextRequest) {
           ],
         }
 
+    // 오늘의 방문자 계산을 위한 시작 시간
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
+
     // 병렬로 모든 데이터 조회
-    const [totalPosts, totalViewsData, recentPosts, popularPosts] = await Promise.all([
+    const [totalPosts, totalViewsData, recentPosts, popularPosts, todayVisitors, totalVisitors] = await Promise.all([
       // 전체 포스트 수
       prisma.post.count({
         where: postWhereCondition,
@@ -57,6 +61,17 @@ export async function GET(request: NextRequest) {
         orderBy: { viewCount: 'desc' },
         take: 5,
       }),
+      // 오늘의 방문자 (고유한 IP 주소)
+      prisma.postView.findMany({
+        where: { viewedAt: { gte: todayStart } },
+        select: { ipAddress: true },
+        distinct: ['ipAddress'],
+      }),
+      // 전체 방문자 (고유한 IP 주소)
+      prisma.postView.findMany({
+        select: { ipAddress: true },
+        distinct: ['ipAddress'],
+      }),
     ])
 
     const formatPosts = (posts: typeof recentPosts) =>
@@ -78,6 +93,8 @@ export async function GET(request: NextRequest) {
     const response: BlogDashboardData = {
       totalPosts,
       totalViews: totalViewsData._sum.viewCount ?? 0,
+      todayVisitors: todayVisitors.length,
+      totalVisitors: totalVisitors.length,
       recentPosts: formatPosts(recentPosts),
       popularPosts: formatPosts(popularPosts),
     }

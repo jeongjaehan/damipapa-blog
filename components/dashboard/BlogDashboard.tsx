@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { BlogDashboardData, PostSummary } from '@/types'
-import { FileText, Eye, TrendingUp, Clock } from 'lucide-react'
+import { FileText, Eye, TrendingUp, Clock, Users, UserCheck } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { ko } from 'date-fns/locale'
 
@@ -90,7 +90,7 @@ export default function BlogDashboard({ data }: BlogDashboardProps) {
   return (
     <div className="space-y-6">
       {/* 통계 카드 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           icon={<FileText className="w-5 h-5 text-blue-600" />}
           label="전체 포스트"
@@ -102,6 +102,18 @@ export default function BlogDashboard({ data }: BlogDashboardProps) {
           label="총 조회수"
           value={data.totalViews}
           color="bg-green-100 dark:bg-green-900/30"
+        />
+        <StatCard
+          icon={<UserCheck className="w-5 h-5 text-purple-600" />}
+          label="오늘 방문자"
+          value={data.todayVisitors}
+          color="bg-purple-100 dark:bg-purple-900/30"
+        />
+        <StatCard
+          icon={<Users className="w-5 h-5 text-orange-600" />}
+          label="전체 방문자"
+          value={data.totalVisitors}
+          color="bg-orange-100 dark:bg-orange-900/30"
         />
       </div>
 
