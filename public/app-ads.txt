@@ -1,0 +1,12 @@
+# app-ads.txt for 전기차보조금 도우미 앱
+# Google AdMob 광고 수익 보호를 위한 설정
+
+# Google AdMob
+google.com, pub-6962521725027959, DIRECT, f08c47fec0942fa0
+
+# IAB Tech Lab
+# Authorized Digital Sellers for app-ads.txt
+# https://iabtechlab.com/ads-txt/
+
+# 추가 광고 네트워크가 있을 경우 여기에 추가
+# 형식: <도메인>, <퍼블리셔 ID>, <관계>, <인증 기관 ID>
