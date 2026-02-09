@@ -13,8 +13,21 @@ export async function GET(request: Request) {
     const skip = page * size
     const take = size
 
-    // 필터 조건
-    const where: any = { isPrivate: false }
+    // 비공개 카테고리 ID 목록 조회
+    const privateCategories = await prisma.category.findMany({
+      where: { isPrivate: true },
+      select: { id: true },
+    })
+    const privateCategoryIds = privateCategories.map((c) => c.id)
+
+    // 필터 조건: 비공개 포스트 + 비공개 카테고리 소속 포스트 제외
+    const where: any = {
+      isPrivate: false,
+      OR: [
+        { categoryId: null }, // 미분류
+        { categoryId: { notIn: privateCategoryIds } }, // 비공개 카테고리가 아닌 포스트
+      ],
+    }
     
     if (tag) {
       where.tags = { contains: tag }
