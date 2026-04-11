@@ -45,8 +45,8 @@ export default function TagsPage() {
   if (!tags.length) {
     return (
       <div className="max-w-4xl mx-auto text-center space-y-6">
-        <h1 className="text-4xl font-bold text-gray-900">태그 클라우드</h1>
-        <p className="text-gray-500">아직 등록된 태그가 없습니다.</p>
+        <h1 className="text-4xl font-bold text-foreground">태그 클라우드</h1>
+        <p className="text-muted-foreground">아직 등록된 태그가 없습니다.</p>
       </div>
     )
   }
@@ -54,8 +54,8 @@ export default function TagsPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-12">
       <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold text-gray-900">태그 클라우드</h1>
-        <p className="text-gray-500">
+        <h1 className="text-4xl font-bold text-foreground">태그 클라우드</h1>
+        <p className="text-muted-foreground">
           자주 사용된 태그일수록 더 크고 선명하게 떠올라요. 원하는 태그를 클릭해 관련 글을 탐색해보세요.
         </p>
       </div>
@@ -63,12 +63,12 @@ export default function TagsPage() {
       <TagCloud tags={tags} />
 
       <div className="grid gap-6 md:grid-cols-3">
-        <section className="rounded-2xl border border-slate-100 bg-white/80 p-6 shadow-sm backdrop-blur">
-          <h2 className="text-lg font-semibold text-gray-900">인기 태그 Top 5</h2>
-          <ul className="mt-4 space-y-3 text-sm text-gray-600">
+        <section className="rounded-2xl border border-border bg-card/80 p-6 shadow-warm-sm backdrop-blur">
+          <h2 className="text-lg font-semibold text-foreground">인기 태그 Top 5</h2>
+          <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
             {topTags.map((tag, index) => (
               <li key={tag.name} className="flex items-center justify-between">
-                <span className="font-medium text-gray-800">
+                <span className="font-medium text-foreground">
                   {index + 1}. #{tag.name}
                 </span>
                 <span>
@@ -79,21 +79,21 @@ export default function TagsPage() {
           </ul>
         </section>
 
-        <section className="rounded-2xl border border-slate-100 bg-white/80 p-6 shadow-sm backdrop-blur">
-          <h2 className="text-lg font-semibold text-gray-900">태그 인사이트</h2>
-          <dl className="mt-4 space-y-3 text-sm text-gray-600">
+        <section className="rounded-2xl border border-border bg-card/80 p-6 shadow-warm-sm backdrop-blur">
+          <h2 className="text-lg font-semibold text-foreground">태그 인사이트</h2>
+          <dl className="mt-4 space-y-3 text-sm text-muted-foreground">
             <div className="flex items-center justify-between">
-              <dt className="text-gray-500">전체 태그 수</dt>
-              <dd className="font-semibold text-gray-800">{tags.length}개</dd>
+              <dt className="text-muted-foreground">전체 태그 수</dt>
+              <dd className="font-semibold text-foreground">{tags.length}개</dd>
             </div>
             <div className="flex items-center justify-between">
-              <dt className="text-gray-500">총 태그 사용량</dt>
-              <dd className="font-semibold text-gray-800">{totalUsage}회</dd>
+              <dt className="text-muted-foreground">총 태그 사용량</dt>
+              <dd className="font-semibold text-foreground">{totalUsage}회</dd>
             </div>
             {highlightTag && (
               <div className="flex items-center justify-between">
-                <dt className="text-gray-500">가장 많이 언급된 태그</dt>
-                <dd className="font-semibold text-indigo-600">
+                <dt className="text-muted-foreground">가장 많이 언급된 태그</dt>
+                <dd className="font-semibold text-primary">
                   #{highlightTag.name}
                 </dd>
               </div>
@@ -101,9 +101,9 @@ export default function TagsPage() {
           </dl>
         </section>
 
-        <section className="rounded-2xl border border-slate-100 bg-gradient-to-br from-sky-50 via-white to-violet-100 p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900">태그 활용 팁</h2>
-          <ul className="mt-4 space-y-3 text-sm text-gray-600">
+        <section className="rounded-2xl border border-border bg-gradient-to-br from-warm-highlight via-card to-accent p-6 shadow-warm-sm">
+          <h2 className="text-lg font-semibold text-foreground">태그 활용 팁</h2>
+          <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
             <li>태그를 클릭하면 해당 주제의 글만 모아서 볼 수 있어요.</li>
             <li>태그 구름은 자동으로 최신 글 정보를 반영해 업데이트됩니다.</li>
             <li>새로운 태그를 추가하면 이곳에서 바로 확인할 수 있어요.</li>
@@ -113,4 +113,3 @@ export default function TagsPage() {
     </div>
   )
 }
-

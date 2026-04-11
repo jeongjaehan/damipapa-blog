@@ -73,7 +73,7 @@ export default function PostShare({ postId, postTitle }: PostShareProps) {
           variant="outline"
           size="sm"
           onClick={handleCopyLink}
-          className={`gap-2 ${copied ? 'bg-green-50 border-green-300 text-green-700' : ''}`}
+          className={`gap-2 ${copied ? 'bg-secondary border-secondary text-secondary-foreground' : ''}`}
           aria-label="링크 복사"
         >
           {copied ? (

@@ -42,9 +42,9 @@ export default async function ProjectsPage() {
 
       {/* 하단 안내 */}
       <div className="text-center mt-12">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 dark:bg-indigo-950/30 rounded-full">
-          <div className="w-2 h-2 bg-indigo-500 dark:bg-indigo-400 rounded-full"></div>
-          <span className="text-sm text-indigo-700 dark:text-indigo-300">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
+          <div className="w-2 h-2 bg-primary rounded-full"></div>
+          <span className="text-sm text-primary">
             새로운 프로젝트가 계속 추가될 예정입니다
           </span>
         </div>

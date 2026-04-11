@@ -42,39 +42,39 @@ export default function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="container mx-auto px-4 py-4">
+    <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-warm-sm">
+      <nav className="container mx-auto px-4 py-5">
         <div className="flex justify-between items-center">
           <Link 
             href="/" 
-            className="text-2xl font-bold text-foreground hover:text-primary-600 transition-colors select-none"
+            className="text-2xl font-bold text-foreground hover:text-primary transition-colors select-none"
             onClick={handleLogoClick}
           >
-            다미파파의 블로그
+            🏡 다미파파의 블로그
           </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link href="/" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
+            <Link href="/" className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors">
               홈
             </Link>
-            <Link href="/career" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
+            <Link href="/career" className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors">
               프로필
             </Link>
-            <Link href="/projects" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
+            <Link href="/projects" className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors">
               놀이터
             </Link>
-            <Link href="/search" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
+            <Link href="/search" className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors">
               검색
             </Link>
-            <Link href="/tags" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
+            <Link href="/tags" className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors">
               태그
             </Link>
             <a 
               href="https://github.com/jeongjaehan/damipapa-blog" 
               target="_blank"
               rel="noopener noreferrer"
-              className="text-foreground/70 hover:text-primary-600 transition-colors"
+              className="text-foreground/70 hover:text-primary transition-colors"
               aria-label="GitHub"
             >
               <Github className="w-5 h-5" />
@@ -91,7 +91,7 @@ export default function Header() {
                   </Link>
                 )}
                 {isAdmin ? (
-                  <Link href="/admin" className="text-sm font-medium text-foreground/70 hover:text-primary-600 transition-colors">
+                  <Link href="/admin" className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors">
                     관리자
                   </Link>
                 ) : (
@@ -124,35 +124,35 @@ export default function Header() {
           <div className="md:hidden mt-4 space-y-2">
             <Link
               href="/"
-              className="block py-2 text-foreground/70 hover:text-primary-600"
+              className="block py-2 text-foreground/70 hover:text-primary"
               onClick={() => setMobileMenuOpen(false)}
             >
               홈
             </Link>
             <Link
               href="/career"
-              className="block py-2 text-foreground/70 hover:text-primary-600"
+              className="block py-2 text-foreground/70 hover:text-primary"
               onClick={() => setMobileMenuOpen(false)}
             >
               프로필
             </Link>
             <Link
               href="/projects"
-              className="block py-2 text-foreground/70 hover:text-primary-600"
+              className="block py-2 text-foreground/70 hover:text-primary"
               onClick={() => setMobileMenuOpen(false)}
             >
               놀이터
             </Link>
             <Link
               href="/search"
-              className="block py-2 text-foreground/70 hover:text-primary-600"
+              className="block py-2 text-foreground/70 hover:text-primary"
               onClick={() => setMobileMenuOpen(false)}
             >
               검색
             </Link>
             <Link
               href="/tags"
-              className="block py-2 text-foreground/70 hover:text-primary-600"
+              className="block py-2 text-foreground/70 hover:text-primary"
               onClick={() => setMobileMenuOpen(false)}
             >
               태그
@@ -161,7 +161,7 @@ export default function Header() {
               href="https://github.com/jeongjaehan/damipapa-blog"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 py-2 text-foreground/70 hover:text-primary-600"
+              className="flex items-center gap-2 py-2 text-foreground/70 hover:text-primary"
               onClick={() => setMobileMenuOpen(false)}
             >
               <Github className="w-5 h-5" />
@@ -176,14 +176,14 @@ export default function Header() {
                   <>
                     <Link
                       href="/admin"
-                      className="block py-2 text-foreground/70 hover:text-primary-600"
+                      className="block py-2 text-foreground/70 hover:text-primary"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       관리자
                     </Link>
                     <Link
                       href="/admin/posts/new"
-                      className="block py-2 bg-primary-600 text-white px-4 rounded hover:bg-primary-700"
+                      className="block py-2 bg-primary text-primary-foreground px-4 rounded-xl hover:bg-primary/90"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       글쓰기
@@ -195,7 +195,7 @@ export default function Header() {
                     logout()
                     setMobileMenuOpen(false)
                   }}
-                  className="block py-2 text-foreground/70 hover:text-primary-600 w-full text-left"
+                  className="block py-2 text-foreground/70 hover:text-primary w-full text-left"
                 >
                   로그아웃
                 </button>

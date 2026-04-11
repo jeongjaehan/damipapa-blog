@@ -83,7 +83,7 @@ export default function PostDetail({ post }: PostDetailProps) {
 
   return (
     <article className="max-w-4xl mx-auto">
-      <div className="bg-card rounded-lg shadow-sm dark:shadow-lg border border-border overflow-hidden">
+      <div className="bg-card rounded-2xl shadow-warm-sm border border-border overflow-hidden">
         <header className="px-4 sm:px-8 py-8 sm:py-12 bg-gradient-to-b from-muted/30 to-card">
           {/* 제목 - 모바일 친화적 크기 */}
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight tracking-tight mb-6">
@@ -127,7 +127,7 @@ export default function PostDetail({ post }: PostDetailProps) {
             {/* 비공개 포스트 배지와 수정일시 */}
             <div className="flex items-center gap-2 flex-wrap">
               {post.isPrivate && isAdmin && (
-                <span className="flex items-center gap-1 px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 rounded text-xs">
+                <span className="flex items-center gap-1 px-2 py-1 bg-destructive/10 text-destructive rounded-lg text-xs">
                   <EyeOff className="w-3 h-3" />
                   비공개 포스트
                 </span>
@@ -145,7 +145,7 @@ export default function PostDetail({ post }: PostDetailProps) {
             <div className="mb-4">
               <Link 
                 href={`/categories/${post.category.slug}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 rounded-lg text-sm hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-warm-highlight border border-primary/20 text-primary rounded-xl text-sm hover:bg-primary/10 transition-all duration-200"
               >
                 <Folder className="w-4 h-4" />
                 {post.category.name}
@@ -158,7 +158,7 @@ export default function PostDetail({ post }: PostDetailProps) {
             <div className="flex flex-wrap gap-2">
               {post.tags.map((tag) => (
                 <Link key={tag} href={`/?tag=${tag}`}>
-                  <Badge variant="outline" className="border-primary-200 dark:border-primary-800 text-primary-700 dark:text-primary-300 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-sm">
+                  <Badge variant="outline" className="border-primary/20 text-primary hover:bg-primary/10 text-sm">
                     #{tag}
                   </Badge>
                 </Link>

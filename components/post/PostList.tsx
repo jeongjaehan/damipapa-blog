@@ -19,7 +19,7 @@ export default function PostList({ initialData, isLoading = false, hasMore = tru
       </div>
 
       {initialData.content.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-muted-foreground">
           <p className="text-xl">포스트가 없습니다</p>
         </div>
       )}
@@ -27,14 +27,14 @@ export default function PostList({ initialData, isLoading = false, hasMore = tru
       {isLoading && (
         <div className="flex justify-center items-center py-12">
           <div className="animate-spin">
-            <div className="h-8 w-8 border-4 border-blue-200 border-t-blue-600 rounded-full"></div>
+            <div className="h-8 w-8 border-4 border-primary/20 border-t-primary rounded-full"></div>
           </div>
-          <p className="ml-4 text-gray-500">로딩 중...</p>
+          <p className="ml-4 text-muted-foreground">로딩 중...</p>
         </div>
       )}
 
       {!hasMore && initialData.content.length > 0 && (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-muted-foreground">
           <p className="text-sm">더 이상 포스트가 없습니다</p>
         </div>
       )}

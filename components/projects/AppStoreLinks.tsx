@@ -35,7 +35,7 @@ export default function AppStoreLinks({ links, title }: AppStoreLinksProps) {
           >
             <Button 
               variant="default" 
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white gap-3 py-6"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground gap-3 py-6"
             >
               <Globe className="w-5 h-5" />
               <div className="flex flex-col items-start">
@@ -87,10 +87,10 @@ export default function AppStoreLinks({ links, title }: AppStoreLinksProps) {
                 <Smartphone className="w-3 h-3 text-white" />
               </div>
               <div className="flex flex-col items-start">
-                <span className="font-semibold text-gray-900">Google Play</span>
-                <span className="text-xs text-gray-500">Android 앱 다운로드</span>
+                <span className="font-semibold text-foreground">Google Play</span>
+                <span className="text-xs text-muted-foreground">Android 앱 다운로드</span>
               </div>
-              <ExternalLink className="w-4 h-4 ml-auto text-gray-400" />
+              <ExternalLink className="w-4 h-4 ml-auto text-muted-foreground" />
             </Button>
           </a>
         )}
@@ -105,14 +105,14 @@ export default function AppStoreLinks({ links, title }: AppStoreLinksProps) {
           >
             <Button 
               variant="outline" 
-              className="w-full border-gray-300 hover:border-gray-400 gap-3 py-4"
+              className="w-full border-border hover:border-foreground/30 gap-3 py-4"
             >
               <Github className="w-5 h-5" />
               <div className="flex flex-col items-start">
-                <span className="font-semibold text-gray-900">소스 코드</span>
-                <span className="text-xs text-gray-500">GitHub에서 확인</span>
+                <span className="font-semibold text-foreground">소스 코드</span>
+                <span className="text-xs text-muted-foreground">GitHub에서 확인</span>
               </div>
-              <ExternalLink className="w-4 h-4 ml-auto text-gray-400" />
+              <ExternalLink className="w-4 h-4 ml-auto text-muted-foreground" />
             </Button>
           </a>
         )}

@@ -21,11 +21,11 @@ interface FloatingConfig {
 
 const sizeClasses = ['text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl']
 const colorClasses = [
-  'bg-sky-50 text-sky-700 border-sky-100 shadow-sky-100',
-  'bg-blue-50 text-blue-700 border-blue-100 shadow-blue-100',
-  'bg-indigo-50 text-indigo-700 border-indigo-100 shadow-indigo-100',
-  'bg-violet-50 text-violet-700 border-violet-100 shadow-violet-100',
-  'bg-purple-50 text-purple-700 border-purple-100 shadow-purple-100',
+  'bg-primary-50 text-primary-700 border-primary-100 shadow-primary-100',
+  'bg-secondary text-secondary-foreground border-secondary shadow-secondary',
+  'bg-accent text-accent-foreground border-accent shadow-accent',
+  'bg-warm-highlight text-primary-800 border-primary-200 shadow-primary-100',
+  'bg-primary-100 text-primary-900 border-primary-200 shadow-primary-200',
 ]
 
 const hashString = (value: string): number => {
@@ -75,12 +75,12 @@ export default function TagCloud({ tags, className }: TagCloudProps) {
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-3xl border border-slate-100 bg-white/60 p-8 shadow-lg shadow-slate-100',
+        'relative overflow-hidden rounded-3xl border border-border bg-card/60 p-8 shadow-warm-lg',
         'backdrop-blur-lg',
         className
       )}
     >
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-sky-50 via-white/40 to-violet-100 opacity-80" />
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-warm-highlight via-card/40 to-accent opacity-80" />
       <div className="relative flex flex-wrap items-center justify-center gap-6">
         {tags.map((tag, index) => {
           const config = floatingConfigs[index]
@@ -91,7 +91,7 @@ export default function TagCloud({ tags, className }: TagCloudProps) {
               <motion.span
                 className={cn(
                   'relative inline-flex items-center gap-2 rounded-full border px-5 py-2 font-semibold transition-all duration-300',
-                  'shadow-lg group-hover:shadow-xl',
+                  'shadow-warm-md group-hover:shadow-warm-lg',
                   getSizeClass(tag.level),
                   getColorClass(tag.level)
                 )}
@@ -111,11 +111,11 @@ export default function TagCloud({ tags, className }: TagCloudProps) {
                 whileHover={{
                   scale: 1.12,
                   rotate: 0,
-                  boxShadow: '0 25px 45px rgba(79, 70, 229, 0.25)',
+                  boxShadow: '0 25px 45px hsl(15 80% 65% / 0.2)',
                 }}
               >
                 <span>#{tag.name}</span>
-                <span className="text-xs font-medium text-slate-500 transition-colors duration-300 group-hover:text-slate-700">
+                <span className="text-xs font-medium text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
                   {tag.count} · {tag.ratio.toFixed(1)}%
                 </span>
               </motion.span>
@@ -126,4 +126,3 @@ export default function TagCloud({ tags, className }: TagCloudProps) {
     </div>
   )
 }
-

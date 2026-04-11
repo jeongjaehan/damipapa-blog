@@ -12,18 +12,18 @@ interface PostCardProps {
 export default function PostCard({ post }: PostCardProps) {
   return (
     <Link href={`/posts/${post.id}`}>
-      <Card className="h-full hover:shadow-xl dark:hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer">
+      <Card className="h-full hover:shadow-warm-lg transition-all duration-300 hover:scale-[1.01] cursor-pointer">
         <CardHeader className="pb-3">
-          <h2 className="text-2xl font-bold text-foreground line-clamp-2 leading-tight hover:text-primary-600 transition-colors">
+          <h2 className="text-2xl font-bold text-foreground line-clamp-2 leading-tight hover:text-primary transition-colors">
             {post.title}
           </h2>
         </CardHeader>
-        
+
         <CardContent className="space-y-4">
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {post.tags.slice(0, 5).map((tag) => (
-                <Badge key={tag} variant="outline" className="border-primary-200 dark:border-primary-800 text-primary-700 dark:text-primary-300">
+                <Badge key={tag} variant="outline" className="border-primary/20 text-primary">
                   #{tag}
                 </Badge>
               ))}

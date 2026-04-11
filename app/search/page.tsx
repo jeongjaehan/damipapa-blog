@@ -57,11 +57,11 @@ function SearchContent() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="검색어를 입력하세요..."
-            className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="flex-1 px-4 py-3 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-ring bg-background text-foreground"
           />
           <button
             type="submit"
-            className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+            className="px-6 py-3 bg-primary text-primary-foreground rounded-2xl hover:bg-primary/90 transition-all duration-200"
           >
             검색
           </button>
@@ -72,7 +72,7 @@ function SearchContent() {
 
       {posts && !loading && (
         <>
-          <p className="text-gray-600 mb-6">
+          <p className="text-muted-foreground mb-6">
             &quot;{keyword}&quot; 검색 결과: {posts.totalElements}개
           </p>
 
@@ -83,7 +83,7 @@ function SearchContent() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-muted-foreground">
               <p className="text-xl">검색 결과가 없습니다</p>
             </div>
           )}

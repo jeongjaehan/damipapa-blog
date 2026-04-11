@@ -28,7 +28,7 @@ export function SegmentedControl<T extends string>({
   return (
     <div
       className={cn(
-        'flex rounded-lg border border-input bg-background p-1 w-full',
+        'flex rounded-2xl border border-input bg-background p-1 w-full',
         className
       )}
       role="tablist"
@@ -44,7 +44,7 @@ export function SegmentedControl<T extends string>({
             aria-selected={isSelected}
             onClick={() => onChange(option.value)}
             className={cn(
-              'relative flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium transition-all rounded-md',
+              'relative flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium transition-all rounded-xl',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
               'disabled:pointer-events-none disabled:opacity-50',
               isSelected

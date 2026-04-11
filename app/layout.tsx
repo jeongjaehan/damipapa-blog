@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Nunito } from 'next/font/google'
 import Script from 'next/script'
 import { Suspense } from 'react'
 import './globals.css'
@@ -10,7 +10,7 @@ import Footer from '@/components/layout/Footer'
 import Analytics from '@/components/common/Analytics'
 import Loading from '@/components/common/Loading'
 
-const inter = Inter({ subsets: ['latin'] })
+const nunito = Nunito({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800'] })
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
 
@@ -104,7 +104,7 @@ export default function RootLayout({
   
   return (
     <html lang="ko">
-      <body className={inter.className}>
+      <body className={nunito.className}>
         {/* Google Analytics 4 */}
         {gaMeasurementId && gaMeasurementId !== 'your_ga_id' && (
           <>

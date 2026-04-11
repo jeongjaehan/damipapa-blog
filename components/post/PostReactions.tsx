@@ -114,7 +114,7 @@ export default function PostReactions({ postId }: PostReactionsProps) {
         variant={isLiked ? 'default' : 'outline'}
         size="sm"
         onClick={() => handleReaction('LIKE')}
-        className={`gap-2 ${isLiked ? 'bg-blue-600 hover:bg-blue-700 text-white' : ''}`}
+        className={`gap-2 ${isLiked ? 'bg-primary hover:bg-primary/90 text-primary-foreground' : ''}`}
       >
         <ThumbsUp className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
         <span className="text-sm font-medium">{reactionStats.likeCount}</span>
@@ -123,7 +123,7 @@ export default function PostReactions({ postId }: PostReactionsProps) {
         variant={isDisliked ? 'default' : 'outline'}
         size="sm"
         onClick={() => handleReaction('DISLIKE')}
-        className={`gap-2 ${isDisliked ? 'bg-red-600 hover:bg-red-700 text-white' : ''}`}
+        className={`gap-2 ${isDisliked ? 'bg-destructive hover:bg-destructive/90 text-destructive-foreground' : ''}`}
       >
         <ThumbsDown className={`w-4 h-4 ${isDisliked ? 'fill-current' : ''}`} />
         <span className="text-sm font-medium">{reactionStats.dislikeCount}</span>

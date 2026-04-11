@@ -113,7 +113,7 @@ function HomeContent() {
 
           {/* 사이드바 - 카테고리 트리 */}
           <aside className="lg:w-72 shrink-0">
-            <div className="sticky top-24 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
+            <div className="sticky top-24 bg-card rounded-2xl border border-border p-4 shadow-sm">
               {categoryData && (
                 <CategoryTree
                   categories={categoryData.categories}
@@ -131,12 +131,7 @@ function HomeContent() {
   // 기본 대시보드 모드
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-foreground tracking-tight">블로그</h1>
-        <p className="text-muted-foreground mt-2">최신 글과 인기 글을 확인하세요</p>
-      </div>
-
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
         {/* 메인 콘텐츠 - 대시보드 */}
         <main className="flex-1 min-w-0">
           {dashboardData && <BlogDashboard data={dashboardData} />}
@@ -144,14 +139,16 @@ function HomeContent() {
 
         {/* 사이드바 - 카테고리 트리 */}
         <aside className="lg:w-72 shrink-0">
-          <div className="sticky top-24 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
-            {categoryData && (
-              <CategoryTree
-                categories={categoryData.categories}
-                uncategorizedCount={categoryData.uncategorizedCount}
-                showPrivate={isAdmin}
-              />
-            )}
+          <div className="sticky top-24 space-y-4">
+            <div className="bg-card/80 backdrop-blur-sm rounded-2xl border border-border/60 p-4 shadow-warm-sm">
+              {categoryData && (
+                <CategoryTree
+                  categories={categoryData.categories}
+                  uncategorizedCount={categoryData.uncategorizedCount}
+                  showPrivate={isAdmin}
+                />
+              )}
+            </div>
           </div>
         </aside>
       </div>
