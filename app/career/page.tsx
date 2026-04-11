@@ -6,7 +6,6 @@ import { getCareerData } from '@/services/api'
 import { CareerData } from '@/types'
 import CareerTimeline from '@/components/career/CareerTimeline'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import Loading from '@/components/common/Loading'
 import { Settings } from 'lucide-react'
 import Link from 'next/link'
@@ -37,46 +36,37 @@ export default function CareerPage() {
 
   if (!data) {
     return (
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <Card className="border-border">
-          <div className="p-8 text-center text-muted-foreground">
-            <p>경력 정보를 불러올 수 없습니다.</p>
-          </div>
-        </Card>
+      <div className="max-w-3xl mx-auto px-4 py-8">
+        <div className="rounded-2xl border border-border bg-card p-8 text-center text-muted-foreground">
+          <p>경력 정보를 불러올 수 없습니다.</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
-      <Card className="border-border">
-        <div className="p-4 sm:p-8">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-4xl font-bold text-foreground">프로필</h1>
-            {isAdmin && (
-              <div className="flex justify-end">
-                <Link href="/admin/career">
-                  <Button variant="outline" className="gap-2 text-sm sm:text-base">
-                    <Settings className="w-4 h-4 flex-shrink-0" />
-                    관리
-                  </Button>
-                </Link>
-              </div>
-            )}
-          </div>
-
-          {data.careers.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <p>등록된 경력이 없습니다.</p>
-            </div>
-          ) : (
-            <div id="career-content">
-              <CareerTimeline profile={data.profile} careers={data.careers} />
-            </div>
-          )}
+    <div className="max-w-3xl mx-auto px-4 py-6 sm:py-10">
+      {/* Admin button */}
+      {isAdmin && (
+        <div className="flex justify-end mb-4">
+          <Link href="/admin/career">
+            <Button variant="outline" size="sm" className="gap-2">
+              <Settings className="w-4 h-4" />
+              관리
+            </Button>
+          </Link>
         </div>
-      </Card>
+      )}
+
+      {data.careers.length === 0 ? (
+        <div className="text-center py-12 text-muted-foreground">
+          <p>등록된 경력이 없습니다.</p>
+        </div>
+      ) : (
+        <div id="career-content">
+          <CareerTimeline profile={data.profile} careers={data.careers} />
+        </div>
+      )}
     </div>
   )
 }
-
