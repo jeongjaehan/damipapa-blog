@@ -13,63 +13,15 @@ interface PostReactionsProps {
 export default function PostReactions({ postId }: PostReactionsProps) {
   const [reactionStats, setReactionStats] = useState<PostReactionResponse | null>(null)
   const [loading, setLoading] = useState(true)
-  const [facebookId, setFacebookId] = useState<string | null>(null)
-  const [checkingFacebook, setCheckingFacebook] = useState(true)
 
-  // Facebook SDK 로그인 상태 확인
   useEffect(() => {
-    const checkFacebookLogin = () => {
-      if (typeof window === 'undefined' || !window.FB) {
-        setCheckingFacebook(false)
-        return
-      }
-
-      try {
-        window.FB.getLoginStatus((response: any) => {
-          if (response.status === 'connected' && response.authResponse?.userID) {
-            setFacebookId(response.authResponse.userID)
-          }
-          setCheckingFacebook(false)
-        })
-      } catch (error) {
-        console.error('Facebook login status check failed:', error)
-        setCheckingFacebook(false)
-      }
-    }
-
-    // Facebook SDK가 로드될 때까지 대기
-    if (typeof window !== 'undefined') {
-      if (window.FB) {
-        checkFacebookLogin()
-      } else {
-        // SDK 로드를 기다림
-        const checkInterval = setInterval(() => {
-          if (window.FB) {
-            clearInterval(checkInterval)
-            checkFacebookLogin()
-          }
-        }, 100)
-
-        // 최대 5초 대기
-        setTimeout(() => {
-          clearInterval(checkInterval)
-          setCheckingFacebook(false)
-        }, 5000)
-      }
-    }
-  }, [])
-
-  // 반응 데이터 로드
-  useEffect(() => {
-    if (!checkingFacebook) {
-      loadReactions()
-    }
-  }, [postId, facebookId, checkingFacebook])
+    loadReactions()
+  }, [postId])
 
   const loadReactions = async () => {
     try {
       setLoading(true)
-      const data = await getPostReactions(postId, facebookId)
+      const data = await getPostReactions(postId)
       setReactionStats(data)
     } catch (error) {
       console.error('반응 로드 실패:', error)
@@ -80,7 +32,7 @@ export default function PostReactions({ postId }: PostReactionsProps) {
 
   const handleReaction = async (reactionType: 'LIKE' | 'DISLIKE') => {
     try {
-      const data = await togglePostReaction(postId, reactionType, facebookId)
+      const data = await togglePostReaction(postId, reactionType)
       setReactionStats(data)
     } catch (error) {
       console.error('반응 토글 실패:', error)

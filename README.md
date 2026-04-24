@@ -13,7 +13,6 @@ Next.js 15 풀스택으로 만든 개인 블로그 플랫폼입니다.
 - **Markdown**: react-markdown + remark-gfm
 - **Diagram**: Mermaid
 - **AI**: OpenAI (제목 추천)
-- **Comments**: Facebook Comments
 
 ## 📋 주요 기능
 
@@ -24,7 +23,6 @@ Next.js 15 풀스택으로 만든 개인 블로그 플랫폼입니다.
 - ✅ 태그 기반 필터링 & 검색
 - ✅ IP 기반 유니크 조회수
 - ✅ 이미지 업로드 & 최적화
-- ✅ Facebook Comments
 - ✅ 포스트 공유 & 반응 (좋아요/싫어요)
 
 ### 부가 기능
@@ -83,7 +81,6 @@ JWT_SECRET="your-64-character-random-secret-key"
 ADMIN_EMAIL="admin@example.com"
 ADMIN_PASSWORD="your-password"
 ADMIN_NAME="관리자"
-NEXT_PUBLIC_FACEBOOK_APP_ID="your-facebook-app-id"
 OPENAI_API_KEY="your-openai-api-key" # AI 제목 추천용
 ```
 

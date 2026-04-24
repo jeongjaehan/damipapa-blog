@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { getPost } from '@/services/api'
 import { PostDetail as PostDetailType } from '@/types'
 import PostDetail from '@/components/post/PostDetail'
-import FacebookComments from '@/components/comment/FacebookComments'
 import Loading from '@/components/common/Loading'
 import { trackPostView } from '@/lib/gtag'
 
@@ -90,14 +89,9 @@ export default function PostPageClient({ postId }: { postId: string }) {
     return <Loading />
   }
 
-  const postUrl = typeof window !== 'undefined' 
-    ? `${window.location.origin}/posts/${post.id}`
-    : `http://localhost:3000/posts/${post.id}`
-
   return (
     <div>
       <PostDetail post={post} />
-      {!post.isPrivate && <FacebookComments url={postUrl} />}
     </div>
   )
 }

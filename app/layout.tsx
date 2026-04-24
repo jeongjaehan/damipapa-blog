@@ -99,7 +99,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const fbAppId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID || '1948329005731989'
   const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
   
   return (
@@ -124,27 +123,6 @@ export default function RootLayout({
             </Script>
           </>
         )}
-        
-        {/* Facebook SDK */}
-        <Script id="facebook-sdk" strategy="afterInteractive">
-          {`
-            window.fbAsyncInit = function() {
-              FB.init({
-                appId: '${fbAppId}',
-                xfbml: true,
-                version: 'v18.0'
-              });
-            };
-            (function(d, s, id){
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) {return;}
-              js = d.createElement(s); js.id = id;
-              js.src = "https://connect.facebook.net/ko_KR/sdk.js";
-              fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));
-          `}
-        </Script>
-        <div id="fb-root"></div>
         
         <ThemeProvider>
           <AuthProvider>
