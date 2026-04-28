@@ -6,10 +6,11 @@ export const dynamic = 'force-dynamic'
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
 
+// Satori는 woff2를 지원하지 않으므로 OTF 사용
 const PRETENDARD_REGULAR =
-  'https://github.com/orioncactus/pretendard/raw/main/packages/pretendard/dist/web/static/woff2/Pretendard-Regular.woff2'
+  'https://github.com/orioncactus/pretendard/raw/main/packages/pretendard/dist/public/static/Pretendard-Regular.otf'
 const PRETENDARD_BOLD =
-  'https://github.com/orioncactus/pretendard/raw/main/packages/pretendard/dist/web/static/woff2/Pretendard-Bold.woff2'
+  'https://github.com/orioncactus/pretendard/raw/main/packages/pretendard/dist/public/static/Pretendard-Bold.otf'
 
 async function fetchFont(url: string): Promise<ArrayBuffer> {
   const res = await fetch(url, { cache: 'force-cache' })
