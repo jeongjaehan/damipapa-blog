@@ -122,7 +122,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
   
   const firstImage = extractFirstImage(post.content || '')
-  const ogImage = firstImage || `${baseUrl}/og-image.png`
+  const ogImage = firstImage || `${baseUrl}/api/og/${id}`
   
   const siteTitle = '다미파파의 블로그'
   const fullTitle = `${siteTitle} - ${title}`
