@@ -19,6 +19,35 @@ Allow: /api/posts/*/view
 # Image uploads - allow crawling
 Allow: /uploads/
 
+# SNS preview bots - allow link unfurling (페이스북, X, 링크드인, 카톡, 슬랙 등)
+User-agent: facebookexternalhit
+Allow: /
+Allow: /api/og/
+
+User-agent: Twitterbot
+Allow: /
+Allow: /api/og/
+
+User-agent: LinkedInBot
+Allow: /
+Allow: /api/og/
+
+User-agent: kakaotalk-scrap
+Allow: /
+Allow: /api/og/
+
+User-agent: Slackbot
+Allow: /
+Allow: /api/og/
+
+User-agent: Discordbot
+Allow: /
+Allow: /api/og/
+
+User-agent: TelegramBot
+Allow: /
+Allow: /api/og/
+
 # Sitemap location (배포 시 실제 도메인으로 변경 필요)
 Sitemap: https://example.com/sitemap.xml
 
