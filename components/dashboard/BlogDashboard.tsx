@@ -253,7 +253,7 @@ export default function BlogDashboard({ data }: BlogDashboardProps) {
   }
 
   return (
-    <div className="relative dashboard-grain">
+    <div className="relative dashboard-grain overflow-hidden">
       {/* ── Decorative blobs ── */}
       <div className="dashboard-blob w-72 h-72 bg-primary/30 -top-20 -right-20" />
       <div className="dashboard-blob w-60 h-60 bg-accent -bottom-10 -left-16" />
