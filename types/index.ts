@@ -324,3 +324,22 @@ export interface BlogDashboardData {
   popularPosts: PostSummary[]
 }
 
+// 포스팅 잔디(Heatmap) 관련 타입
+export type HeatmapLevel = 0 | 1 | 2 | 3 | 4
+
+export interface HeatmapDay {
+  date: string        // YYYY-MM-DD (KST 기준)
+  count: number       // 그 날 작성된 포스트 개수
+  level: HeatmapLevel // 색상 단계 (서버에서 계산)
+}
+
+export interface HeatmapResponse {
+  year: number
+  timezone: 'Asia/Seoul'
+  totalPosts: number
+  activeDays: number
+  longestStreak: number
+  availableYears: number[] // 내림차순
+  days: HeatmapDay[]       // 365 또는 366
+}
+

@@ -8,6 +8,7 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '0')
     const size = parseInt(searchParams.get('size') || '10')
     const tag = searchParams.get('tag')
+    const date = searchParams.get('date') // YYYY-MM-DD (KST)
     const sortBy = searchParams.get('sortBy') || 'recent'
 
     const skip = page * size
@@ -28,9 +29,18 @@ export async function GET(request: Request) {
         { categoryId: { notIn: privateCategoryIds } }, // 비공개 카테고리가 아닌 포스트
       ],
     }
-    
+
     if (tag) {
       where.tags = { contains: tag }
+    }
+
+    // KST 기준 특정 일자 필터 (잔디 셀 클릭 시 사용)
+    if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      const [y, m, d] = date.split('-').map(Number)
+      const KST_OFFSET_MS = 9 * 60 * 60 * 1000
+      const startUtc = new Date(Date.UTC(y, m - 1, d) - KST_OFFSET_MS)
+      const endUtc = new Date(Date.UTC(y, m - 1, d + 1) - KST_OFFSET_MS)
+      where.createdAt = { gte: startUtc, lt: endUtc }
     }
 
     // 정렬 조건

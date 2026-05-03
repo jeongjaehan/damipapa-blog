@@ -8,20 +8,28 @@ import { useAuth } from '@/contexts/AuthContext'
 import Loading from '@/components/common/Loading'
 import CategoryTree from '@/components/category/CategoryTree'
 import BlogDashboard from '@/components/dashboard/BlogDashboard'
+import PostingHeatmap from '@/components/dashboard/PostingHeatmap'
 import PostList from '@/components/post/PostList'
 import { Badge } from '@/components/ui/badge'
+
+function formatDateBadge(date: string): string {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return date
+  const [y, m, d] = date.split('-')
+  return `${y}년 ${Number(m)}월 ${Number(d)}일`
+}
 
 function HomeContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const { isAdmin } = useAuth()
   const tag = searchParams.get('tag')
-  
+  const dateParam = searchParams.get('date')
+
   const [categoryData, setCategoryData] = useState<CategoryTreeType | null>(null)
   const [dashboardData, setDashboardData] = useState<BlogDashboardData | null>(null)
   const [loading, setLoading] = useState(true)
-  
-  // 태그 필터링 모드일 때의 상태
+
+  // 태그 / 날짜 필터링 모드 공용 상태
   const [tagPosts, setTagPosts] = useState<PostSummary[]>([])
   const [tagLoading, setTagLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
@@ -46,32 +54,38 @@ function HomeContent() {
     loadData()
   }, [isAdmin])
 
-  // 태그 필터링 시 포스트 로드
+  // 태그 / 날짜 필터링 시 포스트 로드
   useEffect(() => {
-    if (tag) {
-      const loadTagPosts = async () => {
+    if (tag || dateParam) {
+      const loadFilteredPosts = async () => {
         setTagLoading(true)
         try {
-          const data = await getPosts(0, 10, tag)
+          const data = await getPosts(0, 10, tag || undefined, undefined, dateParam || undefined)
           setTagPosts(data.content)
           setHasMore(!data.last)
           setCurrentPage(0)
         } catch (error) {
-          console.error('태그 포스트 로딩 실패:', error)
+          console.error('필터 포스트 로딩 실패:', error)
         } finally {
           setTagLoading(false)
         }
       }
-      loadTagPosts()
+      loadFilteredPosts()
     }
-  }, [tag])
+  }, [tag, dateParam])
 
   if (loading) {
     return <Loading />
   }
 
-  // 태그 필터링 모드
-  if (tag) {
+  // 태그 / 날짜 필터링 모드
+  if (tag || dateParam) {
+    const filterTitle = dateParam ? '날짜별 글 모음' : '태그 검색 결과'
+    const filterBadge = dateParam ? formatDateBadge(dateParam) : `#${tag}`
+    const emptyMessage = dateParam
+      ? `${filterBadge}에 작성된 공개 글이 없어요`
+      : '검색 결과가 없어요'
+
     return (
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-8">
@@ -79,12 +93,12 @@ function HomeContent() {
           <div className="flex-1 min-w-0">
             <div className="mb-6">
               <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl font-bold text-foreground">태그 검색 결과</h1>
-                <Badge 
-                  variant="outline" 
+                <h1 className="text-3xl font-bold text-foreground">{filterTitle}</h1>
+                <Badge
+                  variant="outline"
                   className="border-primary-200 text-primary-700 dark:border-primary-800 dark:text-primary-300"
                 >
-                  #{tag}
+                  {filterBadge}
                 </Badge>
               </div>
               <button
@@ -97,13 +111,17 @@ function HomeContent() {
 
             {tagLoading ? (
               <Loading />
+            ) : tagPosts.length === 0 ? (
+              <div className="rounded-2xl border border-border/60 bg-card/60 px-6 py-12 text-center text-muted-foreground">
+                {emptyMessage}
+              </div>
             ) : (
               <PostList
-                initialData={{ 
-                  content: tagPosts, 
-                  page: currentPage, 
-                  totalPages: 0, 
-                  last: !hasMore 
+                initialData={{
+                  content: tagPosts,
+                  page: currentPage,
+                  totalPages: 0,
+                  last: !hasMore
                 } as PageResponse<PostSummary>}
                 isLoading={false}
                 hasMore={hasMore}
@@ -135,6 +153,19 @@ function HomeContent() {
         {/* 메인 콘텐츠 - 대시보드 */}
         <main className="flex-1 min-w-0">
           {dashboardData && <BlogDashboard data={dashboardData} />}
+
+          {/* 포스팅 잔디 (활동 히트맵) */}
+          <section className="mt-12 rounded-2xl border border-border/60 bg-card/80 p-5 shadow-warm-sm sm:p-6">
+            <header className="mb-4">
+              <h2 className="text-base font-semibold text-foreground">
+                포스팅 잔디
+              </h2>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                글을 쓴 날만큼 잔디가 자라요
+              </p>
+            </header>
+            <PostingHeatmap isAdmin={isAdmin} />
+          </section>
         </main>
 
         {/* 사이드바 - 카테고리 트리 */}

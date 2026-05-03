@@ -80,11 +80,13 @@ export const getPosts = async (
   page = 0,
   size = 10,
   tag?: string,
-  sortBy?: 'recent' | 'popular'
+  sortBy?: 'recent' | 'popular',
+  date?: string,
 ): Promise<PageResponse<PostSummary>> => {
   const params = new URLSearchParams({ page: page.toString(), size: size.toString() })
   if (tag) params.append('tag', tag)
   if (sortBy) params.append('sortBy', sortBy)
+  if (date) params.append('date', date)
 
   const response = await api.get<PageResponse<PostSummary>>(`/posts?${params}`)
   return response.data
