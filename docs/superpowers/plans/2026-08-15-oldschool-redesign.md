@@ -769,8 +769,22 @@ git commit -m "🔥 대시보드 애니메이션·장식 CSS 제거하고 마크
 
 - [ ] **Step 1: `PostCard` 호출자 확인**
 
-Run: `grep -rn "PostCard" app components --include=*.tsx`
-Expected: `components/post/PostList.tsx`만 나온다. 다른 곳에서 `<Link><PostCard/></Link>` 형태로 쓰고 있으면 그 `<Link>`를 벗겨낸다.
+Run: `grep -rn "PostCard" app components --include="*.tsx"`
+
+`PostCard`를 렌더링하는 곳은 **두 군데**다. 둘 다 이 태스크가 처리한다.
+
+1. `components/post/PostList.tsx:17` — Step 3에서 처리
+2. `app/search/page.tsx:82` — **`PostList`를 거치지 않고 자기만의 그리드 래퍼를 갖고 있다** (80행 `<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">`)
+
+`PostCard`가 카드에서 목록 행으로 바뀌면 3열 그리드 안에 행이 들어가 레이아웃이 깨진다. **그리드를 이 태스크에서 함께 고친다** — 뒤 태스크로 미루면 하나의 변경이 두 태스크로 쪼개진다. 80행을 아래로 바꾼다.
+
+```tsx
+            <div className="border-t border-border">
+```
+
+`app/search/page.tsx`에서 이 한 줄 외에는 아무것도 건드리지 않는다 — 나머지 검색 페이지 정리는 Task 9 소관이다.
+
+`<Link><PostCard/></Link>` 형태로 감싼 곳은 없다(확인됨). 만약 grep이 위 두 곳 외에 다른 파일을 보여주면 보고하고 멈춘다.
 
 - [ ] **Step 2: `PostCard` 재작성**
 
@@ -829,6 +843,8 @@ export default function PostCard({ post }: PostCardProps) {
 
 - [ ] **Step 3: `PostList`의 그리드를 목록으로**
 
+참고: `PostList`는 `app/page.tsx:119`와 `app/categories/[slug]/page.tsx:203` 두 곳에서 쓰인다. 여기서 컨테이너를 바꾸면 두 페이지 모두에 자동으로 반영된다 — 그 두 파일은 건드리지 않는다.
+
 `components/post/PostList.tsx:15`를 바꾼다.
 
 ```tsx
@@ -870,7 +886,7 @@ Expected: 3열 카드 그리드가 사라지고, 가로선으로 구분된 단�
 - [ ] **Step 6: 커밋**
 
 ```bash
-git add components/post/PostCard.tsx components/post/PostList.tsx
+git add components/post/PostCard.tsx components/post/PostList.tsx app/search/page.tsx
 git commit -m "♻️ 글 카드를 목록 행으로 교체"
 ```
 
