@@ -29,7 +29,7 @@ export default function PostCard({ post }: PostCardProps) {
               <Link
                 key={tag}
                 href={`/?tag=${tag}`}
-                className="mr-2 text-muted-foreground visited:text-muted-foreground hover:text-link"
+                className="mr-2 underline text-muted-foreground visited:text-link-visited hover:text-link"
               >
                 #{tag}
               </Link>

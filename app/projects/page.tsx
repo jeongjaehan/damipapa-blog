@@ -20,6 +20,8 @@ export default async function ProjectsPage() {
 
   return (
     <div className="px-4 py-8">
+      <h1 className="text-2xl font-bold">놀이터</h1>
+
       {/* 인트로 문구 */}
       <div className="text-center mb-12">
         <p className="text-xl sm:text-2xl text-muted-foreground font-medium italic max-w-3xl mx-auto leading-relaxed">
@@ -43,7 +45,7 @@ export default async function ProjectsPage() {
       {/* 하단 안내 */}
       <div className="text-center mt-12">
         <div className="inline-flex items-center gap-2 px-4 py-2">
-          <span className="text-sm text-primary">
+          <span className="text-sm text-muted-foreground">
             새로운 프로젝트가 계속 추가될 예정입니다
           </span>
         </div>

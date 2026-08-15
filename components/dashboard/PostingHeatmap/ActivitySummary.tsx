@@ -26,10 +26,10 @@ export default function ActivitySummary({
       <span className="font-semibold text-foreground">
         {data.totalPosts.toLocaleString()}편
       </span>
-      <span className="mx-1.5 text-muted-foreground/60">·</span>
+      <span aria-hidden="true" className="mx-1.5 text-border">·</span>
       활동일{' '}
       <span className="font-semibold text-foreground">{data.activeDays}일</span>
-      <span className="mx-1.5 text-muted-foreground/60">·</span>
+      <span aria-hidden="true" className="mx-1.5 text-border">·</span>
       최장 연속{' '}
       <span className="font-semibold text-foreground">
         {data.longestStreak}일

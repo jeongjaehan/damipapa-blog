@@ -144,7 +144,7 @@ export default function CategoryPage() {
 
   return (
     <div>
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col gap-8">
         {/* 메인 콘텐츠 */}
         <main className="flex-1 min-w-0">
           {/* Breadcrumb */}
@@ -180,7 +180,7 @@ export default function CategoryPage() {
           {/* 카테고리 헤더 */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-4xl font-bold text-foreground">
+              <h1 className="text-2xl font-bold text-foreground">
                 {category?.name || '미분류'}
               </h1>
             </div>
@@ -206,12 +206,12 @@ export default function CategoryPage() {
 
           {/* Intersection Observer 트리거 */}
           <div ref={observerTarget} className="h-20 flex items-center justify-center">
-            {isLoadingMore && <p className="text-muted-foreground">로딩 중...</p>}
+            {isLoadingMore && <p className="py-8 text-center text-sm text-muted-foreground">불러오는 중...</p>}
           </div>
         </main>
 
         {/* 사이드바 - 카테고리 트리 */}
-        <aside className="lg:w-72 shrink-0">
+        <aside>
           <div className="border-t border-border pt-6">
             {categoryData && (
               <CategoryTree

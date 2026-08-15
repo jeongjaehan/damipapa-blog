@@ -67,7 +67,7 @@ function CareerCard({ career, index, viewMode }: {
         <h3 className="text-lg font-bold text-foreground">
           {career.title}
           {isCurrent && <span className="ml-2 text-sm font-normal text-muted-foreground">(재직중)</span>}
-          <span className="ml-2 text-sm font-normal text-muted-foreground">{expanded ? '−' : '+'}</span>
+          <span aria-hidden="true" className="ml-2 text-sm font-normal text-muted-foreground">{expanded ? '−' : '+'}</span>
         </h3>
         <p className="text-sm text-muted-foreground">
           {career.subtitle} · {formatDate(career.startDate)} ~ {isCurrent ? '현재' : formatDate(career.endDate!)}

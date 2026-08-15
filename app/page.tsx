@@ -111,7 +111,7 @@ function HomeContent() {
 
     return (
       <div>
-        <h1 className="text-xl font-bold">
+        <h1 className="text-2xl font-bold">
           {filterTitle}
           <span className="ml-2 font-normal text-muted-foreground">{filterBadge}</span>
         </h1>
@@ -159,7 +159,7 @@ function HomeContent() {
   // 기본 대시보드 모드
   return (
     <div>
-      <h1 className="text-lg font-bold">다미파파의 블로그</h1>
+      <h1 className="text-2xl font-bold">다미파파의 블로그</h1>
 
       {dashboardData && <BlogDashboard data={dashboardData} />}
 

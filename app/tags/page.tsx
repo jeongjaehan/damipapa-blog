@@ -45,7 +45,7 @@ export default function TagsPage() {
   if (!tags.length) {
     return (
       <div className="max-w-4xl mx-auto text-center space-y-6">
-        <h1 className="text-4xl font-bold text-foreground">태그 클라우드</h1>
+        <h1 className="text-2xl font-bold text-foreground">태그</h1>
         <p className="text-muted-foreground">아직 등록된 태그가 없습니다.</p>
       </div>
     )
@@ -54,15 +54,15 @@ export default function TagsPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-12">
       <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold text-foreground">태그 클라우드</h1>
+        <h1 className="text-2xl font-bold text-foreground">태그</h1>
         <p className="text-muted-foreground">
-          자주 사용된 태그일수록 더 크고 선명하게 떠올라요. 원하는 태그를 클릭해 관련 글을 탐색해보세요.
+          많이 쓴 태그부터 정렬했어요. 태그를 클릭하면 관련 글을 볼 수 있습니다.
         </p>
       </div>
 
       <TagCloud tags={tags} />
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6">
         <section className="border-t border-border pt-6">
           <h2 className="text-lg font-semibold text-foreground">인기 태그 Top 5</h2>
           <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
@@ -93,7 +93,7 @@ export default function TagsPage() {
             {highlightTag && (
               <div className="flex items-center justify-between">
                 <dt className="text-muted-foreground">가장 많이 언급된 태그</dt>
-                <dd className="font-semibold text-primary">
+                <dd className="font-semibold text-foreground">
                   #{highlightTag.name}
                 </dd>
               </div>

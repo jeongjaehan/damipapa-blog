@@ -48,7 +48,7 @@ function SearchContent() {
 
   return (
     <>
-      <h1 className="text-4xl font-bold mb-8">검색</h1>
+      <h1 className="text-2xl font-bold mb-8">검색</h1>
 
       <form onSubmit={handleSubmit} className="mb-8">
         <div className="flex gap-2">

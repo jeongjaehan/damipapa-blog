@@ -45,6 +45,8 @@ export default function CareerPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 sm:py-10">
+      <h1 className="text-2xl font-bold">프로필</h1>
+
       {/* Admin button */}
       {isAdmin && (
         <div className="flex justify-end mb-4">

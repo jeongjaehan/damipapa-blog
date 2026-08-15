@@ -82,7 +82,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
         href={href} 
         target="_blank" 
         rel="noopener noreferrer"
-        className="text-primary underline break-all max-w-full overflow-hidden inline-block hover:text-primary/80"
+        className="text-link underline break-all max-w-full overflow-hidden inline-block hover:text-link/80"
       >
         {children}
       </a>
@@ -118,21 +118,21 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
             {/* 프로젝트 정보 */}
             <div className="flex-1 min-w-0">
               <div className="flex flex-col gap-2 mb-3 sm:mb-4">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground break-words hyphens-auto leading-tight">
+                <h1 className="text-2xl font-bold text-foreground break-words hyphens-auto leading-tight">
                   {project.title}
                 </h1>
-                <Badge 
-                  className="w-fit text-white text-xs sm:text-sm px-2 sm:px-3 py-1"
+                <Badge
+                  className="w-fit text-white text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-none"
                   style={{ backgroundColor: statusColor }}
                 >
                   {statusLabel}
                 </Badge>
               </div>
-              
+
               <p className="text-base sm:text-lg text-muted-foreground mb-3 sm:mb-4 leading-relaxed break-words">
                 {project.subtitle}
               </p>
-              
+
               <p className="text-sm sm:text-base text-foreground mb-4 sm:mb-6 break-words leading-relaxed">
                 {project.description}
               </p>
@@ -144,7 +144,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                   <span className="break-words">{project.category}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="flex-shrink-0">작성일</span>
+                  <span className="flex-shrink-0">업데이트</span>
                   <span className="break-words">
                     {formatDistanceToNow(new Date(project.updated_at), {
                       addSuffix: true,
@@ -164,7 +164,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
               </div>
               <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {project.tech_stack.map((tech, index) => (
-                  <Badge key={index} variant="secondary" className="text-xs px-2 py-1 break-words">
+                  <Badge key={index} variant="secondary" className="text-xs px-2 py-1 break-words rounded-none">
                     {tech}
                   </Badge>
                 ))}
@@ -180,7 +180,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
               </div>
               <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {project.features.map((feature, index) => (
-                  <Badge key={index} variant="outline" className="text-xs px-2 py-1 break-words">
+                  <Badge key={index} variant="outline" className="text-xs px-2 py-1 break-words rounded-none">
                     {feature}
                   </Badge>
                 ))}
@@ -191,8 +191,8 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       </Card>
 
       {/* 프로젝트 상세 내용 */}
-      <div className="grid gap-4 sm:gap-6 lg:gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+      <div className="grid gap-4 sm:gap-6 lg:gap-8">
+        <div>
           <Card className="border-border">
             <div className="p-4 sm:p-6 lg:p-8">
               <div className="prose prose-gray max-w-none break-words overflow-hidden">
@@ -226,8 +226,8 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
               <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                   <span className="text-muted-foreground font-medium">상태:</span>
-                  <Badge 
-                    className="w-fit text-white text-xs px-2 py-1"
+                  <Badge
+                    className="w-fit text-white text-xs px-2 py-1 rounded-none"
                     style={{ backgroundColor: statusColor }}
                   >
                     {statusLabel}

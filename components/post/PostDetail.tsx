@@ -81,7 +81,7 @@ export default function PostDetail({ post }: PostDetailProps) {
   return (
     <article>
       <header className="border-b border-border pb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold leading-snug">
+        <h1 className="text-2xl font-bold leading-snug">
           {post.title}
         </h1>
 
@@ -121,7 +121,7 @@ export default function PostDetail({ post }: PostDetailProps) {
               <Link
                 key={tag}
                 href={`/?tag=${tag}`}
-                className="mr-2 text-muted-foreground visited:text-muted-foreground hover:text-link"
+                className="mr-2 underline text-muted-foreground visited:text-link-visited hover:text-link"
               >
                 #{tag}
               </Link>
