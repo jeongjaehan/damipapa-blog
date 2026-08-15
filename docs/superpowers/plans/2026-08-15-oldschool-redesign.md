@@ -1811,6 +1811,7 @@ git commit -m "♻️ 커리어·프로젝트·공통 컴포넌트를 텍스트 
 - Modify: `components/dashboard/PostingHeatmap/Legend.tsx:22,31`
 - Modify: `components/dashboard/PostingHeatmap/index.tsx` (컨테이너 클래스만)
 - Modify: `components/dashboard/PostingHeatmap/YearSelector.tsx` (버튼 스타일)
+- Modify: `components/dashboard/PostingHeatmap/HeatmapTooltip.tsx:33` (툴팁 상자)
 
 **Interfaces:**
 - Consumes: Task 1의 `--heatmap-l0`~`l4` 회색조 토큰
@@ -1846,6 +1847,7 @@ git commit -m "♻️ 커리어·프로젝트·공통 컴포넌트를 텍스트 
 | `index.tsx:143` | `rounded-md bg-destructive/10 px-3 py-2 ...` (에러 박스) | `rounded-md` 제거, `border border-destructive`로 교체 |
 | `index.tsx:158` | `h-[120px] animate-pulse rounded-md bg-muted/50` (로딩 스켈레톤) | **`animate-pulse` 제거** — Tailwind 내장 애니메이션이라 Task 4의 CSS 삭제로는 안 사라진다. `h-[120px] bg-muted` 정적 블록으로 |
 | `index.tsx:163` | `rounded-md bg-card/70 backdrop-blur-[1px]` (오버레이) | `rounded-md`와 `backdrop-blur-[1px]` 제거, `bg-background/80`으로 |
+| `HeatmapTooltip.tsx:33` | `rounded-md bg-popover px-2 py-1 ... shadow-warm-md ring-1 ring-border/60` | `rounded-md`·`shadow-warm-md`·`ring-1 ring-border/60` 제거, `border border-border`로. **계획 초안이 이 파일을 빠뜨렸다** — 잔디 셀에 마우스를 올렸을 때 뜨는 툴팁이라 사용자가 실제로 보는 요소다 |
 
 - [ ] **Step 4: 타입·린트 확인**
 
@@ -1888,14 +1890,14 @@ Run:
 ```bash
 grep -rln "lucide-react" app components | grep -v "/admin/"
 ```
-Expected: 아래 다섯 개만 남는다. 전부 의도된 예외다.
+Expected: 아래 **네 개**만 남는다. 전부 의도된 예외다.
 ```
-app/auth/login/page.tsx          숨겨진 로그인 페이지 (로고 5회 클릭으로만 도달)
+app/auth/login/page.tsx                  숨겨진 로그인 페이지 (로고 5회 클릭으로만 도달)
 components/common/ImageViewerModal.tsx   어드민과 공유
 components/common/OptimizedImage.tsx     어드민과 공유
-components/ui/dropdown-menu.tsx          어드민 전용 (Task 3에서 ThemeToggle이 의존을 끊었다)
 components/ui/segmented-control.tsx      어드민과 공유
 ```
+(계획 초안은 `components/ui/dropdown-menu.tsx`도 목록에 넣었으나, 확인 결과 그 파일은 lucide를 import하지 않는다.)
 다른 파일이 나오면 해당 태스크로 돌아가 아이콘을 텍스트로 바꾼다. `app/game/tetris/**`와 `components/game/**`는 grep 범위에서 제외한다 — 계획 범위 밖이다.
 
 - [ ] **Step 2: 죽은 색 클래스 확인**
@@ -1919,6 +1921,12 @@ Task 1의 grep이 찾아낸 잔여 항목이다. `app/auth/login/page.tsx:59,74`
 - [ ] **Step 2c: 글 상세의 버튼 행 요소 교체**
 
 `components/post/PostDetail.tsx`의 관리자 수정/삭제 버튼을 감싼 `<p className="mt-4 flex gap-2 text-sm">`를 `<div className="mt-4 flex gap-2 text-sm">`로 바꾼다. HTML 위반은 아니지만 버튼 툴바를 문단으로 감싸는 건 의미가 맞지 않는다. Task 8 리뷰가 지적한 항목이며 계획이 지시한 코드였으므로 여기서 정리한다.
+
+- [ ] **Step 2d: 공유 UI 컴포넌트의 트랜지션 제거**
+
+`components/ui/card.tsx:11`의 클래스 문자열에서 `transition-all duration-300`을 제거한다. 같은 줄의 `rounded-2xl`과 `shadow-warm-sm`은 토큰이 각각 `0`/`none`이라 이미 무력화됐지만 트랜지션은 여전히 살아 있다. `Card`는 `app/projects/page.tsx`와 `components/projects/ProjectDetail.tsx`가 아직 쓴다.
+
+이 파일은 어드민과 공유하지만, 제거하는 것이 애니메이션 하나뿐이라 어드민 기능에 영향이 없다. **이 한 클래스 외에는 `components/ui/**`를 건드리지 않는다.**
 
 - [ ] **Step 3: 둥근 모서리 잔존 확인**
 
