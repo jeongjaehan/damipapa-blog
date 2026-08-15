@@ -1,8 +1,6 @@
 import Link from 'next/link'
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear()
-
   return (
     <footer className="mt-auto w-full border-t border-border">
       <div className="mx-auto w-full max-w-content px-4 py-6 text-sm text-muted-foreground">
@@ -14,7 +12,7 @@ export default function Footer() {
           <Link href="/tags" className="text-muted-foreground visited:text-muted-foreground hover:text-link">태그</Link>
         </p>
         <p className="mt-2">
-          &copy; {currentYear} 다미파파의 블로그
+          &copy; 2025 다미파파의 블로그
         </p>
       </div>
     </footer>
