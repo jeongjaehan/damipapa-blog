@@ -93,7 +93,7 @@ export default function MermaidDiagram({ chart, className = '' }: MermaidDiagram
     <div className={`relative ${className}`}>
       {isLoading && (
         <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+          <p className="text-sm text-muted-foreground">불러오는 중...</p>
         </div>
       )}
       <div

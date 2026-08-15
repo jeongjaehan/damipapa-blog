@@ -7,7 +7,6 @@ import { CareerData } from '@/types'
 import CareerTimeline from '@/components/career/CareerTimeline'
 import { Button } from '@/components/ui/button'
 import Loading from '@/components/common/Loading'
-import { Settings } from 'lucide-react'
 import Link from 'next/link'
 
 export default function CareerPage() {
@@ -37,7 +36,7 @@ export default function CareerPage() {
   if (!data) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-8">
-        <div className="rounded-2xl border border-border bg-card p-8 text-center text-muted-foreground">
+        <div className="border border-border p-6 text-center text-muted-foreground">
           <p>경력 정보를 불러올 수 없습니다.</p>
         </div>
       </div>
@@ -51,8 +50,7 @@ export default function CareerPage() {
         <div className="flex justify-end mb-4">
           <Link href="/admin/career">
             <Button variant="outline" size="sm" className="gap-2">
-              <Settings className="w-4 h-4" />
-              관리
+              [설정]
             </Button>
           </Link>
         </div>

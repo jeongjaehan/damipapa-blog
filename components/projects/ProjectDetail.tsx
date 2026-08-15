@@ -5,7 +5,6 @@ import { generateIconText, getStatusColor, getStatusLabel } from '@/utils/korean
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { Calendar, Tag, Code, Layers } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import MermaidDiagram from './MermaidDiagram'
@@ -60,7 +59,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       if (isBlock) {
         return (
           <div className="my-3 sm:my-4 -mx-2 sm:mx-0 overflow-hidden">
-            <pre className="bg-muted rounded-lg p-3 sm:p-4 overflow-x-auto text-sm max-w-full">
+            <pre className="bg-muted border border-border p-4 overflow-x-auto text-sm max-w-full">
               <code className={`${className} block max-w-full overflow-x-auto whitespace-pre-wrap break-words text-foreground`}>
                 {children}
               </code>
@@ -98,7 +97,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
           <div className="flex items-start gap-4 sm:gap-6 mb-4 sm:mb-6">
             {/* 프로젝트 아이콘 */}
             <div
-              className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-2xl sm:rounded-3xl shadow-lg flex items-center justify-center text-white font-bold text-lg sm:text-xl lg:text-2xl flex-shrink-0"
+              className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-white font-bold text-lg sm:text-xl lg:text-2xl flex-shrink-0"
               style={{ 
                 backgroundColor: project.icon.color,
                 boxShadow: `0 8px 32px ${project.icon.color}40`
@@ -108,7 +107,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                 <img 
                   src={project.icon.value} 
                   alt={project.title}
-                  className="w-full h-full rounded-2xl sm:rounded-3xl object-cover"
+                  className="w-full h-full object-cover"
                 />
               ) : (
                 <span className="text-white font-bold select-none">
@@ -142,15 +141,15 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
               {/* 메타 정보 */}
               <div className="space-y-2 sm:grid sm:grid-cols-2 sm:gap-4 sm:space-y-0 text-xs sm:text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <Tag className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                  <span className="flex-shrink-0">태그</span>
                   <span className="break-words">{project.category}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                  <span className="flex-shrink-0">작성일</span>
                   <span className="break-words">
-                    {formatDistanceToNow(new Date(project.updated_at), { 
-                      addSuffix: true, 
-                      locale: ko 
+                    {formatDistanceToNow(new Date(project.updated_at), {
+                      addSuffix: true,
+                      locale: ko
                     })} 업데이트
                   </span>
                 </div>
@@ -162,7 +161,6 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
           {project.tech_stack && project.tech_stack.length > 0 && (
             <div className="mb-4 sm:mb-6">
               <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                <Code className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground flex-shrink-0" />
                 <span className="text-xs sm:text-sm font-medium text-foreground">기술 스택</span>
               </div>
               <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -179,7 +177,6 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
           {project.features && project.features.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                <Layers className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground flex-shrink-0" />
                 <span className="text-xs sm:text-sm font-medium text-foreground">주요 기능</span>
               </div>
               <div className="flex flex-wrap gap-1.5 sm:gap-2">

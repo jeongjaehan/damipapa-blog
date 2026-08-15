@@ -2,8 +2,6 @@ import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { getProject, getAllProjectSlugs } from '@/utils/projects'
 import ProjectDetail from '@/components/projects/ProjectDetail'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
 interface ProjectPageProps {
@@ -47,15 +45,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+    <div className="px-4 py-4">
       {/* 뒤로 가기 버튼 */}
       <div className="mb-4 sm:mb-6">
-        <Link href="/projects">
-          <Button variant="ghost" className="gap-2 text-gray-600 hover:text-gray-900 text-sm sm:text-base">
-            <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">프로젝트 목록으로</span>
-            <span className="sm:hidden">목록</span>
-          </Button>
+        <Link href="/projects" className="text-sm text-link hover:underline sm:text-base">
+          « 목록으로
         </Link>
       </div>
 

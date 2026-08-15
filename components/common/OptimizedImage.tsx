@@ -70,7 +70,7 @@ export default function OptimizedImage({
       <div className={`relative overflow-hidden ${className} ${enableModal ? 'group' : ''}`}>
         {/* 로딩 스켈레톤 */}
         {isLoading && (
-          <div className="absolute inset-0 bg-gray-200 animate-pulse rounded" />
+          <div className="absolute inset-0 bg-muted" />
         )}
         
         {/* 실제 이미지 */}

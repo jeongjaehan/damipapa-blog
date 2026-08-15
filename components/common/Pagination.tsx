@@ -32,10 +32,10 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`px-4 py-2 rounded-xl transition-all duration-200 ${
+          className={`px-2 py-1 ${
             currentPage === i
-              ? 'bg-primary text-primary-foreground'
-              : 'bg-card text-foreground hover:bg-muted'
+              ? 'font-bold text-foreground'
+              : 'text-link hover:underline'
           }`}
         >
           {i + 1}
@@ -51,9 +51,9 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
       <button
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 0}
-        className="px-4 py-2 rounded-xl bg-card text-foreground hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+        className="px-2 py-1 text-link hover:underline disabled:text-muted-foreground disabled:no-underline"
       >
-        이전
+        « 이전
       </button>
 
       {renderPageNumbers()}
@@ -61,9 +61,9 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
       <button
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages - 1}
-        className="px-4 py-2 rounded-xl bg-card text-foreground hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+        className="px-2 py-1 text-link hover:underline disabled:text-muted-foreground disabled:no-underline"
       >
-        다음
+        다음 »
       </button>
     </div>
   )

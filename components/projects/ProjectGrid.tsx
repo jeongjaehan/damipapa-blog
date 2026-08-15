@@ -25,7 +25,7 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
   return (
     <div className="w-full">
       {/* iOS 스타일 앱 그리드 */}
-      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto">
+      <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
         {projects.map((project) => (
           <ProjectCard key={project.id} project={project} />
         ))}
