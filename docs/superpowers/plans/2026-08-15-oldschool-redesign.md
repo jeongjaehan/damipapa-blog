@@ -958,20 +958,23 @@ function ArchiveRow({ post }: { post: PostSummary }) {
   )
 }
 
+const PAGE_SIZE = 10
+
 export default function BlogDashboard({ data }: BlogDashboardProps) {
   const [posts, setPosts] = useState<PostSummary[]>(data.recentPosts)
-  const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(data.totalPosts > data.recentPosts.length)
 
   const loadMore = async () => {
     setLoading(true)
     try {
-      const result = await getPosts(page, 10, undefined, 'recent')
+      // ponytail: 매번 처음부터 다시 받는다. getPosts는 오프셋이 아니라 페이지 단위라,
+      // 초기 목록 길이(대시보드 API가 정하는 값)가 PAGE_SIZE의 배수가 아니면
+      // 페이지 인덱스 계산이 글을 건너뛴다. 글이 수백 편을 넘어가면 커서 페이징으로 바꿀 것.
+      const result = await getPosts(0, posts.length + PAGE_SIZE, undefined, 'recent')
       const existingIds = new Set(posts.map((p) => p.id))
       const newPosts = result.content.filter((p) => !existingIds.has(p.id))
       setPosts([...posts, ...newPosts])
-      setPage(page + 1)
       setHasMore(!result.last)
     } catch (error) {
       console.error('더보기 로딩 실패:', error)
@@ -1039,7 +1042,7 @@ export default function BlogDashboard({ data }: BlogDashboardProps) {
 - `formatDistanceToNow`(상대시간) 대신 `MM.dd` 고정 포맷
 - 인기 글 상태(`popularPosts`, `loadMorePopular`)를 이 컴포넌트에서 제거 — 사이드바로 이동
 - `lucide-react`, `date-fns/locale`, `Badge` import 전부 제거
-- 더보기 페이지 크기를 5 → 10으로 (목록형이라 한 번에 더 많이 보여도 부담이 없다)
+- **더보기 방식이 페이지 인덱스 누적 → 전체 재조회로 바뀐다.** 원본은 `getPosts(recentPage, 5, ...)`로 페이지 인덱스를 올렸는데, 이는 초기 목록이 정확히 5개일 때만 맞는다. `getPosts(page, size)`는 오프셋이 아니라 **페이지 단위**라서, 초기 목록 5개 상태에서 `getPosts(1, 10)`을 부르면 11~20번째를 가져와 **6~10번째가 영구히 안 보인다.** 새 코드는 `getPosts(0, posts.length + PAGE_SIZE, ...)`로 매번 처음부터 받고 id로 중복을 걸러 이 결합을 없앤다
 
 - [ ] **Step 2: `hasMore` 초기값 회귀 확인**
 
@@ -1047,10 +1050,13 @@ export default function BlogDashboard({ data }: BlogDashboardProps) {
 Run: 브라우저에서 홈을 열고, 글 개수가 `recentPosts` 길이보다 많으면 `더보기 »`가 보이는지 확인한다.
 Expected: 전체 글이 `recentPosts`에 다 들어오는 경우 버튼이 안 보이고, 더 있으면 보인다.
 
-- [ ] **Step 3: 더보기 동작 확인**
+- [ ] **Step 3: 더보기 경계 확인 (컨트롤러가 수행)**
 
-`더보기 »`를 두 번 누른다.
-Expected: 글이 추가되고 중복이 생기지 않으며, 연도 그룹이 알맞게 늘어난다. 마지막 페이지에 도달하면 버튼이 사라진다.
+이 검증은 브라우저가 필요하므로 구현자는 건너뛴다. 컨트롤러가 확인할 것:
+
+1. `더보기 »`를 두 번 눌렀을 때 글이 추가되고 **중복이 생기지 않는다**
+2. **초기 목록의 마지막 글 다음 글이 실제로 나타난다** — 즉 6번째 글이 건너뛰어지지 않는다. 이것이 이 태스크에서 가장 틀리기 쉬운 지점이다
+3. 마지막 페이지에 도달하면 버튼이 사라진다
 
 - [ ] **Step 4: 타입·린트 확인**
 
