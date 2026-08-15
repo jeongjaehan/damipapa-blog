@@ -1916,6 +1916,10 @@ Task 1의 grep이 찾아낸 잔여 항목이다. `app/auth/login/page.tsx:59,74`
 
 이 페이지는 로고 5회 클릭으로만 도달하는 숨겨진 페이지라 계획 범위 밖이었지만, `primary-500` 팔레트가 사라져 **포커스 링이 무색이 된다**. 접근성 요소이므로 복구한다. 이 세 줄 외에는 건드리지 않는다.
 
+- [ ] **Step 2c: 글 상세의 버튼 행 요소 교체**
+
+`components/post/PostDetail.tsx`의 관리자 수정/삭제 버튼을 감싼 `<p className="mt-4 flex gap-2 text-sm">`를 `<div className="mt-4 flex gap-2 text-sm">`로 바꾼다. HTML 위반은 아니지만 버튼 툴바를 문단으로 감싸는 건 의미가 맞지 않는다. Task 8 리뷰가 지적한 항목이며 계획이 지시한 코드였으므로 여기서 정리한다.
+
 - [ ] **Step 3: 둥근 모서리 잔존 확인**
 
 Run:
