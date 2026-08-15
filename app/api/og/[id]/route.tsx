@@ -67,7 +67,7 @@ export async function GET(
   const title = post?.title || '다미파파의 블로그'
   const summary =
     extractText(post?.content || '', 140) ||
-    '100% 바이브 코딩으로 만든 블로그. 개발, 기술, 일상에 대한 이야기를 공유합니다.'
+    '개발, 기술, 일상에 대한 이야기를 공유합니다.'
   const tags: string[] = Array.isArray(post?.tags) ? post.tags.slice(0, 3) : []
   const date = formatDate(post?.createdAt)
 

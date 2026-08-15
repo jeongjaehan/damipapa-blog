@@ -14,7 +14,7 @@ export default function Footer() {
           <Link href="/tags" className="text-muted-foreground visited:text-muted-foreground hover:text-link">태그</Link>
         </p>
         <p className="mt-2">
-          &copy; {currentYear} 다미파파의 블로그 · 100% 바이브 코딩으로 만든 블로그
+          &copy; {currentYear} 다미파파의 블로그
         </p>
       </div>
     </footer>

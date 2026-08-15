@@ -81,11 +81,7 @@ export default function BlogDashboard({ data }: BlogDashboardProps) {
 
   return (
     <div>
-      <p className="text-[0.95rem] text-muted-foreground">
-        100% 바이브 코딩으로 만든 블로그
-      </p>
-
-      <p className="mt-1 text-sm text-muted-foreground">
+      <p className="text-sm text-muted-foreground">
         글 {data.totalPosts.toLocaleString()}편
         <span aria-hidden="true" className="mx-1.5 text-border">·</span>
         조회 {data.totalViews.toLocaleString()}
