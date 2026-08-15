@@ -145,7 +145,7 @@ export default function ProfileForm({ profile, onSave, onCancel }: ProfileFormPr
               type="url"
               value={facebook}
               onChange={(e) => setFacebook(e.target.value)}
-              placeholder="https://facebook.com/jaehan.jeong.7"
+              placeholder="https://facebook.com/username"
             />
           </div>
 

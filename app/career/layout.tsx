@@ -10,7 +10,7 @@ async function getCareerData() {
     // 에러 발생 시 기본값 반환
     return {
       profile: {
-        name: '정재한',
+        name: '다미파파',
         bio: 'Senior Developer',
         avatar: null
       }
@@ -20,7 +20,7 @@ async function getCareerData() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getCareerData()
-  const profileName = data.profile?.name || '정재한'
+  const profileName = data.profile?.name || '다미파파'
   const profileBio = data.profile?.bio || 'Senior Developer'
   
   return {
