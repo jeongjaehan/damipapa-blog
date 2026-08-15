@@ -77,7 +77,16 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-serif), Georgia, 'Times New Roman', serif;
+    font-size: 1.05rem;
+    line-height: 1.9;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  a {
+    color: hsl(var(--link));
+  }
+  a:visited {
+    color: hsl(var(--link-visited));
   }
 }
 

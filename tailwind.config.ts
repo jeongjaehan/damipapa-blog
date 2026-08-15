@@ -71,9 +71,13 @@ const config: Config = {
         'warm-lg': 'none',
       },
       fontFamily: {
-        sans: ['Nunito', 'system-ui', 'sans-serif'],
-        serif: ['Georgia', 'serif'],
+        sans: ['var(--font-serif)', 'Georgia', 'Times New Roman', 'serif'],
+        serif: ['var(--font-serif)', 'Georgia', 'Times New Roman', 'serif'],
         mono: ['JetBrains Mono', 'monospace'],
+      },
+      maxWidth: {
+        content: '720px',
+        reading: '680px',
       },
       typography: {
         DEFAULT: {
