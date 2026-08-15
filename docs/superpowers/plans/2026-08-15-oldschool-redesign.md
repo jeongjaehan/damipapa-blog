@@ -1464,19 +1464,39 @@ Expected: 결과 없음.
 
 - [ ] **Step 5: 나머지 페이지의 카드 래퍼 제거**
 
-`app/tags/page.tsx`, `app/categories/page.tsx`, `app/categories/[slug]/page.tsx`, `app/search/page.tsx` 네 파일에서 아래 클래스 패턴을 찾아 제거하거나 교체한다.
+아래는 실제 파일을 스캔해 확정한 목록이다. 여기 없는 줄은 건드리지 않는다.
 
-| 찾을 것 | 바꿀 것 |
-|---|---|
-| `rounded-2xl`, `rounded-3xl`, `rounded-xl` | 제거 (토큰이 0이라 무의미하지만 정리) |
-| `shadow-warm-*`, `shadow-sm`, `shadow-lg` | 제거 |
-| `bg-card`, `bg-card/60`, `backdrop-blur-*` | 제거 |
-| `grid grid-cols-* gap-*` (카드 그리드) | `divide-y divide-border` 목록 |
-| `hover:scale-*`, `transition-all duration-*` | 제거 |
-| `max-w-7xl mx-auto` | 제거 (main이 폭을 잡는다) |
-| lucide import와 아이콘 JSX | 텍스트 라벨 |
+**`app/tags/page.tsx`** — 세 개의 `<section>` 래퍼
 
-`app/search/page.tsx`의 검색 입력창은 `border border-border px-3 py-2` 정도로 단순화하고 `rounded-*`를 제거한다.
+| 행 | 현재 | 바꿀 것 |
+|---|---|---|
+| 66 | `rounded-2xl border border-border bg-card/80 p-6 shadow-warm-sm backdrop-blur` | `border-t border-border pt-6` |
+| 82 | 동일 | `border-t border-border pt-6` |
+| 104 | `rounded-2xl border border-border bg-gradient-to-br from-warm-highlight via-card to-accent p-6 shadow-warm-sm` | `border-t border-border pt-6` — **그라디언트 배경 제거가 핵심** |
+
+**`app/categories/page.tsx`**
+
+| 행 | 현재 | 바꿀 것 |
+|---|---|---|
+| 8 | `import { Folder } from 'lucide-react'` | import 삭제, `<Folder/>` 사용처는 제거 |
+| 51 | `bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm` | `border-t border-border pt-6` — **하드코딩된 `bg-white`/`gray-*`를 쓰고 있어 새 팔레트와 어긋난다. 라이트에서 흰 배경 위 흰 카드라 경계가 사라진다** |
+
+**`app/categories/[slug]/page.tsx`**
+
+| 행 | 현재 | 바꿀 것 |
+|---|---|---|
+| 27 | `import { ChevronRight, Folder, Home, Lock } from 'lucide-react'` | import 삭제. `ChevronRight`(브레드크럼 구분자)는 `/` 텍스트로, `Home`은 `홈` 텍스트로, `Folder`는 삭제, `Lock`은 `[비공개]` 텍스트로 |
+| 126, 151 | `max-w-7xl mx-auto` | 제거 (`<main>`이 폭을 잡는다) |
+| 128 | `bg-destructive/5 border border-destructive/20 rounded-2xl p-8 text-center max-w-md` | `border border-destructive p-4 text-center` |
+| 138 | `px-6 py-2 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all duration-200` | `text-link hover:underline` (텍스트 링크로) |
+| 222 | `sticky top-24 bg-card rounded-2xl border border-border p-4 shadow-warm-sm` | `border-t border-border pt-6` — `sticky`도 제거 |
+
+**`app/search/page.tsx`** — 80행 그리드 래퍼는 **Task 5가 이미 처리했다.** 남은 것은 두 줄뿐이다.
+
+| 행 | 현재 | 바꿀 것 |
+|---|---|---|
+| 60 | `flex-1 px-4 py-3 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-ring bg-background text-foreground` | `flex-1 px-3 py-2 border border-border focus:outline-none focus:ring-1 focus:ring-ring bg-background text-foreground` |
+| 64 | `px-6 py-3 bg-primary text-primary-foreground rounded-2xl hover:bg-primary/90 transition-all duration-200` | `px-4 py-2 border border-border hover:bg-muted` |
 
 - [ ] **Step 6: 타입·린트 확인**
 
