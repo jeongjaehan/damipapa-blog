@@ -4,14 +4,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRef, useState } from 'react'
-import { ThemeToggle } from '@/components/common/ThemeToggle'
 
 const NAV = [
   { href: '/', label: '홈' },
   { href: '/career', label: '프로필' },
   { href: '/projects', label: '놀이터' },
   { href: '/search', label: '검색' },
-  { href: '/tags', label: '태그' },
 ]
 
 function Sep() {
@@ -79,9 +77,6 @@ export default function Header() {
           >
             GitHub
           </a>
-
-          <Sep />
-          <ThemeToggle />
 
           {isAuthenticated && (
             <>
