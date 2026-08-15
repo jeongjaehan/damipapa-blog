@@ -1624,6 +1624,16 @@ grep -rn "primary-[0-9]\|warm-highlight\|shadow-warm" app components --include=*
 ```
 Expected: 결과 없음. 남아 있으면 제거한다(Tailwind가 조용히 무시하므로 화면은 멀쩡하지만 죽은 코드다).
 
+- [ ] **Step 2b: 로그인 페이지 포커스 링 복구**
+
+Task 1의 grep이 찾아낸 잔여 항목이다. `app/auth/login/page.tsx:59,74`의 입력창 클래스에서:
+
+- `focus:ring-primary-500` → `focus:ring-ring`
+- `border-stone-300` → `border-border`
+- `rounded-lg` → 제거
+
+이 페이지는 로고 5회 클릭으로만 도달하는 숨겨진 페이지라 계획 범위 밖이었지만, `primary-500` 팔레트가 사라져 **포커스 링이 무색이 된다**. 접근성 요소이므로 복구한다. 이 세 줄 외에는 건드리지 않는다.
+
 - [ ] **Step 3: 둥근 모서리 잔존 확인**
 
 Run:
