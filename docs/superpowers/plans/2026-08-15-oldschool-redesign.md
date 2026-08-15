@@ -1943,6 +1943,12 @@ grep -rn "boxShadow" app components --include="*.tsx" | grep -v "/admin/" | grep
 ```
 Expected: 결과 없음.
 
+- [ ] **Step 2f: 죽은 포커스 클래스 제거**
+
+`components/dashboard/PostingHeatmap/YearSelector.tsx:35`의 비활성 탭 클래스에 `focus-visible:outline-none`이 남아 있는데, 원래 짝이던 대체 포커스 표시(`focus-visible:bg-muted/60 focus-visible:text-foreground`)는 Task 11에서 사라졌다. 지금은 포커스 표시를 없애기만 하는 죽은 클래스다.
+
+`focus-visible:outline-none`을 제거한다. (해당 버튼은 `tabIndex={-1}`이라 실제로 키보드 도달이 안 되므로 동작 변화는 없다 — 정리 목적이다.)
+
 - [ ] **Step 3: 둥근 모서리 잔존 확인**
 
 Run:
