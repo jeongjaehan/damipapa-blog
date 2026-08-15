@@ -1582,9 +1582,32 @@ export default function Loading() {
 
 - [ ] **Step 4: 프로젝트 페이지 정리**
 
-`components/projects/ProjectGrid.tsx`의 `grid grid-cols-*`를 `divide-y divide-border` 목록으로 바꾸고, `ProjectCard.tsx`를 `PostCard`와 같은 형태(제목 링크 + 한 줄 메타)로 단순화한다. `ProjectDetail.tsx`와 `AppStoreLinks.tsx`에서 lucide import와 아이콘 JSX를 제거하고 텍스트 라벨(`App Store`, `Google Play`)로 바꾼다.
+**중요 — 계획의 원래 가정이 틀렸다.** 실제 코드를 보니 `/projects`("놀이터")는 글 목록이 아니라 **앱 아이콘 런처**다. `ProjectGrid.tsx:28`은 3~6열 아이콘 격자이고 `ProjectCard.tsx`는 iOS 홈화면풍 아이콘 타일(둥근 사각 아이콘 + 배지 + 이름)을 그린다. 이걸 텍스트 목록으로 바꾸면 페이지의 존재 이유가 사라진다.
 
-`components/projects/MermaidDiagram.tsx`는 다이어그램 렌더링 로직이므로 건드리지 않는다.
+**결정: 격자 구조는 유지하고 장식만 벗긴다.** 테트리스 게임을 그대로 두기로 한 것과 같은 판단이다 — 놀이터는 산문이 아니라 도구다. 아이콘은 각진 사각형이 되고, 그림자·확대·페이드는 사라진다.
+
+| 파일:행 | 현재 | 바꿀 것 |
+|---|---|---|
+| `ProjectGrid.tsx:28` | `grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto` | **격자 유지.** `max-w-6xl mx-auto`만 제거하고 열 수를 `grid-cols-3 sm:grid-cols-4 gap-4`로 줄인다(본문 폭이 720px이므로 6열은 안 들어간다) |
+| `ProjectCard.tsx:18` | `rounded-2xl hover:bg-muted/50 transition-all duration-200` | `rounded-2xl`·`transition-all duration-200` 제거, `hover:bg-muted` 유지 |
+| `ProjectCard.tsx:22` | `rounded-2xl shadow-lg ... group-hover:scale-105 transition-transform duration-200` | `rounded-2xl`·`shadow-lg`·`group-hover:scale-105`·`transition-transform duration-200` 제거 |
+| `ProjectCard.tsx:32` | `rounded-2xl object-cover` | `object-cover` |
+| `ProjectCard.tsx:43` | `rounded-full border-2 border-white shadow-sm` | `border border-border` |
+| `ProjectCard.tsx:65` | `opacity-0 group-hover:opacity-100 transition-opacity duration-200` | **항상 보이게** — `opacity-0` 계열 전부 제거. 호버로만 드러나는 정보는 올드스쿨이 아니고 터치 기기에서 접근 불가다 |
+| `ProjectCard.tsx:67` | `rounded-full ... shadow-sm` | `border border-border` |
+| `ProjectDetail.tsx:8` | `import { Calendar, Tag, Code, Layers } from 'lucide-react'` | import 삭제, 아이콘 자리는 텍스트 라벨(`작성일`, `태그`, `기술`, `구성`) |
+| `ProjectDetail.tsx:63` | `bg-muted rounded-lg p-3 sm:p-4` | `bg-muted border border-border p-4` |
+| `ProjectDetail.tsx:101,111` | `rounded-2xl sm:rounded-3xl shadow-lg` | `rounded-*`·`shadow-lg` 제거 |
+| `AppStoreLinks.tsx:4` | `import { ExternalLink, Smartphone, Globe, Github } from 'lucide-react'` | import 삭제. 링크를 텍스트로: `[App Store]`, `[Google Play]`, `[웹사이트]`, `[GitHub]` |
+| `AppStoreLinks.tsx:62,86` | `bg-black rounded-md` / `bg-green-500 rounded-md` (아이콘 배경) | 요소 자체 삭제 — 텍스트 링크로 대체되므로 불필요 |
+| `app/projects/page.tsx:22` | `max-w-7xl mx-auto px-4 py-8` | `max-w-7xl mx-auto` 제거 |
+| `app/projects/page.tsx:45,46` | `bg-primary/10 rounded-full` + `w-2 h-2 bg-primary rounded-full` (상태 표시 점) | 점 삭제, 텍스트만 남김 |
+| `app/projects/[slug]/page.tsx:6` | `import { ArrowLeft } from 'lucide-react'` | import 삭제, `« 목록으로` 텍스트 링크 |
+| `app/projects/[slug]/page.tsx:50` | `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8` | `max-w-7xl mx-auto`와 반응형 패딩 제거 |
+| `app/career/page.tsx:10` | `import { Settings } from 'lucide-react'` | import 삭제, 사용처는 `[설정]` 텍스트 |
+| `app/career/page.tsx:40` | `rounded-2xl border border-border bg-card p-8 text-center` | `border border-border p-6 text-center` |
+
+`components/projects/MermaidDiagram.tsx`는 **Step 4b의 로딩 표시 한 곳 외에는 건드리지 않는다** — 다이어그램 렌더링 로직은 범위 밖이다.
 
 - [ ] **Step 4b: Tailwind 내장 애니메이션 제거**
 
