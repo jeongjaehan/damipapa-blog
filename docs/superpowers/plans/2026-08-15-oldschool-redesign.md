@@ -1718,7 +1718,20 @@ export default function Loading() {
 
 `components/career/CareerTimeline.tsx`(260줄)에서:
 
-- lucide import와 모든 아이콘 JSX 삭제
+- 5행의 lucide import 삭제. 아이콘 JSX는 아래 표대로 처리한다.
+
+| 행 | 아이콘 | 바꿀 것 |
+|---|---|---|
+| 99 | `<Briefcase>` (원형 아이콘 배지 안) | 배지 컨테이너째 삭제 |
+| 110 | `<span ... bg-green-500 animate-pulse>` (재직중 점) | 삭제 — Step 4b 참조. 재직 여부는 `(재직중)` 텍스트로 |
+| 117 | `<Building2>` (회사명 앞) | 삭제, 회사명 텍스트만 |
+| 124 | `<Calendar>` (기간 앞) | 삭제, 기간 텍스트만 |
+| 135 | `<ChevronDown className="... transition-transform duration-300 ${expanded ? 'rotate-180' : ''}">` | `{expanded ? '−' : '+'}` 텍스트로. **회전 트랜지션도 함께 사라진다.** 이 버튼에 `aria-expanded={expanded}`를 추가한다 — 아이콘이 없어지면 펼침 상태가 스크린리더에 전달되지 않는다 |
+| 177 | 프로필 이미지의 `rounded-2xl shadow-warm-md ring-2 ring-white/80` | `border border-border`만 남김 |
+| 201, 210, 221 | `<Mail>`, `<Linkedin>`, `<FacebookIcon>` (연락처 링크) | 텍스트 라벨 `이메일`, `LinkedIn`, `Facebook` |
+| 212, 223 | `<ExternalLink className="... opacity-40">` | 삭제 — 텍스트 링크에는 불필요 |
+
+**`SegmentedControl`(6행 import, 이력서/스토리 보기 전환)은 이 자리에서만 텍스트 버튼 두 개로 교체한다** — `이력서 | 스토리`, 선택된 쪽은 `font-bold`, 나머지는 `text-link hover:underline`. **`components/ui/segmented-control.tsx` 파일 자체는 건드리지 않는다**(어드민과 공유하며, 그 파일의 lucide import는 Task 12의 허용 예외 목록에 있다).
 - **`accentColors` 배열(56~64행)과 그 사용처를 전부 삭제한다.** 인덱스별로 점·뱃지·그라디언트 색을 돌려쓰는 장식 테이블이고, 61행 항목의 `text-primary-700`은 Task 1이 팔레트를 지워 이미 죽은 클래스다. **이 태스크가 그 유일한 소유자다.** 함께 지울 사용처 3곳:
   - 90행 `<div className={\`h-1 w-full bg-gradient-to-r ${colors.gradient}\`} />` — 카드 상단 그라디언트 바
   - 98행 아이콘 컨테이너의 `bg-gradient-to-br ${colors.gradient}`, `rounded-2xl`, `shadow-md`
