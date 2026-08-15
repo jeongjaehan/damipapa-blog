@@ -12,31 +12,22 @@ interface PostListProps {
 export default function PostList({ initialData, isLoading = false, hasMore = true }: PostListProps) {
   return (
     <div>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="border-t border-border">
         {initialData.content.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
       </div>
 
       {initialData.content.length === 0 && (
-        <div className="text-center py-12 text-muted-foreground">
-          <p className="text-xl">포스트가 없습니다</p>
-        </div>
+        <p className="py-8 text-center text-sm text-muted-foreground">포스트가 없습니다.</p>
       )}
 
       {isLoading && (
-        <div className="flex justify-center items-center py-12">
-          <div className="animate-spin">
-            <div className="h-8 w-8 border-4 border-primary/20 border-t-primary rounded-full"></div>
-          </div>
-          <p className="ml-4 text-muted-foreground">로딩 중...</p>
-        </div>
+        <p className="py-8 text-center text-sm text-muted-foreground">불러오는 중...</p>
       )}
 
       {!hasMore && initialData.content.length > 0 && (
-        <div className="text-center py-12 text-muted-foreground">
-          <p className="text-sm">더 이상 포스트가 없습니다</p>
-        </div>
+        <p className="py-8 text-center text-sm text-muted-foreground">더 이상 포스트가 없습니다.</p>
       )}
     </div>
   )

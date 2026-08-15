@@ -82,9 +82,9 @@ export default function MermaidDiagram({ chart, className = '' }: MermaidDiagram
 
   if (error) {
     return (
-      <div className={`border border-red-200 bg-red-50 rounded-lg p-4 text-center ${className}`}>
-        <p className="text-red-600 text-sm">다이어그램 오류</p>
-        <p className="text-red-400 text-xs mt-1">{error}</p>
+      <div className={`border border-destructive p-4 text-center ${className}`}>
+        <p className="text-destructive text-sm">다이어그램 오류</p>
+        <p className="text-destructive/80 text-xs mt-1">{error}</p>
       </div>
     )
   }
@@ -93,7 +93,7 @@ export default function MermaidDiagram({ chart, className = '' }: MermaidDiagram
     <div className={`relative ${className}`}>
       {isLoading && (
         <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+          <p className="text-sm text-muted-foreground">불러오는 중...</p>
         </div>
       )}
       <div

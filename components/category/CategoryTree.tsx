@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { CategoryWithChildren } from '@/types'
-import { ChevronRight, ChevronDown, Folder, FolderOpen, FileText, Lock } from 'lucide-react'
 
 interface CategoryTreeProps {
   categories: CategoryWithChildren[]
@@ -28,64 +27,47 @@ function CategoryNode({ category, selectedSlug, level = 0, showPrivate = false }
   return (
     <div className="select-none">
       <div
-        className={`
-          flex items-center gap-2 py-2 px-3 rounded-xl cursor-pointer transition-all duration-200
-          ${isSelected
-            ? 'bg-primary/10 text-primary'
-            : 'hover:bg-muted text-foreground/70 hover:text-foreground'
-          }
-        `}
-        style={{ paddingLeft: `${paddingLeft + 12}px` }}
+        className="flex items-center gap-1.5 py-1 text-sm"
+        style={{ paddingLeft: `${paddingLeft}px` }}
       >
-        {/* 펼치기/접기 버튼 */}
         {hasChildren ? (
           <button
+            type="button"
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
               setIsOpen(!isOpen)
             }}
-            className="p-0.5 hover:bg-muted rounded-lg"
+            className="w-4 shrink-0 text-muted-foreground hover:text-foreground"
+            aria-expanded={isOpen}
+            aria-label={isOpen ? '접기' : '펼치기'}
           >
-            {isOpen ? (
-              <ChevronDown className="w-4 h-4" />
-            ) : (
-              <ChevronRight className="w-4 h-4" />
-            )}
+            {isOpen ? '−' : '+'}
           </button>
         ) : (
-          <span className="w-5" />
+          <span aria-hidden="true" className="w-4 shrink-0" />
         )}
 
-        {/* 폴더 아이콘 */}
-        {hasChildren ? (
-          isOpen ? (
-            <FolderOpen className="w-4 h-4 text-primary" />
-          ) : (
-            <Folder className="w-4 h-4 text-primary" />
-          )
-        ) : (
-          <FileText className="w-4 h-4 text-muted-foreground" />
-        )}
-
-        {/* 카테고리 링크 */}
         <Link
           href={`/categories/${category.slug}`}
-          className="flex-1 flex items-center gap-2 min-w-0"
+          className={`flex min-w-0 flex-1 items-center gap-1.5 ${
+            isSelected
+              ? 'font-bold text-foreground visited:text-foreground'
+              : 'text-foreground visited:text-foreground hover:text-link'
+          }`}
         >
-          <span className="truncate font-medium">{category.name}</span>
+          <span className="truncate">{category.name}</span>
           {category.isPrivate && showPrivate && (
-            <Lock className="w-3 h-3 text-muted-foreground" />
+            <span className="shrink-0 text-xs text-destructive">[비공개]</span>
           )}
-          <span className="text-xs text-muted-foreground ml-auto">
+          <span className="ml-auto shrink-0 text-xs text-muted-foreground">
             ({category.postCount})
           </span>
         </Link>
       </div>
 
-      {/* 하위 카테고리 */}
       {hasChildren && isOpen && (
-        <div className="mt-0.5">
+        <div>
           {category.children.map((child) => (
             <CategoryNode
               key={child.id}
@@ -110,48 +92,41 @@ export default function CategoryTree({
   const isUncategorizedSelected = selectedSlug === 'uncategorized'
 
   return (
-    <div className="space-y-1">
-      <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-3">
-        카테고리
-      </h3>
+    <div>
+      <h3 className="border-b border-border pb-1 text-sm font-bold">카테고리</h3>
 
-      {/* 카테고리 트리 */}
-      {categories.length > 0 ? (
-        categories.map((category) => (
-          <CategoryNode
-            key={category.id}
-            category={category}
-            selectedSlug={selectedSlug}
-            showPrivate={showPrivate}
-          />
-        ))
-      ) : (
-        <p className="text-sm text-muted-foreground px-3 py-2">
-          카테고리가 없습니다
-        </p>
-      )}
+      <div className="mt-2">
+        {categories.length > 0 ? (
+          categories.map((category) => (
+            <CategoryNode
+              key={category.id}
+              category={category}
+              selectedSlug={selectedSlug}
+              showPrivate={showPrivate}
+            />
+          ))
+        ) : (
+          <p className="py-1 text-sm text-muted-foreground">카테고리가 없습니다.</p>
+        )}
 
-      {/* 미분류 섹션 */}
-      {uncategorizedCount > 0 && (
-        <div className="mt-4 pt-4 border-t border-border">
-          <Link
-            href="/categories/uncategorized"
-            className={`
-              flex items-center gap-2 py-2 px-3 rounded-xl transition-all duration-200
-              ${isUncategorizedSelected
-                ? 'bg-primary/10 text-primary'
-                : 'hover:bg-muted text-foreground/70 hover:text-foreground'
-              }
-            `}
-          >
-            <Folder className="w-4 h-4 text-muted-foreground" />
-            <span className="font-medium">미분류</span>
-            <span className="text-xs text-muted-foreground ml-auto">
-              ({uncategorizedCount})
-            </span>
-          </Link>
-        </div>
-      )}
+        {uncategorizedCount > 0 && (
+          <div className="mt-2 border-t border-border pt-2">
+            <Link
+              href="/categories/uncategorized"
+              className={`flex items-center gap-1.5 py-1 pl-4 text-sm ${
+                isUncategorizedSelected
+                  ? 'font-bold text-foreground visited:text-foreground'
+                  : 'text-foreground visited:text-foreground hover:text-link'
+              }`}
+            >
+              <span>미분류</span>
+              <span className="ml-auto text-xs text-muted-foreground">
+                ({uncategorizedCount})
+              </span>
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

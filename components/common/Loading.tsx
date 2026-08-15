@@ -1,8 +1,5 @@
 export default function Loading() {
   return (
-    <div className="flex justify-center items-center p-8">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-    </div>
+    <p className="py-8 text-center text-sm text-muted-foreground">불러오는 중...</p>
   )
 }
-

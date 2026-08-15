@@ -1,7 +1,5 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { ExternalLink, Smartphone, Globe, Github } from 'lucide-react'
 import { ProjectLinks } from '@/types'
 
 interface AppStoreLinksProps {
@@ -23,100 +21,64 @@ export default function AppStoreLinks({ links, title }: AppStoreLinksProps) {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-foreground">다운로드 & 링크</h3>
-      
-      <div className="grid gap-3">
+
+      <ul className="space-y-2 text-sm">
         {/* 웹 애플리케이션 링크 */}
         {links.web && (
-          <a
-            href={links.web}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full"
-          >
-            <Button 
-              variant="default" 
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground gap-3 py-6"
+          <li>
+            <a
+              href={links.web}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-link hover:underline"
             >
-              <Globe className="w-5 h-5" />
-              <div className="flex flex-col items-start">
-                <span className="font-semibold">웹에서 사용하기</span>
-                <span className="text-xs opacity-80">브라우저에서 바로 이용</span>
-              </div>
-              <ExternalLink className="w-4 h-4 ml-auto" />
-            </Button>
-          </a>
+              [웹사이트]
+            </a>
+          </li>
         )}
 
         {/* iOS 앱스토어 링크 */}
         {links.ios && (
-          <a
-            href={links.ios}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full"
-          >
-            <Button 
-              variant="outline" 
-              className="w-full gap-3 py-6"
+          <li>
+            <a
+              href={links.ios}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-link hover:underline"
             >
-              <div className="w-5 h-5 bg-black rounded-md flex items-center justify-center">
-                <Smartphone className="w-3 h-3 text-white" />
-              </div>
-              <div className="flex flex-col items-start">
-                <span className="font-semibold text-foreground">App Store</span>
-                <span className="text-xs text-muted-foreground">iOS 앱 다운로드</span>
-              </div>
-              <ExternalLink className="w-4 h-4 ml-auto text-muted-foreground" />
-            </Button>
-          </a>
+              [App Store]
+            </a>
+          </li>
         )}
 
         {/* Google Play 링크 */}
         {links.android && (
-          <a
-            href={links.android}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full"
-          >
-            <Button 
-              variant="outline" 
-              className="w-full border-green-300 hover:border-green-400 gap-3 py-6"
+          <li>
+            <a
+              href={links.android}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-link hover:underline"
             >
-              <div className="w-5 h-5 bg-green-500 rounded-md flex items-center justify-center">
-                <Smartphone className="w-3 h-3 text-white" />
-              </div>
-              <div className="flex flex-col items-start">
-                <span className="font-semibold text-foreground">Google Play</span>
-                <span className="text-xs text-muted-foreground">Android 앱 다운로드</span>
-              </div>
-              <ExternalLink className="w-4 h-4 ml-auto text-muted-foreground" />
-            </Button>
-          </a>
+              [Google Play]
+            </a>
+          </li>
         )}
 
         {/* GitHub 링크 */}
         {links.github && (
-          <a
-            href={links.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full"
-          >
-            <Button 
-              variant="outline" 
-              className="w-full border-border hover:border-foreground/30 gap-3 py-4"
+          <li>
+            <a
+              href={links.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-link hover:underline"
             >
-              <Github className="w-5 h-5" />
-              <div className="flex flex-col items-start">
-                <span className="font-semibold text-foreground">소스 코드</span>
-                <span className="text-xs text-muted-foreground">GitHub에서 확인</span>
-              </div>
-              <ExternalLink className="w-4 h-4 ml-auto text-muted-foreground" />
-            </Button>
-          </a>
+              [GitHub]
+            </a>
+          </li>
         )}
-      </div>
+      </ul>
     </div>
   )
 }

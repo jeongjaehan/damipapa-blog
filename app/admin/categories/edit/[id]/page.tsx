@@ -129,7 +129,7 @@ export default function EditCategoryPage() {
           카테고리 목록으로
         </Link>
         <h1 className="text-3xl font-bold text-foreground">카테고리 수정</h1>
-        <p className="text-muted-foreground mt-1">"{originalCategory.name}" 수정</p>
+        <p className="text-muted-foreground mt-1">&quot;{originalCategory.name}&quot; 수정</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">

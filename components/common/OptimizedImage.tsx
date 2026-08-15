@@ -56,7 +56,7 @@ export default function OptimizedImage({
 
   if (error) {
     return (
-      <div className={`flex items-center justify-center bg-gray-100 text-gray-400 rounded ${className}`}>
+      <div className={`flex items-center justify-center bg-muted text-muted-foreground ${className}`}>
         <div className="text-center p-4">
           <ImageIcon className="w-8 h-8 mx-auto mb-2 opacity-50" />
           <p className="text-sm">이미지를 불러올 수 없습니다</p>
@@ -70,7 +70,7 @@ export default function OptimizedImage({
       <div className={`relative overflow-hidden ${className} ${enableModal ? 'group' : ''}`}>
         {/* 로딩 스켈레톤 */}
         {isLoading && (
-          <div className="absolute inset-0 bg-gray-200 animate-pulse rounded" />
+          <div className="absolute inset-0 bg-muted" />
         )}
         
         {/* 실제 이미지 */}
@@ -83,17 +83,17 @@ export default function OptimizedImage({
           onLoad={handleLoad}
           onError={handleError}
           onClick={handleImageClick}
-          className={`transition-all duration-300 ${
+          className={`${
             isLoading ? 'opacity-0' : 'opacity-100'
           } w-full h-auto ${
-            enableModal ? 'cursor-zoom-in hover:opacity-90 hover:scale-[1.02]' : ''
+            enableModal ? 'cursor-zoom-in' : ''
           }`}
         />
 
         {/* 확대 힌트 오버레이 (호버 시에만 표시) */}
         {enableModal && !isLoading && !error && (
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none">
-            <div className="bg-black/50 backdrop-blur-sm rounded-full p-2">
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 flex items-center justify-center pointer-events-none">
+            <div className="bg-black/60 p-2">
               <ZoomIn className="w-6 h-6 text-white" />
             </div>
           </div>

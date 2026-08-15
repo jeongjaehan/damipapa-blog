@@ -90,7 +90,7 @@ export default function PostPageClient({ postId }: { postId: string }) {
   }
 
   return (
-    <div>
+    <div className="max-w-reading mx-auto">
       <PostDetail post={post} />
     </div>
   )

@@ -294,27 +294,40 @@ const serif = Noto_Serif_KR({
 
 `sans`라는 키 이름을 유지하는 이유: `font-sans`를 쓰는 기존 파일들이 깨지지 않게 하기 위해서다. 이름은 `sans`지만 내용은 명조다.
 
-- [ ] **Step 4: 본문 폭 축소**
+- [ ] **Step 4: 본문 폭 토큰 추가**
+
+`tailwind.config.ts`의 `extend`에 아래를 추가한다. 720px는 `layout.tsx`·`Header.tsx`·`Footer.tsx` 세 곳에서 쓰이므로 리터럴을 세 번 적지 않는다.
+
+```ts
+      maxWidth: {
+        content: '720px',
+        reading: '680px',
+      },
+```
+
+`reading`은 Task 8의 글 상세 본문 폭이다. Tailwind에 이미 있는 `max-w-prose`(65ch)와 이름이 겹치지 않게 `reading`을 쓴다.
+
+- [ ] **Step 5: 본문 폭 축소**
 
 `app/layout.tsx:134`의 `<main>`을 바꾼다.
 
 ```tsx
-              <main className="flex-grow mx-auto w-full max-w-[720px] px-4 py-10 bg-background">
+              <main className="flex-grow mx-auto w-full max-w-content px-4 py-10 bg-background">
 ```
 
 `container` 클래스를 뺀다. `tailwind.config.ts`의 `theme.container` 설정 자체는 어드민이 계속 쓰므로 **지우지 않는다.**
 
-- [ ] **Step 5: 타입·린트 확인**
+- [ ] **Step 6: 타입·린트 확인**
 
 Run: `npx tsc --noEmit && npm run lint`
 Expected: 통과
 
-- [ ] **Step 6: 육안 확인**
+- [ ] **Step 7: 육안 확인**
 
 `http://localhost:3000`을 새로고침한다.
 Expected: 본문이 명조체로 바뀌고 콘텐츠 폭이 720px로 좁아진다. 폰트가 안 바뀌면 브라우저 devtools에서 body의 `font-family` 계산값에 `--font-serif`가 들어갔는지 본다.
 
-- [ ] **Step 7: 커밋**
+- [ ] **Step 8: 커밋**
 
 ```bash
 git add app/layout.tsx app/globals.css tailwind.config.ts
@@ -431,7 +444,7 @@ export default function Header() {
 
   return (
     <header className="w-full border-b border-border">
-      <div className="mx-auto w-full max-w-[720px] px-4 pt-8 pb-3">
+      <div className="mx-auto w-full max-w-content px-4 pt-8 pb-3">
         <Link
           href="/"
           onClick={handleLogoClick}
@@ -519,7 +532,7 @@ export default function Footer() {
 
   return (
     <footer className="mt-auto w-full border-t border-border">
-      <div className="mx-auto w-full max-w-[720px] px-4 py-6 text-sm text-muted-foreground">
+      <div className="mx-auto w-full max-w-content px-4 py-6 text-sm text-muted-foreground">
         <p>
           <Link href="/" className="text-muted-foreground visited:text-muted-foreground hover:text-link">홈</Link>
           <span aria-hidden="true" className="mx-2 text-border">|</span>
@@ -756,8 +769,22 @@ git commit -m "🔥 대시보드 애니메이션·장식 CSS 제거하고 마크
 
 - [ ] **Step 1: `PostCard` 호출자 확인**
 
-Run: `grep -rn "PostCard" app components --include=*.tsx`
-Expected: `components/post/PostList.tsx`만 나온다. 다른 곳에서 `<Link><PostCard/></Link>` 형태로 쓰고 있으면 그 `<Link>`를 벗겨낸다.
+Run: `grep -rn "PostCard" app components --include="*.tsx"`
+
+`PostCard`를 렌더링하는 곳은 **두 군데**다. 둘 다 이 태스크가 처리한다.
+
+1. `components/post/PostList.tsx:17` — Step 3에서 처리
+2. `app/search/page.tsx:82` — **`PostList`를 거치지 않고 자기만의 그리드 래퍼를 갖고 있다** (80행 `<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">`)
+
+`PostCard`가 카드에서 목록 행으로 바뀌면 3열 그리드 안에 행이 들어가 레이아웃이 깨진다. **그리드를 이 태스크에서 함께 고친다** — 뒤 태스크로 미루면 하나의 변경이 두 태스크로 쪼개진다. 80행을 아래로 바꾼다.
+
+```tsx
+            <div className="border-t border-border">
+```
+
+`app/search/page.tsx`에서 이 한 줄 외에는 아무것도 건드리지 않는다 — 나머지 검색 페이지 정리는 Task 9 소관이다.
+
+`<Link><PostCard/></Link>` 형태로 감싼 곳은 없다(확인됨). 만약 grep이 위 두 곳 외에 다른 파일을 보여주면 보고하고 멈춘다.
 
 - [ ] **Step 2: `PostCard` 재작성**
 
@@ -816,6 +843,8 @@ export default function PostCard({ post }: PostCardProps) {
 
 - [ ] **Step 3: `PostList`의 그리드를 목록으로**
 
+참고: `PostList`는 `app/page.tsx:119`와 `app/categories/[slug]/page.tsx:203` 두 곳에서 쓰인다. 여기서 컨테이너를 바꾸면 두 페이지 모두에 자동으로 반영된다 — 그 두 파일은 건드리지 않는다.
+
 `components/post/PostList.tsx:15`를 바꾼다.
 
 ```tsx
@@ -857,7 +886,7 @@ Expected: 3열 카드 그리드가 사라지고, 가로선으로 구분된 단�
 - [ ] **Step 6: 커밋**
 
 ```bash
-git add components/post/PostCard.tsx components/post/PostList.tsx
+git add components/post/PostCard.tsx components/post/PostList.tsx app/search/page.tsx
 git commit -m "♻️ 글 카드를 목록 행으로 교체"
 ```
 
@@ -929,20 +958,23 @@ function ArchiveRow({ post }: { post: PostSummary }) {
   )
 }
 
+const PAGE_SIZE = 10
+
 export default function BlogDashboard({ data }: BlogDashboardProps) {
   const [posts, setPosts] = useState<PostSummary[]>(data.recentPosts)
-  const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(data.totalPosts > data.recentPosts.length)
 
   const loadMore = async () => {
     setLoading(true)
     try {
-      const result = await getPosts(page, 10, undefined, 'recent')
+      // ponytail: 매번 처음부터 다시 받는다. getPosts는 오프셋이 아니라 페이지 단위라,
+      // 초기 목록 길이(대시보드 API가 정하는 값)가 PAGE_SIZE의 배수가 아니면
+      // 페이지 인덱스 계산이 글을 건너뛴다. 글이 수백 편을 넘어가면 커서 페이징으로 바꿀 것.
+      const result = await getPosts(0, posts.length + PAGE_SIZE, undefined, 'recent')
       const existingIds = new Set(posts.map((p) => p.id))
       const newPosts = result.content.filter((p) => !existingIds.has(p.id))
       setPosts([...posts, ...newPosts])
-      setPage(page + 1)
       setHasMore(!result.last)
     } catch (error) {
       console.error('더보기 로딩 실패:', error)
@@ -1010,7 +1042,7 @@ export default function BlogDashboard({ data }: BlogDashboardProps) {
 - `formatDistanceToNow`(상대시간) 대신 `MM.dd` 고정 포맷
 - 인기 글 상태(`popularPosts`, `loadMorePopular`)를 이 컴포넌트에서 제거 — 사이드바로 이동
 - `lucide-react`, `date-fns/locale`, `Badge` import 전부 제거
-- 더보기 페이지 크기를 5 → 10으로 (목록형이라 한 번에 더 많이 보여도 부담이 없다)
+- **더보기 방식이 페이지 인덱스 누적 → 전체 재조회로 바뀐다.** 원본은 `getPosts(recentPage, 5, ...)`로 페이지 인덱스를 올렸는데, 이는 초기 목록이 정확히 5개일 때만 맞는다. `getPosts(page, size)`는 오프셋이 아니라 **페이지 단위**라서, 초기 목록 5개 상태에서 `getPosts(1, 10)`을 부르면 11~20번째를 가져와 **6~10번째가 영구히 안 보인다.** 새 코드는 `getPosts(0, posts.length + PAGE_SIZE, ...)`로 매번 처음부터 받고 id로 중복을 걸러 이 결합을 없앤다
 
 - [ ] **Step 2: `hasMore` 초기값 회귀 확인**
 
@@ -1018,10 +1050,13 @@ export default function BlogDashboard({ data }: BlogDashboardProps) {
 Run: 브라우저에서 홈을 열고, 글 개수가 `recentPosts` 길이보다 많으면 `더보기 »`가 보이는지 확인한다.
 Expected: 전체 글이 `recentPosts`에 다 들어오는 경우 버튼이 안 보이고, 더 있으면 보인다.
 
-- [ ] **Step 3: 더보기 동작 확인**
+- [ ] **Step 3: 더보기 경계 확인 (컨트롤러가 수행)**
 
-`더보기 »`를 두 번 누른다.
-Expected: 글이 추가되고 중복이 생기지 않으며, 연도 그룹이 알맞게 늘어난다. 마지막 페이지에 도달하면 버튼이 사라진다.
+이 검증은 브라우저가 필요하므로 구현자는 건너뛴다. 컨트롤러가 확인할 것:
+
+1. `더보기 »`를 두 번 눌렀을 때 글이 추가되고 **중복이 생기지 않는다**
+2. **초기 목록의 마지막 글 다음 글이 실제로 나타난다** — 즉 6번째 글이 건너뛰어지지 않는다. 이것이 이 태스크에서 가장 틀리기 쉬운 지점이다
+3. 마지막 페이지에 도달하면 버튼이 사라진다
 
 - [ ] **Step 4: 타입·린트 확인**
 
@@ -1138,6 +1173,8 @@ function PopularList({ posts }: { posts: PostSummary[] }) {
 ```tsx
   return (
     <div>
+      <h1 className="text-lg font-bold">다미파파의 블로그</h1>
+
       {dashboardData && <BlogDashboard data={dashboardData} />}
 
       <aside className="mt-14 border-t border-border pt-6 space-y-8">
@@ -1164,6 +1201,10 @@ function PopularList({ posts }: { posts: PostSummary[] }) {
 ```
 
 **스펙 §5.2에서 벗어나는 지점**: 스펙은 데스크톱에서 좌우 2단(본문 + 우측 사이드바)을 유지한다고 했지만, `<main>` 폭이 720px로 좁아진 상태에서 2단을 만들면 본문이 450px대로 눌려 오히려 읽기 나빠진다. **사이드바를 본문 아래로 내려 단일 컬럼으로 통일한다.** 모바일과 데스크톱이 같은 구조가 되어 반응형 분기도 사라진다.
+
+**`<h1>`은 반드시 있어야 한다.** 구 대시보드는 시간대별 인사말("안녕하세요")을 `<h1>`으로 갖고 있었는데 Task 6이 이를 제거했다. 지금 홈은 `<h1>` 없이 `<h2>` 연도 제목부터 시작하는 상태다 — 사이트에서 가장 많이 방문하는 페이지에 최상위 제목이 없는 것이고, 제목 레벨도 건너뛴다. 위 코드의 `<h1 className="text-lg font-bold">다미파파의 블로그</h1>`가 이를 메운다.
+
+헤더에도 같은 문구가 있어 시각적으로 한 번 반복되지만, 이는 2000년대 블로그에서 흔한 형태(배너 + 페이지 머리글)이고, 헤더 쪽을 `<h1>`으로 바꾸는 대안은 글 상세 페이지에서 글 제목 `<h1>`과 충돌한다. **필터 모드 분기에는 이미 `<h1>`이 있으므로(96행) 그쪽은 건드리지 않는다.**
 
 - [ ] **Step 4: 타입·린트 확인**
 
@@ -1275,7 +1316,35 @@ import { Eye, Calendar, Edit, Trash2, EyeOff, Folder, Clock } from 'lucide-react
       <div className="py-8">
 ```
 
-85행의 바깥 `<article className="max-w-4xl mx-auto">`는 `<article>`로 바꾼다 — 폭은 `page-client.tsx`가 잡는다. 닫는 태그 수가 하나 줄어드는 점에 주의한다(감싸던 `<div className="bg-card ...">`가 사라졌으므로 파일 끝에서 `</div>` 하나를 지운다).
+**태그 균형 — 이 편집에서 가장 틀리기 쉬운 부분이다. 아래를 정확히 따른다.**
+
+현재 구조는 이렇다.
+
+```
+85    <article className="max-w-4xl mx-auto">
+86      <div className="bg-card rounded-2xl shadow-warm-sm border border-border overflow-hidden">
+87        <header ...>   … 168  </header>
+170       <Separator />
+172       <div className="px-4 sm:px-8 py-8 sm:py-12">
+173         <div className="markdown prose prose-lg"> … 255 </div>
+258         <PostShare … />
+261         <PostReactions … />
+262       </div>
+263     </div>      ← 86행 래퍼의 짝
+264   </article>
+```
+
+해야 할 일:
+
+1. 85행을 `    <article>`로 바꾼다 (`max-w-4xl mx-auto` 제거 — 폭은 `page-client.tsx`가 잡는다)
+2. **86행 `<div className="bg-card ...">`를 삭제하고, 짝인 263행 `</div>`도 삭제한다**
+3. 87~168행의 `<header>` 블록 내용을 위 새 코드로 교체한다
+4. **170행 `<Separator />`를 삭제한다** — 새 `<header>`가 `border-b`로 구분선을 직접 그린다
+5. 172행 `<div className="px-4 sm:px-8 py-8 sm:py-12">`를 `<div className="py-8">`로 바꾼다 (짝인 262행 `</div>`는 그대로 둔다)
+
+`ReactMarkdown` 블록(173~255행)과 `YoutubeEmbed`, `handleDelete`는 **한 글자도 건드리지 않는다.**
+
+편집 후 `npx tsc --noEmit`이 통과하면 태그 균형이 맞은 것이다. JSX 태그가 어긋나면 타입 체크가 반드시 실패한다.
 
 - [ ] **Step 3: 마크다운 이미지의 둥근 모서리 제거**
 
@@ -1287,15 +1356,72 @@ import { Eye, Calendar, Edit, Trash2, EyeOff, Folder, Clock } from 'lucide-react
 
 - [ ] **Step 4: 본문 폭 조정**
 
-`app/posts/[id]/page-client.tsx`에서 상세 본문을 감싸는 래퍼에 `max-w-[680px] mx-auto`를 준다. 이미 `max-w-*` 클래스가 있으면 그 값을 `max-w-[680px]`로 바꾼다.
+`app/posts/[id]/page-client.tsx`에서 상세 본문을 감싸는 래퍼에 `max-w-reading mx-auto`를 준다(Task 2에서 `tailwind.config.ts`에 추가한 `maxWidth.reading = 680px` 토큰). 이미 `max-w-*` 클래스가 있으면 그 값을 `max-w-reading`으로 바꾼다.
 
 - [ ] **Step 5: `PostShare` 아이콘 제거**
 
-`components/post/PostShare.tsx`에서 `import { Facebook, Linkedin, Link2, Check } from 'lucide-react'`를 삭제하고, JSX의 각 아이콘을 지운 뒤 버튼 라벨을 텍스트로 만든다: `페이스북`, `링크드인`, `링크 복사`(복사 완료 시 `복사됨`). 버튼 컨테이너의 `rounded-*`, `shadow-*` 클래스도 제거한다.
+**함정**: 현재 버튼 라벨에 `hidden sm:inline`이 걸려 있다. 모바일에서는 아이콘만 보이는 구조라, **아이콘만 지우면 모바일에서 빈 버튼이 된다.** `hidden sm:inline`을 반드시 함께 제거한다.
+
+`import { Facebook, Linkedin, Link2, Check } from 'lucide-react'`와 `import { Button } from '@/components/ui/button'`를 삭제하고, `return` 블록(48~92행)을 아래로 교체한다.
+
+```tsx
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-border py-4 text-sm">
+      <span className="text-muted-foreground">공유하기</span>
+      <button type="button" onClick={handleFacebookShare} className="text-link hover:underline">
+        페이스북
+      </button>
+      <button type="button" onClick={handleLinkedInShare} className="text-link hover:underline">
+        링크드인
+      </button>
+      <button type="button" onClick={handleCopyLink} className="text-link hover:underline">
+        {copied ? '복사됨' : '링크 복사'}
+      </button>
+    </div>
+  )
+```
+
+`postUrl`, `openShareWindow`, 세 개의 핸들러, `copied` 상태는 **그대로 둔다.**
 
 - [ ] **Step 6: `PostReactions` 아이콘 제거**
 
-`components/post/PostReactions.tsx`에서 `import { ThumbsUp, ThumbsDown } from 'lucide-react'`를 삭제하고, 아이콘 자리를 텍스트로 바꾼다: `좋아요 {count}`, `싫어요 {count}`.
+**함정**: 현재 선택 상태를 아이콘의 `fill-current`와 `bg-primary` 배경으로 표시한다. 아이콘과 배경색을 없애면 **내가 누른 상태인지 알 수 없게 된다.** 선택 상태는 대괄호와 굵기로 표시한다.
+
+`import { ThumbsUp, ThumbsDown } from 'lucide-react'`와 `import { Button } from '@/components/ui/button'`를 삭제하고, 로딩 블록(43~58행)과 `return` 블록(63~85행)을 아래로 교체한다.
+
+```tsx
+  if (loading || !reactionStats) {
+    return (
+      <div className="border-t border-border py-6 text-sm text-muted-foreground">
+        좋아요 0 · 싫어요 0
+      </div>
+    )
+  }
+
+  const isLiked = reactionStats.userReaction?.type === 'LIKE'
+  const isDisliked = reactionStats.userReaction?.type === 'DISLIKE'
+
+  return (
+    <div className="flex items-center gap-4 border-t border-border py-6 text-sm">
+      <button
+        type="button"
+        onClick={() => handleReaction('LIKE')}
+        className={isLiked ? 'font-bold text-foreground' : 'text-link hover:underline'}
+      >
+        {isLiked ? '★' : '☆'} 좋아요 {reactionStats.likeCount}
+      </button>
+      <button
+        type="button"
+        onClick={() => handleReaction('DISLIKE')}
+        className={isDisliked ? 'font-bold text-foreground' : 'text-link hover:underline'}
+      >
+        {isDisliked ? '★' : '☆'} 싫어요 {reactionStats.dislikeCount}
+      </button>
+    </div>
+  )
+```
+
+`handleReaction`, `loadReactions`, `useEffect`는 **그대로 둔다.** 채운 별/빈 별은 색에 의존하지 않는 상태 표시라 다크모드와 색각 이상 모두에서 동작한다.
 
 - [ ] **Step 7: 타입·린트 확인**
 
@@ -1327,28 +1453,116 @@ git commit -m "♻️ 글 상세를 카드 없는 텍스트 레이아웃으로 �
 - Consumes: Task 1 토큰
 - Produces: `TagCloud`의 props(`{ tags: TagMetric[], className?: string }`)와 default export는 불변이다. `CategoryTree`의 props(`categories`, `uncategorizedCount`, `selectedSlug?`, `showPrivate?`)도 불변이다.
 
-- [ ] **Step 1: `CategoryTree` 아이콘 제거**
+- [ ] **Step 1: `CategoryNode` 교체**
 
-6행의 lucide import를 삭제하고, `CategoryNode`의 아이콘 자리를 텍스트로 바꾼다.
-
-- 펼치기/접기 버튼: `<ChevronDown/>` → `−`, `<ChevronRight/>` → `+` (자식이 없으면 지금처럼 빈 자리)
-- 폴더/파일 아이콘: 전부 삭제 (들여쓰기만으로 계층이 보인다)
-- `<Lock/>`(비공개 표시): `🔒` 대신 텍스트 `[비공개]`, `text-xs text-destructive`
-
-행 컨테이너의 클래스도 바꾼다.
+6행 `import { ChevronRight, ChevronDown, Folder, FolderOpen, FileText, Lock } from 'lucide-react'`를 삭제하고, `CategoryNode` 함수(22~102행)의 `return` 블록을 아래로 교체한다. `useState`·`hasChildren`·`isSelected`·`paddingLeft` 계산은 그대로 둔다.
 
 ```tsx
-        className={`
-          flex items-center gap-2 py-1 text-sm
-          ${isSelected ? 'font-bold text-foreground' : 'text-foreground'}
-        `}
+  return (
+    <div className="select-none">
+      <div
+        className="flex items-center gap-1.5 py-1 text-sm"
+        style={{ paddingLeft: `${paddingLeft}px` }}
+      >
+        {hasChildren ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setIsOpen(!isOpen)
+            }}
+            className="w-4 shrink-0 text-muted-foreground hover:text-foreground"
+            aria-expanded={isOpen}
+            aria-label={isOpen ? '접기' : '펼치기'}
+          >
+            {isOpen ? '−' : '+'}
+          </button>
+        ) : (
+          <span aria-hidden="true" className="w-4 shrink-0" />
+        )}
+
+        <Link
+          href={`/categories/${category.slug}`}
+          className={`flex min-w-0 flex-1 items-center gap-1.5 ${
+            isSelected
+              ? 'font-bold text-foreground visited:text-foreground'
+              : 'text-foreground visited:text-foreground hover:text-link'
+          }`}
+        >
+          <span className="truncate">{category.name}</span>
+          {category.isPrivate && showPrivate && (
+            <span className="shrink-0 text-xs text-destructive">[비공개]</span>
+          )}
+          <span className="ml-auto shrink-0 text-xs text-muted-foreground">
+            ({category.postCount})
+          </span>
+        </Link>
+      </div>
+
+      {hasChildren && isOpen && (
+        <div>
+          {category.children.map((child) => (
+            <CategoryNode
+              key={child.id}
+              category={child}
+              selectedSlug={selectedSlug}
+              level={level + 1}
+              showPrivate={showPrivate}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
 ```
 
-`rounded-xl`, `hover:bg-muted`, `bg-primary/10`, `transition-all`을 제거한다. 선택 상태는 배경색이 아니라 **굵기**로 표시한다.
+바뀐 점: 폴더/파일 아이콘 전부 삭제(들여쓰기가 계층을 보여준다), `rounded-xl`·`hover:bg-muted`·`bg-primary/10`·`transition-all duration-200` 제거, **선택 상태를 배경색이 아니라 굵기로 표시**, 펼치기 버튼에 `aria-expanded`와 `aria-label` 추가(아이콘이 사라지면서 `+`/`−`만으로는 스크린리더에 의미가 전달되지 않는다).
 
-- [ ] **Step 2: `CategoryTree` 헤더와 미분류 섹션 정리**
+- [ ] **Step 2: 헤더와 미분류 섹션 교체**
 
-114행 헤더를 `<h3 className="border-b border-border pb-1 text-sm font-bold">카테고리</h3>`로 바꾸고, `uppercase tracking-wider px-3`을 제거한다. 미분류 링크(137~152행)에서도 `rounded-xl`, `bg-primary/10`, `transition-all`, `<Folder/>`를 제거한다.
+`CategoryTree` 함수의 `return` 블록(112~155행)을 아래로 교체한다.
+
+```tsx
+  return (
+    <div>
+      <h3 className="border-b border-border pb-1 text-sm font-bold">카테고리</h3>
+
+      <div className="mt-2">
+        {categories.length > 0 ? (
+          categories.map((category) => (
+            <CategoryNode
+              key={category.id}
+              category={category}
+              selectedSlug={selectedSlug}
+              showPrivate={showPrivate}
+            />
+          ))
+        ) : (
+          <p className="py-1 text-sm text-muted-foreground">카테고리가 없습니다.</p>
+        )}
+
+        {uncategorizedCount > 0 && (
+          <div className="mt-2 border-t border-border pt-2">
+            <Link
+              href="/categories/uncategorized"
+              className={`flex items-center gap-1.5 py-1 pl-4 text-sm ${
+                isUncategorizedSelected
+                  ? 'font-bold text-foreground visited:text-foreground'
+                  : 'text-foreground visited:text-foreground hover:text-link'
+              }`}
+            >
+              <span>미분류</span>
+              <span className="ml-auto text-xs text-muted-foreground">
+                ({uncategorizedCount})
+              </span>
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+```
 
 - [ ] **Step 3: `TagCloud` 전체 교체**
 
@@ -1407,19 +1621,39 @@ Expected: 결과 없음.
 
 - [ ] **Step 5: 나머지 페이지의 카드 래퍼 제거**
 
-`app/tags/page.tsx`, `app/categories/page.tsx`, `app/categories/[slug]/page.tsx`, `app/search/page.tsx` 네 파일에서 아래 클래스 패턴을 찾아 제거하거나 교체한다.
+아래는 실제 파일을 스캔해 확정한 목록이다. 여기 없는 줄은 건드리지 않는다.
 
-| 찾을 것 | 바꿀 것 |
-|---|---|
-| `rounded-2xl`, `rounded-3xl`, `rounded-xl` | 제거 (토큰이 0이라 무의미하지만 정리) |
-| `shadow-warm-*`, `shadow-sm`, `shadow-lg` | 제거 |
-| `bg-card`, `bg-card/60`, `backdrop-blur-*` | 제거 |
-| `grid grid-cols-* gap-*` (카드 그리드) | `divide-y divide-border` 목록 |
-| `hover:scale-*`, `transition-all duration-*` | 제거 |
-| `max-w-7xl mx-auto` | 제거 (main이 폭을 잡는다) |
-| lucide import와 아이콘 JSX | 텍스트 라벨 |
+**`app/tags/page.tsx`** — 세 개의 `<section>` 래퍼
 
-`app/search/page.tsx`의 검색 입력창은 `border border-border px-3 py-2` 정도로 단순화하고 `rounded-*`를 제거한다.
+| 행 | 현재 | 바꿀 것 |
+|---|---|---|
+| 66 | `rounded-2xl border border-border bg-card/80 p-6 shadow-warm-sm backdrop-blur` | `border-t border-border pt-6` |
+| 82 | 동일 | `border-t border-border pt-6` |
+| 104 | `rounded-2xl border border-border bg-gradient-to-br from-warm-highlight via-card to-accent p-6 shadow-warm-sm` | `border-t border-border pt-6` — **그라디언트 배경 제거가 핵심** |
+
+**`app/categories/page.tsx`**
+
+| 행 | 현재 | 바꿀 것 |
+|---|---|---|
+| 8 | `import { Folder } from 'lucide-react'` | import 삭제, `<Folder/>` 사용처는 제거 |
+| 51 | `bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm` | `border-t border-border pt-6` — **하드코딩된 `bg-white`/`gray-*`를 쓰고 있어 새 팔레트와 어긋난다. 라이트에서 흰 배경 위 흰 카드라 경계가 사라진다** |
+
+**`app/categories/[slug]/page.tsx`**
+
+| 행 | 현재 | 바꿀 것 |
+|---|---|---|
+| 27 | `import { ChevronRight, Folder, Home, Lock } from 'lucide-react'` | import 삭제. `ChevronRight`(브레드크럼 구분자)는 `/` 텍스트로, `Home`은 `홈` 텍스트로, `Folder`는 삭제, `Lock`은 `[비공개]` 텍스트로 |
+| 126, 151 | `max-w-7xl mx-auto` | 제거 (`<main>`이 폭을 잡는다) |
+| 128 | `bg-destructive/5 border border-destructive/20 rounded-2xl p-8 text-center max-w-md` | `border border-destructive p-4 text-center` |
+| 138 | `px-6 py-2 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all duration-200` | `text-link hover:underline` (텍스트 링크로) |
+| 222 | `sticky top-24 bg-card rounded-2xl border border-border p-4 shadow-warm-sm` | `border-t border-border pt-6` — `sticky`도 제거 |
+
+**`app/search/page.tsx`** — 80행 그리드 래퍼는 **Task 5가 이미 처리했다.** 남은 것은 두 줄뿐이다.
+
+| 행 | 현재 | 바꿀 것 |
+|---|---|---|
+| 60 | `flex-1 px-4 py-3 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-ring bg-background text-foreground` | `flex-1 px-3 py-2 border border-border focus:outline-none focus:ring-1 focus:ring-ring bg-background text-foreground` |
+| 64 | `px-6 py-3 bg-primary text-primary-foreground rounded-2xl hover:bg-primary/90 transition-all duration-200` | `px-4 py-2 border border-border hover:bg-muted` |
 
 - [ ] **Step 6: 타입·린트 확인**
 
@@ -1484,7 +1718,26 @@ export default function Loading() {
 
 `components/career/CareerTimeline.tsx`(260줄)에서:
 
-- lucide import와 모든 아이콘 JSX 삭제
+- 5행의 lucide import 삭제. 아이콘 JSX는 아래 표대로 처리한다.
+
+| 행 | 아이콘 | 바꿀 것 |
+|---|---|---|
+| 99 | `<Briefcase>` (원형 아이콘 배지 안) | 배지 컨테이너째 삭제 |
+| 110 | `<span ... bg-green-500 animate-pulse>` (재직중 점) | 삭제 — Step 4b 참조. 재직 여부는 `(재직중)` 텍스트로 |
+| 117 | `<Building2>` (회사명 앞) | 삭제, 회사명 텍스트만 |
+| 124 | `<Calendar>` (기간 앞) | 삭제, 기간 텍스트만 |
+| 135 | `<ChevronDown className="... transition-transform duration-300 ${expanded ? 'rotate-180' : ''}">` | `{expanded ? '−' : '+'}` 텍스트로. **회전 트랜지션도 함께 사라진다.** 이 버튼에 `aria-expanded={expanded}`를 추가한다 — 아이콘이 없어지면 펼침 상태가 스크린리더에 전달되지 않는다 |
+| 177 | 프로필 이미지의 `rounded-2xl shadow-warm-md ring-2 ring-white/80` | `border border-border`만 남김 |
+| 201, 210, 221 | `<Mail>`, `<Linkedin>`, `<FacebookIcon>` (연락처 링크) | 텍스트 라벨 `이메일`, `LinkedIn`, `Facebook` |
+| 212, 223 | `<ExternalLink className="... opacity-40">` | 삭제 — 텍스트 링크에는 불필요 |
+
+**`SegmentedControl`(6행 import, 이력서/스토리 보기 전환)은 이 자리에서만 텍스트 버튼 두 개로 교체한다** — `이력서 | 스토리`, 선택된 쪽은 `font-bold`, 나머지는 `text-link hover:underline`. **`components/ui/segmented-control.tsx` 파일 자체는 건드리지 않는다**(어드민과 공유하며, 그 파일의 lucide import는 Task 12의 허용 예외 목록에 있다).
+- **`accentColors` 배열(56~64행)과 그 사용처를 전부 삭제한다.** 인덱스별로 점·뱃지·그라디언트 색을 돌려쓰는 장식 테이블이고, 61행 항목의 `text-primary-700`은 Task 1이 팔레트를 지워 이미 죽은 클래스다. **이 태스크가 그 유일한 소유자다.** 함께 지울 사용처 3곳:
+  - 90행 `<div className={\`h-1 w-full bg-gradient-to-r ${colors.gradient}\`} />` — 카드 상단 그라디언트 바
+  - 98행 아이콘 컨테이너의 `bg-gradient-to-br ${colors.gradient}`, `rounded-2xl`, `shadow-md`
+  - 127행 뱃지의 `${colors.badge}`, `rounded-full`
+
+  `const colors = accentColors[index % accentColors.length]`(74행 부근)도 함께 지운다. 뱃지는 색 대신 대괄호 텍스트(`[재직중]` 등)로 표현한다.
 - 타임라인의 세로선·점(`absolute`, `rounded-full`, `bg-primary` 등 장식 요소) 삭제
 - 각 경력 항목을 `<section>` + `<h3>회사명</h3>` + `<p className="text-sm text-muted-foreground">기간 · 직무</p>` + 설명 목록 구조로 단순화
 - `rounded-*`, `shadow-*`, `bg-card`, `hover:scale-*`, `transition-*` 제거
@@ -1493,9 +1746,44 @@ export default function Loading() {
 
 - [ ] **Step 4: 프로젝트 페이지 정리**
 
-`components/projects/ProjectGrid.tsx`의 `grid grid-cols-*`를 `divide-y divide-border` 목록으로 바꾸고, `ProjectCard.tsx`를 `PostCard`와 같은 형태(제목 링크 + 한 줄 메타)로 단순화한다. `ProjectDetail.tsx`와 `AppStoreLinks.tsx`에서 lucide import와 아이콘 JSX를 제거하고 텍스트 라벨(`App Store`, `Google Play`)로 바꾼다.
+**중요 — 계획의 원래 가정이 틀렸다.** 실제 코드를 보니 `/projects`("놀이터")는 글 목록이 아니라 **앱 아이콘 런처**다. `ProjectGrid.tsx:28`은 3~6열 아이콘 격자이고 `ProjectCard.tsx`는 iOS 홈화면풍 아이콘 타일(둥근 사각 아이콘 + 배지 + 이름)을 그린다. 이걸 텍스트 목록으로 바꾸면 페이지의 존재 이유가 사라진다.
 
-`components/projects/MermaidDiagram.tsx`는 다이어그램 렌더링 로직이므로 건드리지 않는다.
+**결정: 격자 구조는 유지하고 장식만 벗긴다.** 테트리스 게임을 그대로 두기로 한 것과 같은 판단이다 — 놀이터는 산문이 아니라 도구다. 아이콘은 각진 사각형이 되고, 그림자·확대·페이드는 사라진다.
+
+| 파일:행 | 현재 | 바꿀 것 |
+|---|---|---|
+| `ProjectGrid.tsx:28` | `grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto` | **격자 유지.** `max-w-6xl mx-auto`만 제거하고 열 수를 `grid-cols-3 sm:grid-cols-4 gap-4`로 줄인다(본문 폭이 720px이므로 6열은 안 들어간다) |
+| `ProjectCard.tsx:18` | `rounded-2xl hover:bg-muted/50 transition-all duration-200` | `rounded-2xl`·`transition-all duration-200` 제거, `hover:bg-muted` 유지 |
+| `ProjectCard.tsx:22` | `rounded-2xl shadow-lg ... group-hover:scale-105 transition-transform duration-200` | `rounded-2xl`·`shadow-lg`·`group-hover:scale-105`·`transition-transform duration-200` 제거 |
+| `ProjectCard.tsx:32` | `rounded-2xl object-cover` | `object-cover` |
+| `ProjectCard.tsx:43` | `rounded-full border-2 border-white shadow-sm` | `border border-border` |
+| `ProjectCard.tsx:65` | `opacity-0 group-hover:opacity-100 transition-opacity duration-200` | **항상 보이게** — `opacity-0` 계열 전부 제거. 호버로만 드러나는 정보는 올드스쿨이 아니고 터치 기기에서 접근 불가다 |
+| `ProjectCard.tsx:67` | `rounded-full ... shadow-sm` | `border border-border` |
+| `ProjectDetail.tsx:8` | `import { Calendar, Tag, Code, Layers } from 'lucide-react'` | import 삭제, 아이콘 자리는 텍스트 라벨(`작성일`, `태그`, `기술`, `구성`) |
+| `ProjectDetail.tsx:63` | `bg-muted rounded-lg p-3 sm:p-4` | `bg-muted border border-border p-4` |
+| `ProjectDetail.tsx:101,111` | `rounded-2xl sm:rounded-3xl shadow-lg` | `rounded-*`·`shadow-lg` 제거 |
+| `AppStoreLinks.tsx:4` | `import { ExternalLink, Smartphone, Globe, Github } from 'lucide-react'` | import 삭제. 링크를 텍스트로: `[App Store]`, `[Google Play]`, `[웹사이트]`, `[GitHub]` |
+| `AppStoreLinks.tsx:62,86` | `bg-black rounded-md` / `bg-green-500 rounded-md` (아이콘 배경) | 요소 자체 삭제 — 텍스트 링크로 대체되므로 불필요 |
+| `app/projects/page.tsx:22` | `max-w-7xl mx-auto px-4 py-8` | `max-w-7xl mx-auto` 제거 |
+| `app/projects/page.tsx:45,46` | `bg-primary/10 rounded-full` + `w-2 h-2 bg-primary rounded-full` (상태 표시 점) | 점 삭제, 텍스트만 남김 |
+| `app/projects/[slug]/page.tsx:6` | `import { ArrowLeft } from 'lucide-react'` | import 삭제, `« 목록으로` 텍스트 링크 |
+| `app/projects/[slug]/page.tsx:50` | `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8` | `max-w-7xl mx-auto`와 반응형 패딩 제거 |
+| `app/career/page.tsx:10` | `import { Settings } from 'lucide-react'` | import 삭제, 사용처는 `[설정]` 텍스트 |
+| `app/career/page.tsx:40` | `rounded-2xl border border-border bg-card p-8 text-center` | `border border-border p-6 text-center` |
+
+`components/projects/MermaidDiagram.tsx`는 **Step 4b의 로딩 표시 한 곳 외에는 건드리지 않는다** — 다이어그램 렌더링 로직은 범위 밖이다.
+
+- [ ] **Step 4b: Tailwind 내장 애니메이션 제거**
+
+Task 4가 지운 것은 `globals.css`의 커스텀 애니메이션뿐이다. `animate-pulse`/`animate-spin`은 **Tailwind 내장 클래스라 CSS 삭제로는 사라지지 않는다.** 공개 페이지에 남은 것 중 이 태스크가 소유하는 세 곳:
+
+| 위치 | 현재 | 바꿀 것 |
+|---|---|---|
+| `components/career/CareerTimeline.tsx:110` | `w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse` (재직중 표시 점) | 점 전체 삭제. 재직 여부는 텍스트 `(재직중)`으로 |
+| `components/projects/MermaidDiagram.tsx:96` | `animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600` | `불러오는 중...` 텍스트로 교체. **이 파일에서 이 로딩 표시 외에는 아무것도 건드리지 않는다** — 다이어그램 렌더링 로직은 범위 밖이다 |
+| `components/common/OptimizedImage.tsx:73` | `absolute inset-0 bg-gray-200 animate-pulse rounded` | `absolute inset-0 bg-muted`. `bg-gray-200`은 하드코딩된 밝은 회색이라 **다크모드에서 흰 사각형으로 뜨는 기존 버그**이기도 하다 |
+
+`components/common/ImageViewerModal.tsx:89`의 스피너는 **건드리지 않는다** — 검은 오버레이 위의 모달 로딩 표시이고 어드민과 공유한다.
 
 - [ ] **Step 5: 타입·린트 확인**
 
@@ -1523,6 +1811,7 @@ git commit -m "♻️ 커리어·프로젝트·공통 컴포넌트를 텍스트 
 - Modify: `components/dashboard/PostingHeatmap/Legend.tsx:22,31`
 - Modify: `components/dashboard/PostingHeatmap/index.tsx` (컨테이너 클래스만)
 - Modify: `components/dashboard/PostingHeatmap/YearSelector.tsx` (버튼 스타일)
+- Modify: `components/dashboard/PostingHeatmap/HeatmapTooltip.tsx:33` (툴팁 상자)
 
 **Interfaces:**
 - Consumes: Task 1의 `--heatmap-l0`~`l4` 회색조 토큰
@@ -1550,7 +1839,15 @@ git commit -m "♻️ 커리어·프로젝트·공통 컴포넌트를 텍스트 
 
 - [ ] **Step 3: 컨테이너와 연도 선택기 정리**
 
-`index.tsx`와 `YearSelector.tsx`에서 `rounded-*`, `shadow-*`, `bg-card`, `transition-*` 클래스를 제거한다. 연도 선택 버튼은 선택된 연도를 `font-bold`, 나머지를 `text-link hover:underline`으로 표시한다. `components/ui/segmented-control.tsx`를 쓰고 있다면 이 자리에서만 텍스트 버튼으로 교체하고 **컴포넌트 파일 자체는 건드리지 않는다**(어드민이 함께 쓴다).
+실제 확인한 대상은 아래 네 곳뿐이다. `components/ui/segmented-control.tsx`는 히트맵에서 **쓰이지 않으므로** 건드리지 않는다.
+
+| 위치 | 현재 | 바꿀 것 |
+|---|---|---|
+| `YearSelector.tsx:32` | `rounded-md px-3 py-1.5 text-left transition-colors` | `rounded-md`와 `transition-colors` 제거. 선택된 연도는 `font-bold`, 나머지는 `text-link hover:underline` |
+| `index.tsx:143` | `rounded-md bg-destructive/10 px-3 py-2 ...` (에러 박스) | `rounded-md` 제거, `border border-destructive`로 교체 |
+| `index.tsx:158` | `h-[120px] animate-pulse rounded-md bg-muted/50` (로딩 스켈레톤) | **`animate-pulse` 제거** — Tailwind 내장 애니메이션이라 Task 4의 CSS 삭제로는 안 사라진다. `h-[120px] bg-muted` 정적 블록으로 |
+| `index.tsx:163` | `rounded-md bg-card/70 backdrop-blur-[1px]` (오버레이) | `rounded-md`와 `backdrop-blur-[1px]` 제거, `bg-background/80`으로 |
+| `HeatmapTooltip.tsx:33` | `rounded-md bg-popover px-2 py-1 ... shadow-warm-md ring-1 ring-border/60` | `rounded-md`·`shadow-warm-md`·`ring-1 ring-border/60` 제거, `border border-border`로. **계획 초안이 이 파일을 빠뜨렸다** — 잔디 셀에 마우스를 올렸을 때 뜨는 툴팁이라 사용자가 실제로 보는 요소다 |
 
 - [ ] **Step 4: 타입·린트 확인**
 
@@ -1593,13 +1890,15 @@ Run:
 ```bash
 grep -rln "lucide-react" app components | grep -v "/admin/"
 ```
-Expected: 아래 세 개만 남는다.
+Expected: 아래 **네 개**만 남는다. 전부 의도된 예외다.
 ```
-components/common/ImageViewerModal.tsx
-components/common/OptimizedImage.tsx
-components/ui/dropdown-menu.tsx
+app/auth/login/page.tsx                  숨겨진 로그인 페이지 (로고 5회 클릭으로만 도달)
+components/common/ImageViewerModal.tsx   어드민과 공유
+components/common/OptimizedImage.tsx     어드민과 공유
+components/ui/segmented-control.tsx      어드민과 공유
 ```
-다른 파일이 나오면 해당 태스크로 돌아가 아이콘을 텍스트로 바꾼다. (`app/auth/login/page.tsx`와 `app/game/tetris/**`는 예외로 남겨도 된다 — 로그인은 숨겨진 페이지고 게임은 범위 밖이다. 남긴 파일 목록을 커밋 메시지에 적는다.)
+(계획 초안은 `components/ui/dropdown-menu.tsx`도 목록에 넣었으나, 확인 결과 그 파일은 lucide를 import하지 않는다.)
+다른 파일이 나오면 해당 태스크로 돌아가 아이콘을 텍스트로 바꾼다. `app/game/tetris/**`와 `components/game/**`는 grep 범위에서 제외한다 — 계획 범위 밖이다.
 
 - [ ] **Step 2: 죽은 색 클래스 확인**
 
@@ -1609,13 +1908,62 @@ grep -rn "primary-[0-9]\|warm-highlight\|shadow-warm" app components --include=*
 ```
 Expected: 결과 없음. 남아 있으면 제거한다(Tailwind가 조용히 무시하므로 화면은 멀쩡하지만 죽은 코드다).
 
+- [ ] **Step 2b: 로그인 페이지 포커스 링 복구**
+
+Task 1의 grep이 찾아낸 잔여 항목이다. `app/auth/login/page.tsx:59,74`의 입력창 클래스에서:
+
+- `focus:ring-primary-500` → `focus:ring-ring`
+- `border-stone-300` → `border-border`
+- `rounded-lg` → 제거
+
+이 페이지는 로고 5회 클릭으로만 도달하는 숨겨진 페이지라 계획 범위 밖이었지만, `primary-500` 팔레트가 사라져 **포커스 링이 무색이 된다**. 접근성 요소이므로 복구한다. 이 세 줄 외에는 건드리지 않는다.
+
+- [ ] **Step 2c: 글 상세의 버튼 행 요소 교체**
+
+`components/post/PostDetail.tsx`의 관리자 수정/삭제 버튼을 감싼 `<p className="mt-4 flex gap-2 text-sm">`를 `<div className="mt-4 flex gap-2 text-sm">`로 바꾼다. HTML 위반은 아니지만 버튼 툴바를 문단으로 감싸는 건 의미가 맞지 않는다. Task 8 리뷰가 지적한 항목이며 계획이 지시한 코드였으므로 여기서 정리한다.
+
+- [ ] **Step 2d: 공유 UI 컴포넌트의 트랜지션 제거**
+
+`components/ui/card.tsx:11`의 클래스 문자열에서 `transition-all duration-300`을 제거한다. 같은 줄의 `rounded-2xl`과 `shadow-warm-sm`은 토큰이 각각 `0`/`none`이라 이미 무력화됐지만 트랜지션은 여전히 살아 있다. `Card`는 `app/projects/page.tsx`와 `components/projects/ProjectDetail.tsx`가 아직 쓴다.
+
+이 파일은 어드민과 공유하지만, 제거하는 것이 애니메이션 하나뿐이라 어드민 기능에 영향이 없다. **이 한 클래스 외에는 `components/ui/**`를 건드리지 않는다.**
+
+- [ ] **Step 2e: 인라인 style로 숨어 있던 그림자 제거**
+
+Tailwind 클래스가 아니라 JS `style` 객체로 들어간 그림자가 두 곳 남아 있다. 클래스 기반 grep은 이걸 구조적으로 잡지 못한다 — Task 10 리뷰가 발견했다.
+
+- `components/projects/ProjectCard.tsx:25` — `boxShadow: \`0 4px 20px ${project.iconColor}40\``
+- `components/projects/ProjectDetail.tsx:103` — `boxShadow: \`0 8px 32px ${project.icon.color}40\``
+
+두 줄 모두 `boxShadow` 속성만 삭제한다. **같은 `style` 객체의 `backgroundColor`는 유지한다** — 프로젝트별 아이콘 색은 데이터에서 오는 정보이지 장식이 아니다.
+
+삭제 후 확인:
+```bash
+grep -rn "boxShadow" app components --include="*.tsx" | grep -v "/admin/" | grep -v "/game/"
+```
+Expected: 결과 없음.
+
+- [ ] **Step 2f: 죽은 포커스 클래스 제거**
+
+`components/dashboard/PostingHeatmap/YearSelector.tsx:35`의 비활성 탭 클래스에 `focus-visible:outline-none`이 남아 있는데, 원래 짝이던 대체 포커스 표시(`focus-visible:bg-muted/60 focus-visible:text-foreground`)는 Task 11에서 사라졌다. 지금은 포커스 표시를 없애기만 하는 죽은 클래스다.
+
+`focus-visible:outline-none`을 제거한다. (해당 버튼은 `tabIndex={-1}`이라 실제로 키보드 도달이 안 되므로 동작 변화는 없다 — 정리 목적이다.)
+
 - [ ] **Step 3: 둥근 모서리 잔존 확인**
 
 Run:
 ```bash
-grep -rn "rounded-full" app components --include=*.tsx | grep -v "/admin/" | grep -v "/game/"
+grep -rn "rounded-full" app components --include="*.tsx" | grep -v "/admin/" | grep -v "/game/"
 ```
 Expected: 아바타 등 의도적으로 원형인 것만 남는다. 태그 pill이나 버튼에 남아 있으면 제거한다.
+
+- [ ] **Step 3b: Tailwind 내장 애니메이션 잔존 확인**
+
+Run:
+```bash
+grep -rn "animate-pulse\|animate-spin\|animate-bounce" app components --include="*.tsx" | grep -v "/admin/" | grep -v "/game/"
+```
+Expected: `components/common/ImageViewerModal.tsx:89` 하나만 남는다 (검은 오버레이 위 모달 스피너, 어드민 공유 — 의도된 예외). 다른 것이 나오면 Task 5·10·11 중 해당 태스크가 놓친 것이다.
 
 - [ ] **Step 4: 프로덕션 빌드**
 
@@ -1624,8 +1972,15 @@ Expected: 통과. 실패하면 에러 메시지의 파일을 고치고 다시 �
 
 - [ ] **Step 5: 폰트 전송량 확인**
 
-빌드 후 개발 서버가 아닌 `npm run start`로 띄우고, 브라우저 Network 탭에서 폰트 파일 총 전송량을 잰다.
-Expected: 기준선은 **300KB 이하**. 이를 크게 넘으면 스펙 §10의 후퇴 방안을 실행한다 — `tailwind.config.ts`의 `fontFamily.sans`를 시스템 산세리프 스택으로 되돌리고 `fontFamily.serif`만 Noto Serif KR로 남긴 뒤, 제목(`h1`~`h3`, `.markdown h1~h3`, `PostCard`의 제목)에만 `font-serif`를 붙인다. **이 후퇴를 실행했다면 스펙 §3.2에 결정 변경을 한 줄 기록한다.**
+브라우저 Network 탭 대신 빌드 산출물의 폰트 파일 크기를 직접 잰다(이 세션에는 브라우저가 없다).
+
+```bash
+find .next/static/media -name "*.woff2" -exec ls -l {} \; | awk '{s+=$5; print $5, $9} END {print "TOTAL:", s, "bytes ("s/1024" KB)"}'
+```
+
+`preload: false`이므로 이 파일들이 첫 화면에서 한꺼번에 내려가지는 않는다 — unicode-range 단위로 필요한 조각만 요청된다. 따라서 이 합계는 **최악의 경우 상한**이다.
+
+Expected: 개별 조각이 대체로 100KB 이하이고, 한글 조각 하나가 단독으로 500KB를 넘지 않는다. 이를 크게 넘으면 스펙 §10의 후퇴 방안을 실행한다 — `tailwind.config.ts`의 `fontFamily.sans`를 시스템 산세리프 스택으로 되돌리고 `fontFamily.serif`만 Noto Serif KR로 남긴 뒤, 제목(`h1`~`h3`, `.markdown h1~h3`, `PostCard`의 제목)에만 `font-serif`를 붙인다. **이 후퇴를 실행했다면 스펙 §3.2에 결정 변경을 한 줄 기록한다.**
 
 - [ ] **Step 6: 모바일 가로 오버플로 회귀 확인**
 

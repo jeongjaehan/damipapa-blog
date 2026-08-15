@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Nunito } from 'next/font/google'
+import { Noto_Serif_KR } from 'next/font/google'
 import Script from 'next/script'
 import { Suspense } from 'react'
 import './globals.css'
@@ -10,7 +10,12 @@ import Footer from '@/components/layout/Footer'
 import Analytics from '@/components/common/Analytics'
 import Loading from '@/components/common/Loading'
 
-const nunito = Nunito({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800'] })
+const serif = Noto_Serif_KR({
+  weight: ['400', '700'],
+  display: 'swap',
+  preload: false,
+  variable: '--font-serif',
+})
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
 
@@ -20,7 +25,7 @@ export const metadata: Metadata = {
     default: '다미파파의 블로그',
     template: '%s | 다미파파의 블로그',
   },
-  description: '100% 바이브 코딩으로 만든  블로그. 개발, 기술, 일상에 대한 이야기를 공유합니다.',
+  description: '개발, 기술, 일상에 대한 이야기를 공유합니다.',
   keywords: ['블로그', '개발', '기술', 'Next.js', '프로그래밍'],
   authors: [{ name: '다미파파' }],
   creator: '다미파파',
@@ -39,7 +44,7 @@ export const metadata: Metadata = {
     url: baseUrl,
     siteName: '다미파파의 블로그',
     title: '다미파파의 블로그',
-    description: '100% 바이브 코딩으로 만든  블로그',
+    description: '개발, 기술, 일상에 대한 이야기를 공유합니다.',
     images: [
       {
         url: `${baseUrl}/og-image.png`,
@@ -52,7 +57,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: '다미파파의 블로그',
-    description: '100% 바이브 코딩으로 만든  블로그',
+    description: '개발, 기술, 일상에 대한 이야기를 공유합니다.',
   },
   icons: {
     // 다양한 해상도 favicon (ICO 파일 우선, PNG 보조)
@@ -103,7 +108,7 @@ export default function RootLayout({
   
   return (
     <html lang="ko">
-      <body className={nunito.className}>
+      <body className={serif.variable}>
         {/* Google Analytics 4 */}
         {gaMeasurementId && gaMeasurementId !== 'your_ga_id' && (
           <>
@@ -131,7 +136,7 @@ export default function RootLayout({
             </Suspense>
             <div className="min-h-screen flex flex-col bg-background">
               <Header />
-              <main className="flex-grow container mx-auto px-4 py-8 bg-background">
+              <main className="flex-grow mx-auto w-full max-w-content px-4 py-10 bg-background">
                 {children}
               </main>
               <Footer />

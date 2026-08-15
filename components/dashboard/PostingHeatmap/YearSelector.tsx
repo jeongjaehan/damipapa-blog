@@ -29,10 +29,10 @@ export default function YearSelector({
             aria-selected={active}
             tabIndex={active ? 0 : -1}
             onClick={() => onChange(y)}
-            className={`shrink-0 rounded-md px-3 py-1.5 text-left transition-colors ${
+            className={`shrink-0 px-3 py-1.5 text-left ${
               active
-                ? 'bg-primary/10 font-semibold text-primary ring-1 ring-primary/20'
-                : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground focus-visible:bg-muted/60 focus-visible:text-foreground focus-visible:outline-none'
+                ? 'font-bold'
+                : 'text-link hover:underline'
             }`}
           >
             {y}

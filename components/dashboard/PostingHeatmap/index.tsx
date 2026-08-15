@@ -140,7 +140,7 @@ export default function PostingHeatmap({
         {/* 잔디 본체 */}
         <div className="min-w-0 flex-1">
           {error && !data && (
-            <div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            <div className="border border-destructive px-3 py-2 text-sm text-destructive">
               {error}
             </div>
           )}
@@ -155,12 +155,12 @@ export default function PostingHeatmap({
               />
             )}
             {!data && loading && (
-              <div className="h-[120px] animate-pulse rounded-md bg-muted/50" />
+              <div className="h-[120px] bg-muted" />
             )}
 
             {/* 블로그 전체가 비어있을 때 그리드 위 오버레이 */}
             {isBlogEmpty && (
-              <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center rounded-md bg-card/70 backdrop-blur-[1px]">
+              <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center bg-background/80">
                 <p className="text-sm font-semibold text-foreground">
                   여기 잔디는 글과 함께 자라요
                 </p>

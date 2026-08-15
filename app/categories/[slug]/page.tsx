@@ -24,7 +24,6 @@ interface CategoryWithAncestors {
 import Loading from '@/components/common/Loading'
 import CategoryTree from '@/components/category/CategoryTree'
 import PostList from '@/components/post/PostList'
-import { ChevronRight, Folder, Home, Lock } from 'lucide-react'
 
 export default function CategoryPage() {
   const params = useParams()
@@ -123,53 +122,48 @@ export default function CategoryPage() {
   // 에러 상태 표시
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col items-center justify-center py-20">
-          <div className="bg-destructive/5 border border-destructive/20 rounded-2xl p-8 text-center max-w-md">
-            <Lock className="w-12 h-12 text-destructive mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-destructive mb-2">
-              {error}
-            </h1>
-            <p className="text-destructive/80 mb-6">
-              이 카테고리에 접근할 수 없습니다.
-            </p>
-            <button
-              onClick={() => router.push('/')}
-              className="px-6 py-2 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all duration-200"
-            >
-              홈으로 돌아가기
-            </button>
-          </div>
+      <div className="flex flex-col items-center justify-center py-20">
+        <div className="border border-destructive p-4 text-center">
+          <p className="mb-2 text-sm font-bold text-destructive">[비공개]</p>
+          <h1 className="text-2xl font-bold text-destructive mb-2">
+            {error}
+          </h1>
+          <p className="text-destructive/80 mb-6">
+            이 카테고리에 접근할 수 없습니다.
+          </p>
+          <button
+            onClick={() => router.push('/')}
+            className="text-link hover:underline"
+          >
+            홈으로 돌아가기
+          </button>
         </div>
       </div>
     )
   }
 
-  const isUncategorized = slug === 'uncategorized'
-
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="flex flex-col lg:flex-row gap-8">
+    <div>
+      <div className="flex flex-col gap-8">
         {/* 메인 콘텐츠 */}
         <main className="flex-1 min-w-0">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6 flex-wrap">
-            <Link 
-              href="/" 
-              className="flex items-center gap-1 hover:text-primary"
+            <Link
+              href="/"
+              className="hover:text-link"
             >
-              <Home className="w-4 h-4" />
-              <span>홈</span>
+              홈
             </Link>
             {/* 상위 카테고리 경로 (ancestors) */}
             {category?.ancestors && category.ancestors.length > 0 && (
               <>
                 {category.ancestors.map((ancestor) => (
                   <span key={ancestor.id} className="flex items-center gap-2">
-                    <ChevronRight className="w-4 h-4" />
-                    <Link 
+                    <span aria-hidden="true">/</span>
+                    <Link
                       href={`/categories/${ancestor.slug}`}
-                      className="hover:text-primary"
+                      className="hover:text-link"
                     >
                       {ancestor.name}
                     </Link>
@@ -177,7 +171,7 @@ export default function CategoryPage() {
                 ))}
               </>
             )}
-            <ChevronRight className="w-4 h-4" />
+            <span aria-hidden="true">/</span>
             <span className="text-foreground font-medium">
               {category?.name || '미분류'}
             </span>
@@ -186,8 +180,7 @@ export default function CategoryPage() {
           {/* 카테고리 헤더 */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-2">
-              <Folder className={`w-8 h-8 ${isUncategorized ? 'text-muted-foreground' : 'text-primary'}`} />
-              <h1 className="text-4xl font-bold text-foreground">
+              <h1 className="text-2xl font-bold text-foreground">
                 {category?.name || '미분류'}
               </h1>
             </div>
@@ -213,13 +206,13 @@ export default function CategoryPage() {
 
           {/* Intersection Observer 트리거 */}
           <div ref={observerTarget} className="h-20 flex items-center justify-center">
-            {isLoadingMore && <p className="text-muted-foreground">로딩 중...</p>}
+            {isLoadingMore && <p className="py-8 text-center text-sm text-muted-foreground">불러오는 중...</p>}
           </div>
         </main>
 
         {/* 사이드바 - 카테고리 트리 */}
-        <aside className="lg:w-72 shrink-0">
-          <div className="sticky top-24 bg-card rounded-2xl border border-border p-4 shadow-warm-sm">
+        <aside>
+          <div className="border-t border-border pt-6">
             {categoryData && (
               <CategoryTree
                 categories={categoryData.categories}

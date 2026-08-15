@@ -4,64 +4,70 @@
 
 @layer base {
   :root {
-    --background: 30 50% 98%;
-    --foreground: 25 30% 12%;
-    --card: 33 40% 97%;
-    --card-foreground: 25 30% 12%;
-    --popover: 33 40% 97%;
-    --popover-foreground: 25 30% 12%;
-    --primary: 15 80% 65%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 222 93% 35%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 145 30% 90%;
-    --secondary-foreground: 145 20% 25%;
-    --muted: 30 30% 95%;
-    --muted-foreground: 25 15% 50%;
-    --accent: 270 40% 93%;
-    --accent-foreground: 270 30% 25%;
-    --destructive: 0 70% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 30 25% 88%;
-    --input: 30 25% 88%;
-    --ring: 15 80% 65%;
-    --radius: 1rem;
-    --warm-highlight: 40 90% 94%;
+    --secondary: 0 0% 94%;
+    --secondary-foreground: 0 0% 20%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 0 0% 92%;
+    --accent-foreground: 0 0% 20%;
+    --destructive: 0 60% 40%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 87%;
+    --input: 0 0% 87%;
+    --ring: 0 0% 40%;
+    --radius: 0rem;
+    --warm-highlight: 0 0% 96%;
 
-    /* GitHub 잔디 색상 (Light) */
-    --heatmap-l0: 30 25% 90%;
-    --heatmap-l1: 135 50% 78%;
-    --heatmap-l2: 135 55% 58%;
-    --heatmap-l3: 135 60% 42%;
-    --heatmap-l4: 135 70% 28%;
+    --link: 222 93% 35%;
+    --link-visited: 271 68% 32%;
+
+    /* 잔디 - 회색조 (Light: 짙을수록 활동 많음) */
+    --heatmap-l0: 0 0% 93%;
+    --heatmap-l1: 0 0% 78%;
+    --heatmap-l2: 0 0% 60%;
+    --heatmap-l3: 0 0% 38%;
+    --heatmap-l4: 0 0% 15%;
   }
 
   .dark {
-    --background: 25 25% 10%;
-    --foreground: 30 20% 92%;
-    --card: 25 20% 14%;
-    --card-foreground: 30 20% 92%;
-    --popover: 25 20% 14%;
-    --popover-foreground: 30 20% 92%;
-    --primary: 15 75% 65%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 145 15% 18%;
-    --secondary-foreground: 145 20% 80%;
-    --muted: 25 15% 18%;
-    --muted-foreground: 30 15% 60%;
-    --accent: 270 20% 20%;
-    --accent-foreground: 270 20% 80%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 30 20% 92%;
-    --border: 25 15% 22%;
-    --input: 25 15% 18%;
-    --ring: 15 75% 65%;
-    --warm-highlight: 40 30% 22%;
+    --background: 0 0% 8%;
+    --foreground: 0 0% 85%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 85%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 85%;
+    --primary: 212 90% 70%;
+    --primary-foreground: 0 0% 8%;
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 80%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 0 0% 18%;
+    --accent-foreground: 0 0% 80%;
+    --destructive: 0 55% 45%;
+    --destructive-foreground: 0 0% 95%;
+    --border: 0 0% 22%;
+    --input: 0 0% 22%;
+    --ring: 0 0% 55%;
+    --warm-highlight: 0 0% 15%;
 
-    /* GitHub 잔디 색상 (Dark) */
-    --heatmap-l0: 25 15% 18%;
-    --heatmap-l1: 135 35% 22%;
-    --heatmap-l2: 135 45% 30%;
-    --heatmap-l3: 135 55% 40%;
-    --heatmap-l4: 135 65% 50%;
+    --link: 212 90% 70%;
+    --link-visited: 280 55% 75%;
+
+    /* 잔디 - 회색조 (Dark: 밝을수록 활동 많음) */
+    --heatmap-l0: 0 0% 18%;
+    --heatmap-l1: 0 0% 32%;
+    --heatmap-l2: 0 0% 48%;
+    --heatmap-l3: 0 0% 66%;
+    --heatmap-l4: 0 0% 85%;
   }
 }
 
@@ -71,7 +77,16 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-serif), Georgia, 'Times New Roman', serif;
+    font-size: 1.05rem;
+    line-height: 1.9;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  a {
+    color: hsl(var(--link));
+  }
+  a:visited {
+    color: hsl(var(--link-visited));
   }
 }
 
@@ -245,119 +260,136 @@ select:disabled {
   opacity: 0.7 !important;
 }
 
-/* Markdown styles - Medium/Notion inspired */
+/* Markdown styles */
 .markdown {
-  max-width: 680px;
-  margin: 0 auto;
-  font-size: 1.125rem;
-  line-height: 1.875;
   color: hsl(var(--foreground));
-  letter-spacing: -0.003em;
+  font-size: 1.05rem;
+  line-height: 1.9;
 }
 
 .markdown h1 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  margin-bottom: 1.5rem;
-  margin-top: 3rem;
-  color: hsl(var(--foreground));
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid hsl(var(--border));
 }
 
 .markdown h2 {
-  font-size: 2rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  margin-bottom: 1.25rem;
-  margin-top: 2.5rem;
-  color: hsl(var(--foreground));
+  margin: 2.2rem 0 0.9rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid hsl(var(--border));
 }
 
 .markdown h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  line-height: 1.4;
-  margin-bottom: 1rem;
-  margin-top: 2rem;
-  color: hsl(var(--foreground));
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 1.8rem 0 0.7rem;
 }
 
 .markdown p {
-  margin-bottom: 1rem;
-  line-height: 1.75;
-  color: hsl(var(--foreground));
+  margin: 1.2rem 0;
 }
 
-.markdown ul, .markdown ol {
-  margin-bottom: 1rem;
-  margin-left: 1.5rem;
-  list-style-type: disc;
-  color: hsl(var(--foreground));
+.markdown ul,
+.markdown ol {
+  margin: 1.2rem 0;
+  padding-left: 1.6rem;
+}
+
+.markdown ul {
+  list-style: disc;
 }
 
 .markdown ol {
-  list-style-type: decimal;
+  list-style: decimal;
 }
 
 .markdown li {
-  margin-bottom: 0.5rem;
-  color: hsl(var(--foreground));
-}
-
-.markdown code {
-  background-color: hsl(var(--muted));
-  color: hsl(var(--foreground));
-  padding: 0.2em 0.4em;
-  border-radius: 0.25rem;
-  font-size: 0.9em;
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  font-weight: 500;
-}
-
-.markdown pre {
-  background-color: hsl(var(--muted));
-  padding: 1.5rem;
-  border-radius: 0.5rem;
-  overflow-x: auto;
-  margin: 2rem 0;
-  border: 1px solid hsl(var(--border));
-}
-
-.markdown pre code {
-  background-color: transparent;
-  color: hsl(var(--foreground));
-  padding: 0;
-  font-size: 0.9rem;
-  line-height: 1.7;
-}
-
-.markdown blockquote {
-  border-left: 4px solid hsl(var(--primary));
-  padding-left: 1rem;
-  font-style: italic;
-  margin: 1rem 0;
-  color: hsl(var(--foreground) / 0.9);
+  margin: 0.4rem 0;
 }
 
 .markdown a {
-  color: hsl(var(--primary));
+  color: hsl(var(--link));
   text-decoration: underline;
 }
 
-.markdown a:hover {
-  color: hsl(var(--primary) / 0.8);
+.markdown a:visited {
+  color: hsl(var(--link-visited));
+}
+
+.markdown blockquote {
+  margin: 1.5rem 0;
+  padding: 0.2rem 0 0.2rem 1rem;
+  border-left: 3px solid hsl(var(--border));
+  color: hsl(var(--muted-foreground));
+}
+
+.markdown code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9em;
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0;
+  padding: 0.1rem 0.3rem;
+}
+
+.markdown pre {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0;
+  overflow-x: auto;
+}
+
+.markdown pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+.markdown img {
+  border: 1px solid hsl(var(--border));
+  border-radius: 0;
+  margin: 1.5rem 0;
+}
+
+.markdown hr {
+  margin: 2.5rem 0;
+  border: none;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.markdown table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.markdown th,
+.markdown td {
+  border: 1px solid hsl(var(--border));
+  padding: 0.5rem 0.7rem;
+  text-align: left;
+}
+
+.markdown th {
+  background: hsl(var(--muted));
+  font-weight: 700;
 }
 
 .markdown strong {
   font-weight: 700;
-  color: hsl(var(--foreground));
 }
 
 .markdown em {
   font-style: italic;
-  color: hsl(var(--foreground));
 }
 
 /* TipTap Editor Styles */
@@ -549,163 +581,6 @@ select:disabled {
   color: #ec4899;
 }
 
-/* Dashboard Animations */
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.92);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes float-gentle {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-12px) rotate(2deg); }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-@keyframes counter-roll {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-up {
-  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.animate-fade-in {
-  animation: fade-in 0.6s ease both;
-}
-
-.animate-scale-in {
-  animation: scale-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.animate-float-gentle {
-  animation: float-gentle 6s ease-in-out infinite;
-}
-
-.animate-counter-roll {
-  animation: counter-roll 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    hsl(var(--warm-highlight)) 0%,
-    hsl(var(--primary) / 0.08) 50%,
-    hsl(var(--warm-highlight)) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 3s ease-in-out infinite;
-}
-
-/* Dashboard decorative blob */
-.dashboard-blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  opacity: 0.15;
-  pointer-events: none;
-}
-
-.dark .dashboard-blob {
-  opacity: 0.08;
-}
-
-/* Dashboard grain overlay */
-.dashboard-grain::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-}
-
-.dark .dashboard-grain::before {
-  opacity: 0.04;
-}
-
-/* Featured post card hover */
-.featured-card {
-  position: relative;
-  overflow: hidden;
-}
-
-.featured-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    hsl(var(--primary) / 0.04) 0%,
-    transparent 50%,
-    hsl(var(--accent) / 0.04) 100%
-  );
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  z-index: 0;
-  border-radius: inherit;
-}
-
-.featured-card:hover::before {
-  opacity: 1;
-}
-
-/* Magazine post card numbered badge */
-.magazine-number {
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.04em;
-}
-
-/* Tag Animation - Pulse Scale */
-@keyframes pulse-scale {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.animate-pulse-scale {
-  animation: pulse-scale 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
 /* 포스팅 잔디(Heatmap) 모바일 가로 스크롤 - 우측 fade mask */
 @media (max-width: 767px) {
   .heatmap-scroll {
@@ -736,11 +611,5 @@ select:disabled {
 
 .pdf-generating .animate-pulse {
   animation: none !important;
-}
-
-/* Markdown 스타일 */
-.markdown p {
-  margin: 1rem 0;
-  line-height: 1.6;
 }
 

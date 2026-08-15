@@ -30,7 +30,7 @@ export default function HeatmapTooltip({ cell, rect }: HeatmapTooltipProps) {
     <div
       role="tooltip"
       aria-live="polite"
-      className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md bg-popover px-2 py-1 text-xs text-popover-foreground shadow-warm-md ring-1 ring-border/60"
+      className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full whitespace-nowrap bg-popover px-2 py-1 text-xs text-popover-foreground border border-border"
       style={{ top, left }}
     >
       {formatTooltip(cell)}
