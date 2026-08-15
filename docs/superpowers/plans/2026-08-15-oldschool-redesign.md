@@ -294,27 +294,40 @@ const serif = Noto_Serif_KR({
 
 `sans`라는 키 이름을 유지하는 이유: `font-sans`를 쓰는 기존 파일들이 깨지지 않게 하기 위해서다. 이름은 `sans`지만 내용은 명조다.
 
-- [ ] **Step 4: 본문 폭 축소**
+- [ ] **Step 4: 본문 폭 토큰 추가**
+
+`tailwind.config.ts`의 `extend`에 아래를 추가한다. 720px는 `layout.tsx`·`Header.tsx`·`Footer.tsx` 세 곳에서 쓰이므로 리터럴을 세 번 적지 않는다.
+
+```ts
+      maxWidth: {
+        content: '720px',
+        reading: '680px',
+      },
+```
+
+`reading`은 Task 8의 글 상세 본문 폭이다. Tailwind에 이미 있는 `max-w-prose`(65ch)와 이름이 겹치지 않게 `reading`을 쓴다.
+
+- [ ] **Step 5: 본문 폭 축소**
 
 `app/layout.tsx:134`의 `<main>`을 바꾼다.
 
 ```tsx
-              <main className="flex-grow mx-auto w-full max-w-[720px] px-4 py-10 bg-background">
+              <main className="flex-grow mx-auto w-full max-w-content px-4 py-10 bg-background">
 ```
 
 `container` 클래스를 뺀다. `tailwind.config.ts`의 `theme.container` 설정 자체는 어드민이 계속 쓰므로 **지우지 않는다.**
 
-- [ ] **Step 5: 타입·린트 확인**
+- [ ] **Step 6: 타입·린트 확인**
 
 Run: `npx tsc --noEmit && npm run lint`
 Expected: 통과
 
-- [ ] **Step 6: 육안 확인**
+- [ ] **Step 7: 육안 확인**
 
 `http://localhost:3000`을 새로고침한다.
 Expected: 본문이 명조체로 바뀌고 콘텐츠 폭이 720px로 좁아진다. 폰트가 안 바뀌면 브라우저 devtools에서 body의 `font-family` 계산값에 `--font-serif`가 들어갔는지 본다.
 
-- [ ] **Step 7: 커밋**
+- [ ] **Step 8: 커밋**
 
 ```bash
 git add app/layout.tsx app/globals.css tailwind.config.ts
@@ -431,7 +444,7 @@ export default function Header() {
 
   return (
     <header className="w-full border-b border-border">
-      <div className="mx-auto w-full max-w-[720px] px-4 pt-8 pb-3">
+      <div className="mx-auto w-full max-w-content px-4 pt-8 pb-3">
         <Link
           href="/"
           onClick={handleLogoClick}
@@ -519,7 +532,7 @@ export default function Footer() {
 
   return (
     <footer className="mt-auto w-full border-t border-border">
-      <div className="mx-auto w-full max-w-[720px] px-4 py-6 text-sm text-muted-foreground">
+      <div className="mx-auto w-full max-w-content px-4 py-6 text-sm text-muted-foreground">
         <p>
           <Link href="/" className="text-muted-foreground visited:text-muted-foreground hover:text-link">홈</Link>
           <span aria-hidden="true" className="mx-2 text-border">|</span>
@@ -1287,7 +1300,7 @@ import { Eye, Calendar, Edit, Trash2, EyeOff, Folder, Clock } from 'lucide-react
 
 - [ ] **Step 4: 본문 폭 조정**
 
-`app/posts/[id]/page-client.tsx`에서 상세 본문을 감싸는 래퍼에 `max-w-[680px] mx-auto`를 준다. 이미 `max-w-*` 클래스가 있으면 그 값을 `max-w-[680px]`로 바꾼다.
+`app/posts/[id]/page-client.tsx`에서 상세 본문을 감싸는 래퍼에 `max-w-reading mx-auto`를 준다(Task 2에서 `tailwind.config.ts`에 추가한 `maxWidth.reading = 680px` 토큰). 이미 `max-w-*` 클래스가 있으면 그 값을 `max-w-reading`으로 바꾼다.
 
 - [ ] **Step 5: `PostShare` 아이콘 제거**
 
@@ -1593,13 +1606,15 @@ Run:
 ```bash
 grep -rln "lucide-react" app components | grep -v "/admin/"
 ```
-Expected: 아래 세 개만 남는다.
+Expected: 아래 다섯 개만 남는다. 전부 의도된 예외다.
 ```
-components/common/ImageViewerModal.tsx
-components/common/OptimizedImage.tsx
-components/ui/dropdown-menu.tsx
+app/auth/login/page.tsx          숨겨진 로그인 페이지 (로고 5회 클릭으로만 도달)
+components/common/ImageViewerModal.tsx   어드민과 공유
+components/common/OptimizedImage.tsx     어드민과 공유
+components/ui/dropdown-menu.tsx          어드민 전용 (Task 3에서 ThemeToggle이 의존을 끊었다)
+components/ui/segmented-control.tsx      어드민과 공유
 ```
-다른 파일이 나오면 해당 태스크로 돌아가 아이콘을 텍스트로 바꾼다. (`app/auth/login/page.tsx`와 `app/game/tetris/**`는 예외로 남겨도 된다 — 로그인은 숨겨진 페이지고 게임은 범위 밖이다. 남긴 파일 목록을 커밋 메시지에 적는다.)
+다른 파일이 나오면 해당 태스크로 돌아가 아이콘을 텍스트로 바꾼다. `app/game/tetris/**`와 `components/game/**`는 grep 범위에서 제외한다 — 계획 범위 밖이다.
 
 - [ ] **Step 2: 죽은 색 클래스 확인**
 
