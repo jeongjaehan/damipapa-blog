@@ -57,11 +57,11 @@ function SearchContent() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="검색어를 입력하세요..."
-            className="flex-1 px-4 py-3 border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-ring bg-background text-foreground"
+            className="flex-1 px-3 py-2 border border-border focus:outline-none focus:ring-1 focus:ring-ring bg-background text-foreground"
           />
           <button
             type="submit"
-            className="px-6 py-3 bg-primary text-primary-foreground rounded-2xl hover:bg-primary/90 transition-all duration-200"
+            className="px-4 py-2 border border-border hover:bg-muted"
           >
             검색
           </button>

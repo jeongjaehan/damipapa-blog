@@ -63,7 +63,7 @@ export default function TagsPage() {
       <TagCloud tags={tags} />
 
       <div className="grid gap-6 md:grid-cols-3">
-        <section className="rounded-2xl border border-border bg-card/80 p-6 shadow-warm-sm backdrop-blur">
+        <section className="border-t border-border pt-6">
           <h2 className="text-lg font-semibold text-foreground">인기 태그 Top 5</h2>
           <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
             {topTags.map((tag, index) => (
@@ -79,7 +79,7 @@ export default function TagsPage() {
           </ul>
         </section>
 
-        <section className="rounded-2xl border border-border bg-card/80 p-6 shadow-warm-sm backdrop-blur">
+        <section className="border-t border-border pt-6">
           <h2 className="text-lg font-semibold text-foreground">태그 인사이트</h2>
           <dl className="mt-4 space-y-3 text-sm text-muted-foreground">
             <div className="flex items-center justify-between">
@@ -101,7 +101,7 @@ export default function TagsPage() {
           </dl>
         </section>
 
-        <section className="rounded-2xl border border-border bg-gradient-to-br from-warm-highlight via-card to-accent p-6 shadow-warm-sm">
+        <section className="border-t border-border pt-6">
           <h2 className="text-lg font-semibold text-foreground">태그 활용 팁</h2>
           <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
             <li>태그를 클릭하면 해당 주제의 글만 모아서 볼 수 있어요.</li>
