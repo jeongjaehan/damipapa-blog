@@ -648,7 +648,7 @@ export default function AdminCategoriesPage() {
             <div className="py-12 text-center text-gray-500 dark:text-gray-400">
               <Folder className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
               <p>등록된 카테고리가 없습니다</p>
-              <p className="text-sm mt-1">위의 "새 카테고리" 버튼을 클릭하여 추가하세요</p>
+              <p className="text-sm mt-1">위의 &quot;새 카테고리&quot; 버튼을 클릭하여 추가하세요</p>
             </div>
           )}
         </div>
