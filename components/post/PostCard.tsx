@@ -1,9 +1,6 @@
 import Link from 'next/link'
+import { format } from 'date-fns'
 import { PostSummary } from '@/types'
-import { formatDate } from '@/utils/date'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Eye, Calendar } from 'lucide-react'
 
 interface PostCardProps {
   post: PostSummary
@@ -11,41 +8,40 @@ interface PostCardProps {
 
 export default function PostCard({ post }: PostCardProps) {
   return (
-    <Link href={`/posts/${post.id}`}>
-      <Card className="h-full hover:shadow-warm-lg transition-all duration-300 hover:scale-[1.01] cursor-pointer">
-        <CardHeader className="pb-3">
-          <h2 className="text-2xl font-bold text-foreground line-clamp-2 leading-tight hover:text-primary transition-colors">
-            {post.title}
-          </h2>
-        </CardHeader>
+    <article className="border-b border-border py-5">
+      <p className="text-sm text-muted-foreground">
+        {format(new Date(post.createdAt), 'yyyy.MM.dd')}
+      </p>
 
-        <CardContent className="space-y-4">
-          {post.tags && post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {post.tags.slice(0, 5).map((tag) => (
-                <Badge key={tag} variant="outline" className="border-primary/20 text-primary">
-                  #{tag}
-                </Badge>
-              ))}
-            </div>
-          )}
+      <h2 className="mt-1 text-lg font-bold leading-snug">
+        <Link
+          href={`/posts/${post.id}`}
+          className="text-foreground underline visited:text-link-visited hover:text-link"
+        >
+          {post.title}
+        </Link>
+      </h2>
 
-          <div className="flex items-center justify-between pt-3 border-t border-border">
-            <span className="text-sm font-medium text-foreground/80">{post.authorName}</span>
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5" />
-                {formatDate(post.createdAt)}
-              </span>
-              <span className="flex items-center gap-1">
-                <Eye className="w-3.5 h-3.5" />
-                {post.viewCount}
-              </span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </Link>
+      <p className="mt-1.5 text-sm text-muted-foreground">
+        {post.tags && post.tags.length > 0 && (
+          <>
+            {post.tags.slice(0, 5).map((tag) => (
+              <Link
+                key={tag}
+                href={`/?tag=${tag}`}
+                className="mr-2 text-muted-foreground visited:text-muted-foreground hover:text-link"
+              >
+                #{tag}
+              </Link>
+            ))}
+            <span aria-hidden="true" className="mx-1 text-border">·</span>
+          </>
+        )}
+        {post.authorName}
+        <span aria-hidden="true" className="mx-1 text-border">·</span>
+        조회 {post.viewCount.toLocaleString()}
+      </p>
+    </article>
   )
 }
 

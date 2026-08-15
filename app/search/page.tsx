@@ -77,7 +77,7 @@ function SearchContent() {
           </p>
 
           {posts.content.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="border-t border-border">
               {posts.content.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
