@@ -32,7 +32,7 @@ export default function YearSelector({
             className={`shrink-0 px-3 py-1.5 text-left ${
               active
                 ? 'font-bold'
-                : 'text-link hover:underline focus-visible:outline-none'
+                : 'text-link hover:underline'
             }`}
           >
             {y}

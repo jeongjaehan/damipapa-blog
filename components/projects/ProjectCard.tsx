@@ -20,9 +20,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         <div className="relative">
           <div
             className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center text-white font-bold text-lg sm:text-xl"
-            style={{ 
-              backgroundColor: project.iconColor,
-              boxShadow: `0 4px 20px ${project.iconColor}40`
+            style={{
+              backgroundColor: project.iconColor
             }}
           >
             {project.iconType === 'image' && project.icon ? (

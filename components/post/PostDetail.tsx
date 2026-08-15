@@ -130,12 +130,12 @@ export default function PostDetail({ post }: PostDetailProps) {
         )}
 
         {isAdmin && (
-          <p className="mt-4 flex gap-2 text-sm">
+          <div className="mt-4 flex gap-2 text-sm">
             <Link href={`/admin/posts/edit/${post.id}`}>
               <Button size="sm" variant="outline">수정</Button>
             </Link>
             <Button size="sm" variant="destructive" onClick={handleDelete}>삭제</Button>
-          </p>
+          </div>
         )}
       </header>
 

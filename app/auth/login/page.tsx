@@ -56,7 +56,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-2.5 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                className="w-full px-4 py-2.5 border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition"
                 placeholder="admin@blog.com"
               />
             </div>
@@ -71,7 +71,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-2.5 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                className="w-full px-4 py-2.5 border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition"
                 placeholder="비밀번호를 입력하세요"
               />
             </div>

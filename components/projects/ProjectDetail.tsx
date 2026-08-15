@@ -98,9 +98,8 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
             {/* 프로젝트 아이콘 */}
             <div
               className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 flex items-center justify-center text-white font-bold text-lg sm:text-xl lg:text-2xl flex-shrink-0"
-              style={{ 
-                backgroundColor: project.icon.color,
-                boxShadow: `0 8px 32px ${project.icon.color}40`
+              style={{
+                backgroundColor: project.icon.color
               }}
             >
               {project.icon.type === 'image' ? (
