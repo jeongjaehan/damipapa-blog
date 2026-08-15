@@ -3,30 +3,36 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { useState, useRef } from 'react'
-import { Button } from '@/components/ui/button'
-import { Menu, X, PenSquare, Github } from 'lucide-react'
+import { useRef, useState } from 'react'
 import { ThemeToggle } from '@/components/common/ThemeToggle'
+
+const NAV = [
+  { href: '/', label: '홈' },
+  { href: '/career', label: '프로필' },
+  { href: '/projects', label: '놀이터' },
+  { href: '/search', label: '검색' },
+  { href: '/tags', label: '태그' },
+]
+
+function Sep() {
+  return <span aria-hidden="true" className="text-border">|</span>
+}
 
 export default function Header() {
   const router = useRouter()
   const { user, isAuthenticated, isAdmin, logout } = useAuth()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [logoClickCount, setLogoClickCount] = useState(0)
   const lastClickTimeRef = useRef<number>(0)
 
   const handleLogoClick = (e: React.MouseEvent) => {
-    // 이미 로그인되어 있으면 클릭 카운트 무시
     if (isAuthenticated) return
 
     const now = Date.now()
-    
-    // 1초 이내 클릭만 카운트
+
     if (now - lastClickTimeRef.current < 1000) {
       const newCount = logoClickCount + 1
       setLogoClickCount(newCount)
-      
-      // 5번 클릭하면 로그인 페이지로 이동
+
       if (newCount >= 5) {
         e.preventDefault()
         setLogoClickCount(0)
@@ -34,177 +40,83 @@ export default function Header() {
         return
       }
     } else {
-      // 1초 이상 지났으면 카운트 리셋
       setLogoClickCount(1)
     }
-    
+
     lastClickTimeRef.current = now
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-warm-sm">
-      <nav className="container mx-auto px-4 py-5">
-        <div className="flex justify-between items-center">
-          <Link 
-            href="/" 
-            className="text-2xl font-bold text-foreground hover:text-primary transition-colors select-none"
-            onClick={handleLogoClick}
-          >
-            🏡 다미파파의 블로그
-          </Link>
+    <header className="w-full border-b border-border">
+      <div className="mx-auto w-full max-w-content px-4 pt-8 pb-3">
+        <Link
+          href="/"
+          onClick={handleLogoClick}
+          className="select-none text-2xl font-bold text-foreground visited:text-foreground hover:text-link"
+        >
+          다미파파의 블로그
+        </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-6">
-            <Link href="/" className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors">
-              홈
-            </Link>
-            <Link href="/career" className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors">
-              프로필
-            </Link>
-            <Link href="/projects" className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors">
-              놀이터
-            </Link>
-            <Link href="/search" className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors">
-              검색
-            </Link>
-            <Link href="/tags" className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors">
-              태그
-            </Link>
-            <a 
-              href="https://github.com/jeongjaehan/damipapa-blog" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-foreground/70 hover:text-primary transition-colors"
-              aria-label="GitHub"
-            >
-              <Github className="w-5 h-5" />
-            </a>
-            <ThemeToggle />
-            {isAuthenticated && (
-              <>
-                {isAdmin && (
-                  <Link href="/admin/posts/new">
-                    <Button size="sm" className="gap-2">
-                      <PenSquare className="w-4 h-4" />
-                      글쓰기
-                    </Button>
+        <nav className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+          {NAV.map((item, i) => (
+            <span key={item.href} className="flex items-center gap-x-2">
+              {i > 0 && <Sep />}
+              <Link
+                href={item.href}
+                className="text-foreground visited:text-foreground hover:text-link"
+              >
+                {item.label}
+              </Link>
+            </span>
+          ))}
+
+          <Sep />
+          <a
+            href="https://github.com/jeongjaehan/damipapa-blog"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground visited:text-foreground hover:text-link"
+          >
+            GitHub
+          </a>
+
+          <Sep />
+          <ThemeToggle />
+
+          {isAuthenticated && (
+            <>
+              <Sep />
+              {isAdmin ? (
+                <>
+                  <Link
+                    href="/admin/posts/new"
+                    className="text-foreground visited:text-foreground hover:text-link"
+                  >
+                    글쓰기
                   </Link>
-                )}
-                {isAdmin ? (
-                  <Link href="/admin" className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors">
+                  <Sep />
+                  <Link
+                    href="/admin"
+                    className="text-foreground visited:text-foreground hover:text-link"
+                  >
                     관리자
                   </Link>
-                ) : (
-                  <span className="text-sm text-foreground/70">{user?.name}</span>
-                )}
-                <Button variant="ghost" size="sm" onClick={logout}>
-                  로그아웃
-                </Button>
-              </>
-            )}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
-          </Button>
-        </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden mt-4 space-y-2">
-            <Link
-              href="/"
-              className="block py-2 text-foreground/70 hover:text-primary"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              홈
-            </Link>
-            <Link
-              href="/career"
-              className="block py-2 text-foreground/70 hover:text-primary"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              프로필
-            </Link>
-            <Link
-              href="/projects"
-              className="block py-2 text-foreground/70 hover:text-primary"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              놀이터
-            </Link>
-            <Link
-              href="/search"
-              className="block py-2 text-foreground/70 hover:text-primary"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              검색
-            </Link>
-            <Link
-              href="/tags"
-              className="block py-2 text-foreground/70 hover:text-primary"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              태그
-            </Link>
-            <a
-              href="https://github.com/jeongjaehan/damipapa-blog"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 py-2 text-foreground/70 hover:text-primary"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <Github className="w-5 h-5" />
-              <span>GitHub</span>
-            </a>
-            <div className="py-2">
-              <ThemeToggle />
-            </div>
-            {isAuthenticated && (
-              <>
-                {isAdmin && (
-                  <>
-                    <Link
-                      href="/admin"
-                      className="block py-2 text-foreground/70 hover:text-primary"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      관리자
-                    </Link>
-                    <Link
-                      href="/admin/posts/new"
-                      className="block py-2 bg-primary text-primary-foreground px-4 rounded-xl hover:bg-primary/90"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      글쓰기
-                    </Link>
-                  </>
-                )}
-                <button
-                  onClick={() => {
-                    logout()
-                    setMobileMenuOpen(false)
-                  }}
-                  className="block py-2 text-foreground/70 hover:text-primary w-full text-left"
-                >
-                  로그아웃
-                </button>
-              </>
-            )}
-          </div>
-        )}
-      </nav>
+                </>
+              ) : (
+                <span className="text-muted-foreground">{user?.name}</span>
+              )}
+              <Sep />
+              <button
+                type="button"
+                onClick={logout}
+                className="text-foreground hover:text-link"
+              >
+                로그아웃
+              </button>
+            </>
+          )}
+        </nav>
+      </div>
     </header>
   )
 }
-
