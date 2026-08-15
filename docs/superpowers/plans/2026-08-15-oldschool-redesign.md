@@ -1928,6 +1928,21 @@ Task 1의 grep이 찾아낸 잔여 항목이다. `app/auth/login/page.tsx:59,74`
 
 이 파일은 어드민과 공유하지만, 제거하는 것이 애니메이션 하나뿐이라 어드민 기능에 영향이 없다. **이 한 클래스 외에는 `components/ui/**`를 건드리지 않는다.**
 
+- [ ] **Step 2e: 인라인 style로 숨어 있던 그림자 제거**
+
+Tailwind 클래스가 아니라 JS `style` 객체로 들어간 그림자가 두 곳 남아 있다. 클래스 기반 grep은 이걸 구조적으로 잡지 못한다 — Task 10 리뷰가 발견했다.
+
+- `components/projects/ProjectCard.tsx:25` — `boxShadow: \`0 4px 20px ${project.iconColor}40\``
+- `components/projects/ProjectDetail.tsx:103` — `boxShadow: \`0 8px 32px ${project.icon.color}40\``
+
+두 줄 모두 `boxShadow` 속성만 삭제한다. **같은 `style` 객체의 `backgroundColor`는 유지한다** — 프로젝트별 아이콘 색은 데이터에서 오는 정보이지 장식이 아니다.
+
+삭제 후 확인:
+```bash
+grep -rn "boxShadow" app components --include="*.tsx" | grep -v "/admin/" | grep -v "/game/"
+```
+Expected: 결과 없음.
+
 - [ ] **Step 3: 둥근 모서리 잔존 확인**
 
 Run:
