@@ -1544,6 +1544,18 @@ export default function Loading() {
 
 `components/projects/MermaidDiagram.tsx`는 다이어그램 렌더링 로직이므로 건드리지 않는다.
 
+- [ ] **Step 4b: Tailwind 내장 애니메이션 제거**
+
+Task 4가 지운 것은 `globals.css`의 커스텀 애니메이션뿐이다. `animate-pulse`/`animate-spin`은 **Tailwind 내장 클래스라 CSS 삭제로는 사라지지 않는다.** 공개 페이지에 남은 것 중 이 태스크가 소유하는 세 곳:
+
+| 위치 | 현재 | 바꿀 것 |
+|---|---|---|
+| `components/career/CareerTimeline.tsx:110` | `w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse` (재직중 표시 점) | 점 전체 삭제. 재직 여부는 텍스트 `(재직중)`으로 |
+| `components/projects/MermaidDiagram.tsx:96` | `animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600` | `불러오는 중...` 텍스트로 교체. **이 파일에서 이 로딩 표시 외에는 아무것도 건드리지 않는다** — 다이어그램 렌더링 로직은 범위 밖이다 |
+| `components/common/OptimizedImage.tsx:73` | `absolute inset-0 bg-gray-200 animate-pulse rounded` | `absolute inset-0 bg-muted`. `bg-gray-200`은 하드코딩된 밝은 회색이라 **다크모드에서 흰 사각형으로 뜨는 기존 버그**이기도 하다 |
+
+`components/common/ImageViewerModal.tsx:89`의 스피너는 **건드리지 않는다** — 검은 오버레이 위의 모달 로딩 표시이고 어드민과 공유한다.
+
 - [ ] **Step 5: 타입·린트 확인**
 
 Run: `npx tsc --noEmit && npm run lint`
@@ -1597,7 +1609,14 @@ git commit -m "♻️ 커리어·프로젝트·공통 컴포넌트를 텍스트 
 
 - [ ] **Step 3: 컨테이너와 연도 선택기 정리**
 
-`index.tsx`와 `YearSelector.tsx`에서 `rounded-*`, `shadow-*`, `bg-card`, `transition-*` 클래스를 제거한다. 연도 선택 버튼은 선택된 연도를 `font-bold`, 나머지를 `text-link hover:underline`으로 표시한다. `components/ui/segmented-control.tsx`를 쓰고 있다면 이 자리에서만 텍스트 버튼으로 교체하고 **컴포넌트 파일 자체는 건드리지 않는다**(어드민이 함께 쓴다).
+실제 확인한 대상은 아래 네 곳뿐이다. `components/ui/segmented-control.tsx`는 히트맵에서 **쓰이지 않으므로** 건드리지 않는다.
+
+| 위치 | 현재 | 바꿀 것 |
+|---|---|---|
+| `YearSelector.tsx:32` | `rounded-md px-3 py-1.5 text-left transition-colors` | `rounded-md`와 `transition-colors` 제거. 선택된 연도는 `font-bold`, 나머지는 `text-link hover:underline` |
+| `index.tsx:143` | `rounded-md bg-destructive/10 px-3 py-2 ...` (에러 박스) | `rounded-md` 제거, `border border-destructive`로 교체 |
+| `index.tsx:158` | `h-[120px] animate-pulse rounded-md bg-muted/50` (로딩 스켈레톤) | **`animate-pulse` 제거** — Tailwind 내장 애니메이션이라 Task 4의 CSS 삭제로는 안 사라진다. `h-[120px] bg-muted` 정적 블록으로 |
+| `index.tsx:163` | `rounded-md bg-card/70 backdrop-blur-[1px]` (오버레이) | `rounded-md`와 `backdrop-blur-[1px]` 제거, `bg-background/80`으로 |
 
 - [ ] **Step 4: 타입·린트 확인**
 
@@ -1672,9 +1691,17 @@ Task 1의 grep이 찾아낸 잔여 항목이다. `app/auth/login/page.tsx:59,74`
 
 Run:
 ```bash
-grep -rn "rounded-full" app components --include=*.tsx | grep -v "/admin/" | grep -v "/game/"
+grep -rn "rounded-full" app components --include="*.tsx" | grep -v "/admin/" | grep -v "/game/"
 ```
 Expected: 아바타 등 의도적으로 원형인 것만 남는다. 태그 pill이나 버튼에 남아 있으면 제거한다.
+
+- [ ] **Step 3b: Tailwind 내장 애니메이션 잔존 확인**
+
+Run:
+```bash
+grep -rn "animate-pulse\|animate-spin\|animate-bounce" app components --include="*.tsx" | grep -v "/admin/" | grep -v "/game/"
+```
+Expected: `components/common/ImageViewerModal.tsx:89` 하나만 남는다 (검은 오버레이 위 모달 스피너, 어드민 공유 — 의도된 예외). 다른 것이 나오면 Task 5·10·11 중 해당 태스크가 놓친 것이다.
 
 - [ ] **Step 4: 프로덕션 빌드**
 
