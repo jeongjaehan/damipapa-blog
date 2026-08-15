@@ -1360,11 +1360,68 @@ import { Eye, Calendar, Edit, Trash2, EyeOff, Folder, Clock } from 'lucide-react
 
 - [ ] **Step 5: `PostShare` 아이콘 제거**
 
-`components/post/PostShare.tsx`에서 `import { Facebook, Linkedin, Link2, Check } from 'lucide-react'`를 삭제하고, JSX의 각 아이콘을 지운 뒤 버튼 라벨을 텍스트로 만든다: `페이스북`, `링크드인`, `링크 복사`(복사 완료 시 `복사됨`). 버튼 컨테이너의 `rounded-*`, `shadow-*` 클래스도 제거한다.
+**함정**: 현재 버튼 라벨에 `hidden sm:inline`이 걸려 있다. 모바일에서는 아이콘만 보이는 구조라, **아이콘만 지우면 모바일에서 빈 버튼이 된다.** `hidden sm:inline`을 반드시 함께 제거한다.
+
+`import { Facebook, Linkedin, Link2, Check } from 'lucide-react'`와 `import { Button } from '@/components/ui/button'`를 삭제하고, `return` 블록(48~92행)을 아래로 교체한다.
+
+```tsx
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-border py-4 text-sm">
+      <span className="text-muted-foreground">공유하기</span>
+      <button type="button" onClick={handleFacebookShare} className="text-link hover:underline">
+        페이스북
+      </button>
+      <button type="button" onClick={handleLinkedInShare} className="text-link hover:underline">
+        링크드인
+      </button>
+      <button type="button" onClick={handleCopyLink} className="text-link hover:underline">
+        {copied ? '복사됨' : '링크 복사'}
+      </button>
+    </div>
+  )
+```
+
+`postUrl`, `openShareWindow`, 세 개의 핸들러, `copied` 상태는 **그대로 둔다.**
 
 - [ ] **Step 6: `PostReactions` 아이콘 제거**
 
-`components/post/PostReactions.tsx`에서 `import { ThumbsUp, ThumbsDown } from 'lucide-react'`를 삭제하고, 아이콘 자리를 텍스트로 바꾼다: `좋아요 {count}`, `싫어요 {count}`.
+**함정**: 현재 선택 상태를 아이콘의 `fill-current`와 `bg-primary` 배경으로 표시한다. 아이콘과 배경색을 없애면 **내가 누른 상태인지 알 수 없게 된다.** 선택 상태는 대괄호와 굵기로 표시한다.
+
+`import { ThumbsUp, ThumbsDown } from 'lucide-react'`와 `import { Button } from '@/components/ui/button'`를 삭제하고, 로딩 블록(43~58행)과 `return` 블록(63~85행)을 아래로 교체한다.
+
+```tsx
+  if (loading || !reactionStats) {
+    return (
+      <div className="border-t border-border py-6 text-sm text-muted-foreground">
+        좋아요 0 · 싫어요 0
+      </div>
+    )
+  }
+
+  const isLiked = reactionStats.userReaction?.type === 'LIKE'
+  const isDisliked = reactionStats.userReaction?.type === 'DISLIKE'
+
+  return (
+    <div className="flex items-center gap-4 border-t border-border py-6 text-sm">
+      <button
+        type="button"
+        onClick={() => handleReaction('LIKE')}
+        className={isLiked ? 'font-bold text-foreground' : 'text-link hover:underline'}
+      >
+        {isLiked ? '★' : '☆'} 좋아요 {reactionStats.likeCount}
+      </button>
+      <button
+        type="button"
+        onClick={() => handleReaction('DISLIKE')}
+        className={isDisliked ? 'font-bold text-foreground' : 'text-link hover:underline'}
+      >
+        {isDisliked ? '★' : '☆'} 싫어요 {reactionStats.dislikeCount}
+      </button>
+    </div>
+  )
+```
+
+`handleReaction`, `loadReactions`, `useEffect`는 **그대로 둔다.** 채운 별/빈 별은 색에 의존하지 않는 상태 표시라 다크모드와 색각 이상 모두에서 동작한다.
 
 - [ ] **Step 7: 타입·린트 확인**
 
