@@ -4,7 +4,6 @@ import Script from 'next/script'
 import { Suspense } from 'react'
 import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
-import { ThemeProvider } from '@/contexts/ThemeContext'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import Analytics from '@/components/common/Analytics'
@@ -129,20 +128,18 @@ export default function RootLayout({
           </>
         )}
         
-        <ThemeProvider>
-          <AuthProvider>
-            <Suspense fallback={<Loading />}>
-              <Analytics />
-            </Suspense>
-            <div className="min-h-screen flex flex-col bg-background">
-              <Header />
-              <main className="flex-grow mx-auto w-full max-w-content px-4 py-10 bg-background">
-                {children}
-              </main>
-              <Footer />
-            </div>
-          </AuthProvider>
-        </ThemeProvider>
+        <AuthProvider>
+          <Suspense fallback={<Loading />}>
+            <Analytics />
+          </Suspense>
+          <div className="min-h-screen flex flex-col bg-background">
+            <Header />
+            <main className="flex-grow mx-auto w-full max-w-content px-4 py-10 bg-background">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </AuthProvider>
       </body>
     </html>
   )

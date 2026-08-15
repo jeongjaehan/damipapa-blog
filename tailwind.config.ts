@@ -1,6 +1,8 @@
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
+  // ponytail: 라이트 전용. 'class' 유지 필수 — 지우면 기본값 media로 돌아가
+  // 남아있는 dark: 유틸이 OS 다크에 반응함. 다크 재도입 시 html에 .dark만 붙이면 됨.
   darkMode: 'class',
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
