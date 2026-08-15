@@ -4,64 +4,70 @@
 
 @layer base {
   :root {
-    --background: 30 50% 98%;
-    --foreground: 25 30% 12%;
-    --card: 33 40% 97%;
-    --card-foreground: 25 30% 12%;
-    --popover: 33 40% 97%;
-    --popover-foreground: 25 30% 12%;
-    --primary: 15 80% 65%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 222 93% 35%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 145 30% 90%;
-    --secondary-foreground: 145 20% 25%;
-    --muted: 30 30% 95%;
-    --muted-foreground: 25 15% 50%;
-    --accent: 270 40% 93%;
-    --accent-foreground: 270 30% 25%;
-    --destructive: 0 70% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 30 25% 88%;
-    --input: 30 25% 88%;
-    --ring: 15 80% 65%;
-    --radius: 1rem;
-    --warm-highlight: 40 90% 94%;
+    --secondary: 0 0% 94%;
+    --secondary-foreground: 0 0% 20%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 0 0% 92%;
+    --accent-foreground: 0 0% 20%;
+    --destructive: 0 60% 40%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 87%;
+    --input: 0 0% 87%;
+    --ring: 0 0% 40%;
+    --radius: 0rem;
+    --warm-highlight: 0 0% 96%;
 
-    /* GitHub 잔디 색상 (Light) */
-    --heatmap-l0: 30 25% 90%;
-    --heatmap-l1: 135 50% 78%;
-    --heatmap-l2: 135 55% 58%;
-    --heatmap-l3: 135 60% 42%;
-    --heatmap-l4: 135 70% 28%;
+    --link: 222 93% 35%;
+    --link-visited: 271 68% 32%;
+
+    /* 잔디 - 회색조 (Light: 짙을수록 활동 많음) */
+    --heatmap-l0: 0 0% 93%;
+    --heatmap-l1: 0 0% 78%;
+    --heatmap-l2: 0 0% 60%;
+    --heatmap-l3: 0 0% 38%;
+    --heatmap-l4: 0 0% 15%;
   }
 
   .dark {
-    --background: 25 25% 10%;
-    --foreground: 30 20% 92%;
-    --card: 25 20% 14%;
-    --card-foreground: 30 20% 92%;
-    --popover: 25 20% 14%;
-    --popover-foreground: 30 20% 92%;
-    --primary: 15 75% 65%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 145 15% 18%;
-    --secondary-foreground: 145 20% 80%;
-    --muted: 25 15% 18%;
-    --muted-foreground: 30 15% 60%;
-    --accent: 270 20% 20%;
-    --accent-foreground: 270 20% 80%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 30 20% 92%;
-    --border: 25 15% 22%;
-    --input: 25 15% 18%;
-    --ring: 15 75% 65%;
-    --warm-highlight: 40 30% 22%;
+    --background: 0 0% 8%;
+    --foreground: 0 0% 85%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 85%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 85%;
+    --primary: 212 90% 70%;
+    --primary-foreground: 0 0% 8%;
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 80%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 0 0% 18%;
+    --accent-foreground: 0 0% 80%;
+    --destructive: 0 55% 45%;
+    --destructive-foreground: 0 0% 95%;
+    --border: 0 0% 22%;
+    --input: 0 0% 22%;
+    --ring: 0 0% 55%;
+    --warm-highlight: 0 0% 15%;
 
-    /* GitHub 잔디 색상 (Dark) */
-    --heatmap-l0: 25 15% 18%;
-    --heatmap-l1: 135 35% 22%;
-    --heatmap-l2: 135 45% 30%;
-    --heatmap-l3: 135 55% 40%;
-    --heatmap-l4: 135 65% 50%;
+    --link: 212 90% 70%;
+    --link-visited: 280 55% 75%;
+
+    /* 잔디 - 회색조 (Dark: 밝을수록 활동 많음) */
+    --heatmap-l0: 0 0% 18%;
+    --heatmap-l1: 0 0% 32%;
+    --heatmap-l2: 0 0% 48%;
+    --heatmap-l3: 0 0% 66%;
+    --heatmap-l4: 0 0% 85%;
   }
 }
 
