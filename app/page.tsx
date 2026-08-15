@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { getCategoryTree, getBlogDashboard, getPosts } from '@/services/api'
 import { CategoryTree as CategoryTreeType, BlogDashboardData, PostSummary, PageResponse } from '@/types'
 import { useAuth } from '@/contexts/AuthContext'
@@ -10,12 +11,34 @@ import CategoryTree from '@/components/category/CategoryTree'
 import BlogDashboard from '@/components/dashboard/BlogDashboard'
 import PostingHeatmap from '@/components/dashboard/PostingHeatmap'
 import PostList from '@/components/post/PostList'
-import { Badge } from '@/components/ui/badge'
 
 function formatDateBadge(date: string): string {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return date
   const [y, m, d] = date.split('-')
   return `${y}년 ${Number(m)}월 ${Number(d)}일`
+}
+
+function PopularList({ posts }: { posts: PostSummary[] }) {
+  if (posts.length === 0) return null
+
+  return (
+    <section>
+      <h3 className="border-b border-border pb-1 text-sm font-bold">인기 글</h3>
+      <ol className="mt-2 space-y-1.5 text-sm">
+        {posts.slice(0, 5).map((post, i) => (
+          <li key={post.id} className="flex gap-2">
+            <span className="shrink-0 tabular-nums text-muted-foreground">{i + 1}.</span>
+            <Link
+              href={`/posts/${post.id}`}
+              className="text-foreground underline visited:text-link-visited hover:text-link"
+            >
+              {post.title}
+            </Link>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
 }
 
 function HomeContent() {
@@ -87,102 +110,78 @@ function HomeContent() {
       : '검색 결과가 없어요'
 
     return (
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* 메인 콘텐츠 */}
-          <div className="flex-1 min-w-0">
-            <div className="mb-6">
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl font-bold text-foreground">{filterTitle}</h1>
-                <Badge
-                  variant="outline"
-                  className="border-primary-200 text-primary-700 dark:border-primary-800 dark:text-primary-300"
-                >
-                  {filterBadge}
-                </Badge>
-              </div>
-              <button
-                onClick={() => router.push('/')}
-                className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400"
-              >
-                ← 대시보드로 돌아가기
-              </button>
-            </div>
+      <div>
+        <h1 className="text-xl font-bold">
+          {filterTitle}
+          <span className="ml-2 font-normal text-muted-foreground">{filterBadge}</span>
+        </h1>
+        <p className="mt-1 text-sm">
+          <button
+            onClick={() => router.push('/')}
+            className="text-link hover:underline"
+          >
+            « 홈으로 돌아가기
+          </button>
+        </p>
 
-            {tagLoading ? (
-              <Loading />
-            ) : tagPosts.length === 0 ? (
-              <div className="rounded-2xl border border-border/60 bg-card/60 px-6 py-12 text-center text-muted-foreground">
-                {emptyMessage}
-              </div>
-            ) : (
-              <PostList
-                initialData={{
-                  content: tagPosts,
-                  page: currentPage,
-                  totalPages: 0,
-                  last: !hasMore
-                } as PageResponse<PostSummary>}
-                isLoading={false}
-                hasMore={hasMore}
-              />
-            )}
-          </div>
-
-          {/* 사이드바 - 카테고리 트리 */}
-          <aside className="lg:w-72 shrink-0">
-            <div className="sticky top-24 bg-card rounded-2xl border border-border p-4 shadow-sm">
-              {categoryData && (
-                <CategoryTree
-                  categories={categoryData.categories}
-                  uncategorizedCount={categoryData.uncategorizedCount}
-                  showPrivate={isAdmin}
-                />
-              )}
-            </div>
-          </aside>
+        <div className="mt-8">
+          {tagLoading ? (
+            <Loading />
+          ) : tagPosts.length === 0 ? (
+            <p className="py-8 text-sm text-muted-foreground">{emptyMessage}</p>
+          ) : (
+            <PostList
+              initialData={{
+                content: tagPosts,
+                page: currentPage,
+                totalPages: 0,
+                last: !hasMore
+              } as PageResponse<PostSummary>}
+              isLoading={false}
+              hasMore={hasMore}
+            />
+          )}
         </div>
+
+        <aside className="mt-12 border-t border-border pt-6">
+          {categoryData && (
+            <CategoryTree
+              categories={categoryData.categories}
+              uncategorizedCount={categoryData.uncategorizedCount}
+              showPrivate={isAdmin}
+            />
+          )}
+        </aside>
       </div>
     )
   }
 
   // 기본 대시보드 모드
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
-        {/* 메인 콘텐츠 - 대시보드 */}
-        <main className="flex-1 min-w-0">
-          {dashboardData && <BlogDashboard data={dashboardData} />}
+    <div>
+      <h1 className="text-lg font-bold">다미파파의 블로그</h1>
 
-          {/* 포스팅 잔디 (활동 히트맵) */}
-          <section className="mt-12 rounded-2xl border border-border/60 bg-card/80 p-5 shadow-warm-sm sm:p-6">
-            <header className="mb-4">
-              <h2 className="text-base font-semibold text-foreground">
-                포스팅 잔디
-              </h2>
-              <p className="mt-0.5 text-xs text-muted-foreground">
-                글을 쓴 날만큼 잔디가 자라요
-              </p>
-            </header>
-            <PostingHeatmap isAdmin={isAdmin} />
-          </section>
-        </main>
+      {dashboardData && <BlogDashboard data={dashboardData} />}
 
-        {/* 사이드바 - 카테고리 트리 */}
-        <aside className="lg:w-72 shrink-0">
-          <div className="sticky top-24 space-y-4">
-            <div className="bg-card/80 backdrop-blur-sm rounded-2xl border border-border/60 p-4 shadow-warm-sm">
-              {categoryData && (
-                <CategoryTree
-                  categories={categoryData.categories}
-                  uncategorizedCount={categoryData.uncategorizedCount}
-                  showPrivate={isAdmin}
-                />
-              )}
-            </div>
-          </div>
-        </aside>
-      </div>
+      <aside className="mt-14 border-t border-border pt-6 space-y-8">
+        {dashboardData && <PopularList posts={dashboardData.popularPosts} />}
+
+        {categoryData && (
+          <CategoryTree
+            categories={categoryData.categories}
+            uncategorizedCount={categoryData.uncategorizedCount}
+            showPrivate={isAdmin}
+          />
+        )}
+      </aside>
+
+      <section className="mt-12 border-t border-border pt-6">
+        <h2 className="text-base font-bold">포스팅 잔디</h2>
+        <p className="mt-0.5 text-sm text-muted-foreground">글을 쓴 날만큼 잔디가 자라요</p>
+        <div className="mt-4">
+          <PostingHeatmap isAdmin={isAdmin} />
+        </div>
+      </section>
     </div>
   )
 }
