@@ -1966,8 +1966,15 @@ Expected: 통과. 실패하면 에러 메시지의 파일을 고치고 다시 �
 
 - [ ] **Step 5: 폰트 전송량 확인**
 
-빌드 후 개발 서버가 아닌 `npm run start`로 띄우고, 브라우저 Network 탭에서 폰트 파일 총 전송량을 잰다.
-Expected: 기준선은 **300KB 이하**. 이를 크게 넘으면 스펙 §10의 후퇴 방안을 실행한다 — `tailwind.config.ts`의 `fontFamily.sans`를 시스템 산세리프 스택으로 되돌리고 `fontFamily.serif`만 Noto Serif KR로 남긴 뒤, 제목(`h1`~`h3`, `.markdown h1~h3`, `PostCard`의 제목)에만 `font-serif`를 붙인다. **이 후퇴를 실행했다면 스펙 §3.2에 결정 변경을 한 줄 기록한다.**
+브라우저 Network 탭 대신 빌드 산출물의 폰트 파일 크기를 직접 잰다(이 세션에는 브라우저가 없다).
+
+```bash
+find .next/static/media -name "*.woff2" -exec ls -l {} \; | awk '{s+=$5; print $5, $9} END {print "TOTAL:", s, "bytes ("s/1024" KB)"}'
+```
+
+`preload: false`이므로 이 파일들이 첫 화면에서 한꺼번에 내려가지는 않는다 — unicode-range 단위로 필요한 조각만 요청된다. 따라서 이 합계는 **최악의 경우 상한**이다.
+
+Expected: 개별 조각이 대체로 100KB 이하이고, 한글 조각 하나가 단독으로 500KB를 넘지 않는다. 이를 크게 넘으면 스펙 §10의 후퇴 방안을 실행한다 — `tailwind.config.ts`의 `fontFamily.sans`를 시스템 산세리프 스택으로 되돌리고 `fontFamily.serif`만 Noto Serif KR로 남긴 뒤, 제목(`h1`~`h3`, `.markdown h1~h3`, `PostCard`의 제목)에만 `font-serif`를 붙인다. **이 후퇴를 실행했다면 스펙 §3.2에 결정 변경을 한 줄 기록한다.**
 
 - [ ] **Step 6: 모바일 가로 오버플로 회귀 확인**
 
