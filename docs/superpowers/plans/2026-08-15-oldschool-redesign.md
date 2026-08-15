@@ -1498,7 +1498,12 @@ export default function Loading() {
 `components/career/CareerTimeline.tsx`(260줄)에서:
 
 - lucide import와 모든 아이콘 JSX 삭제
-- **61행의 장식 스타일 배열을 삭제한다** — `{ dot: 'bg-primary/70', badge: 'bg-warm-highlight text-primary-700', gradient: 'from-primary/60 to-accent' }` 형태의 항목들이다. Task 1이 `primary-700` 팔레트를 제거해 이 배열의 `text-primary-700`은 이미 죽은 클래스이며, 이 태스크가 그 유일한 소유자다. 배열을 참조하는 JSX(점·그라디언트 렌더링)도 함께 지운다.
+- **`accentColors` 배열(56~64행)과 그 사용처를 전부 삭제한다.** 인덱스별로 점·뱃지·그라디언트 색을 돌려쓰는 장식 테이블이고, 61행 항목의 `text-primary-700`은 Task 1이 팔레트를 지워 이미 죽은 클래스다. **이 태스크가 그 유일한 소유자다.** 함께 지울 사용처 3곳:
+  - 90행 `<div className={\`h-1 w-full bg-gradient-to-r ${colors.gradient}\`} />` — 카드 상단 그라디언트 바
+  - 98행 아이콘 컨테이너의 `bg-gradient-to-br ${colors.gradient}`, `rounded-2xl`, `shadow-md`
+  - 127행 뱃지의 `${colors.badge}`, `rounded-full`
+
+  `const colors = accentColors[index % accentColors.length]`(74행 부근)도 함께 지운다. 뱃지는 색 대신 대괄호 텍스트(`[재직중]` 등)로 표현한다.
 - 타임라인의 세로선·점(`absolute`, `rounded-full`, `bg-primary` 등 장식 요소) 삭제
 - 각 경력 항목을 `<section>` + `<h3>회사명</h3>` + `<p className="text-sm text-muted-foreground">기간 · 직무</p>` + 설명 목록 구조로 단순화
 - `rounded-*`, `shadow-*`, `bg-card`, `hover:scale-*`, `transition-*` 제거
