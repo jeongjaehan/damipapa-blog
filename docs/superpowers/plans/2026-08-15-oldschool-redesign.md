@@ -1453,28 +1453,116 @@ git commit -m "♻️ 글 상세를 카드 없는 텍스트 레이아웃으로 �
 - Consumes: Task 1 토큰
 - Produces: `TagCloud`의 props(`{ tags: TagMetric[], className?: string }`)와 default export는 불변이다. `CategoryTree`의 props(`categories`, `uncategorizedCount`, `selectedSlug?`, `showPrivate?`)도 불변이다.
 
-- [ ] **Step 1: `CategoryTree` 아이콘 제거**
+- [ ] **Step 1: `CategoryNode` 교체**
 
-6행의 lucide import를 삭제하고, `CategoryNode`의 아이콘 자리를 텍스트로 바꾼다.
-
-- 펼치기/접기 버튼: `<ChevronDown/>` → `−`, `<ChevronRight/>` → `+` (자식이 없으면 지금처럼 빈 자리)
-- 폴더/파일 아이콘: 전부 삭제 (들여쓰기만으로 계층이 보인다)
-- `<Lock/>`(비공개 표시): `🔒` 대신 텍스트 `[비공개]`, `text-xs text-destructive`
-
-행 컨테이너의 클래스도 바꾼다.
+6행 `import { ChevronRight, ChevronDown, Folder, FolderOpen, FileText, Lock } from 'lucide-react'`를 삭제하고, `CategoryNode` 함수(22~102행)의 `return` 블록을 아래로 교체한다. `useState`·`hasChildren`·`isSelected`·`paddingLeft` 계산은 그대로 둔다.
 
 ```tsx
-        className={`
-          flex items-center gap-2 py-1 text-sm
-          ${isSelected ? 'font-bold text-foreground' : 'text-foreground'}
-        `}
+  return (
+    <div className="select-none">
+      <div
+        className="flex items-center gap-1.5 py-1 text-sm"
+        style={{ paddingLeft: `${paddingLeft}px` }}
+      >
+        {hasChildren ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setIsOpen(!isOpen)
+            }}
+            className="w-4 shrink-0 text-muted-foreground hover:text-foreground"
+            aria-expanded={isOpen}
+            aria-label={isOpen ? '접기' : '펼치기'}
+          >
+            {isOpen ? '−' : '+'}
+          </button>
+        ) : (
+          <span aria-hidden="true" className="w-4 shrink-0" />
+        )}
+
+        <Link
+          href={`/categories/${category.slug}`}
+          className={`flex min-w-0 flex-1 items-center gap-1.5 ${
+            isSelected
+              ? 'font-bold text-foreground visited:text-foreground'
+              : 'text-foreground visited:text-foreground hover:text-link'
+          }`}
+        >
+          <span className="truncate">{category.name}</span>
+          {category.isPrivate && showPrivate && (
+            <span className="shrink-0 text-xs text-destructive">[비공개]</span>
+          )}
+          <span className="ml-auto shrink-0 text-xs text-muted-foreground">
+            ({category.postCount})
+          </span>
+        </Link>
+      </div>
+
+      {hasChildren && isOpen && (
+        <div>
+          {category.children.map((child) => (
+            <CategoryNode
+              key={child.id}
+              category={child}
+              selectedSlug={selectedSlug}
+              level={level + 1}
+              showPrivate={showPrivate}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
 ```
 
-`rounded-xl`, `hover:bg-muted`, `bg-primary/10`, `transition-all`을 제거한다. 선택 상태는 배경색이 아니라 **굵기**로 표시한다.
+바뀐 점: 폴더/파일 아이콘 전부 삭제(들여쓰기가 계층을 보여준다), `rounded-xl`·`hover:bg-muted`·`bg-primary/10`·`transition-all duration-200` 제거, **선택 상태를 배경색이 아니라 굵기로 표시**, 펼치기 버튼에 `aria-expanded`와 `aria-label` 추가(아이콘이 사라지면서 `+`/`−`만으로는 스크린리더에 의미가 전달되지 않는다).
 
-- [ ] **Step 2: `CategoryTree` 헤더와 미분류 섹션 정리**
+- [ ] **Step 2: 헤더와 미분류 섹션 교체**
 
-114행 헤더를 `<h3 className="border-b border-border pb-1 text-sm font-bold">카테고리</h3>`로 바꾸고, `uppercase tracking-wider px-3`을 제거한다. 미분류 링크(137~152행)에서도 `rounded-xl`, `bg-primary/10`, `transition-all`, `<Folder/>`를 제거한다.
+`CategoryTree` 함수의 `return` 블록(112~155행)을 아래로 교체한다.
+
+```tsx
+  return (
+    <div>
+      <h3 className="border-b border-border pb-1 text-sm font-bold">카테고리</h3>
+
+      <div className="mt-2">
+        {categories.length > 0 ? (
+          categories.map((category) => (
+            <CategoryNode
+              key={category.id}
+              category={category}
+              selectedSlug={selectedSlug}
+              showPrivate={showPrivate}
+            />
+          ))
+        ) : (
+          <p className="py-1 text-sm text-muted-foreground">카테고리가 없습니다.</p>
+        )}
+
+        {uncategorizedCount > 0 && (
+          <div className="mt-2 border-t border-border pt-2">
+            <Link
+              href="/categories/uncategorized"
+              className={`flex items-center gap-1.5 py-1 pl-4 text-sm ${
+                isUncategorizedSelected
+                  ? 'font-bold text-foreground visited:text-foreground'
+                  : 'text-foreground visited:text-foreground hover:text-link'
+              }`}
+            >
+              <span>미분류</span>
+              <span className="ml-auto text-xs text-muted-foreground">
+                ({uncategorizedCount})
+              </span>
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+```
 
 - [ ] **Step 3: `TagCloud` 전체 교체**
 
