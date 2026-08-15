@@ -33,11 +33,11 @@ function HeatmapCellInner({ cell, onHover, onLeave, onActivate }: HeatmapCellPro
 
   const hoverable = !cell.isFuture
   const clickable = hoverable && cell.count > 0
-  const baseClass = 'h-[11px] w-[11px] rounded-[2px] transition-transform duration-100'
+  const baseClass = 'h-[11px] w-[11px]'
   const futureClass = cell.isFuture ? 'opacity-30' : ''
   const cursorClass = clickable ? 'cursor-pointer' : 'cursor-default'
   const focusClass = hoverable
-    ? 'hover:scale-[1.25] hover:ring-1 hover:ring-foreground/25 focus-visible:scale-[1.25] focus-visible:ring-1 focus-visible:ring-foreground/40 focus-visible:outline-none motion-reduce:hover:scale-100 motion-reduce:focus-visible:scale-100'
+    ? 'hover:ring-1 hover:ring-foreground/40 focus-visible:ring-1 focus-visible:ring-foreground/60 focus-visible:outline-none'
     : ''
 
   return (

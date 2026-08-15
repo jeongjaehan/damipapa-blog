@@ -22,16 +22,16 @@ export default function Legend({ className = '' }: { className?: string }) {
       className={`flex items-center gap-1 text-[11px] text-muted-foreground ${className}`}
       aria-label="잔디 색상 범례"
     >
-      <span>Less</span>
+      <span>적음</span>
       {[0, 1, 2, 3, 4].map((level) => (
         <span
           key={level}
           aria-label={`${LEVEL_HINT[level]} 작성한 날`}
           title={LEVEL_HINT[level]}
-          className={`h-[11px] w-[11px] rounded-[2px] ${LEVEL_BG[level]}`}
+          className={`h-[11px] w-[11px] ${LEVEL_BG[level]}`}
         />
       ))}
-      <span>More</span>
+      <span>많음</span>
     </div>
   )
 }
