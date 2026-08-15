@@ -1288,7 +1288,35 @@ import { Eye, Calendar, Edit, Trash2, EyeOff, Folder, Clock } from 'lucide-react
       <div className="py-8">
 ```
 
-85행의 바깥 `<article className="max-w-4xl mx-auto">`는 `<article>`로 바꾼다 — 폭은 `page-client.tsx`가 잡는다. 닫는 태그 수가 하나 줄어드는 점에 주의한다(감싸던 `<div className="bg-card ...">`가 사라졌으므로 파일 끝에서 `</div>` 하나를 지운다).
+**태그 균형 — 이 편집에서 가장 틀리기 쉬운 부분이다. 아래를 정확히 따른다.**
+
+현재 구조는 이렇다.
+
+```
+85    <article className="max-w-4xl mx-auto">
+86      <div className="bg-card rounded-2xl shadow-warm-sm border border-border overflow-hidden">
+87        <header ...>   … 168  </header>
+170       <Separator />
+172       <div className="px-4 sm:px-8 py-8 sm:py-12">
+173         <div className="markdown prose prose-lg"> … 255 </div>
+258         <PostShare … />
+261         <PostReactions … />
+262       </div>
+263     </div>      ← 86행 래퍼의 짝
+264   </article>
+```
+
+해야 할 일:
+
+1. 85행을 `    <article>`로 바꾼다 (`max-w-4xl mx-auto` 제거 — 폭은 `page-client.tsx`가 잡는다)
+2. **86행 `<div className="bg-card ...">`를 삭제하고, 짝인 263행 `</div>`도 삭제한다**
+3. 87~168행의 `<header>` 블록 내용을 위 새 코드로 교체한다
+4. **170행 `<Separator />`를 삭제한다** — 새 `<header>`가 `border-b`로 구분선을 직접 그린다
+5. 172행 `<div className="px-4 sm:px-8 py-8 sm:py-12">`를 `<div className="py-8">`로 바꾼다 (짝인 262행 `</div>`는 그대로 둔다)
+
+`ReactMarkdown` 블록(173~255행)과 `YoutubeEmbed`, `handleDelete`는 **한 글자도 건드리지 않는다.**
+
+편집 후 `npx tsc --noEmit`이 통과하면 태그 균형이 맞은 것이다. JSX 태그가 어긋나면 타입 체크가 반드시 실패한다.
 
 - [ ] **Step 3: 마크다운 이미지의 둥근 모서리 제거**
 
