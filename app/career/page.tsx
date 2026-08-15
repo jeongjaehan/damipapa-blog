@@ -50,7 +50,7 @@ export default function CareerPage() {
         <div className="flex justify-end mb-4">
           <Link href="/admin/career">
             <Button variant="outline" size="sm" className="gap-2">
-              [설정]
+              관리
             </Button>
           </Link>
         </div>

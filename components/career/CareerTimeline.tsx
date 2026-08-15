@@ -65,13 +65,13 @@ function CareerCard({ career, index, viewMode }: {
         className="w-full text-left"
       >
         <h3 className="text-lg font-bold text-foreground">
-          {career.subtitle}
+          {career.title}
           {isCurrent && <span className="ml-2 text-sm font-normal text-muted-foreground">(재직중)</span>}
           <span className="ml-2 text-sm font-normal text-muted-foreground">{expanded ? '−' : '+'}</span>
         </h3>
         <p className="text-sm text-muted-foreground">
-          {formatDate(career.startDate)} ~ {isCurrent ? '현재' : formatDate(career.endDate!)}
-          {' '}({calculateWorkPeriod(career.startDate, career.endDate)}) · {career.title}
+          {career.subtitle} · {formatDate(career.startDate)} ~ {isCurrent ? '현재' : formatDate(career.endDate!)}
+          {' '}({calculateWorkPeriod(career.startDate, career.endDate)})
         </p>
       </button>
 
